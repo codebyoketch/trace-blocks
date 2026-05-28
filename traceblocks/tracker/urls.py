@@ -1,8 +1,11 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
  
 urlpatterns = [
-    path("",                              views.index,            name="index"),
+    path("index/",                              views.index,            name="index"),
+    path("",                        auth_views.LoginView.as_view(template_name="login.html"), name="login"),
+    path("logout/",                       auth_views.LogoutView.as_view(next_page="index"), name="logout"),
     path("products/new/",                 views.create_product,   name="create_product"),
     path("products/<str:sku>/",           views.product_detail,   name="product_detail"),
     path("products/<str:sku>/events/",    views.add_event,        name="add_event"),
