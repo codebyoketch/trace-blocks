@@ -4,6 +4,231 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supply Chain Event — TraceBlocks</title>
+  <style>
+   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ══ INTERACTIVE HIGH-CONTRAST WEB3 THEME CONFIGURATION ══ */
+    :root {
+      --bg:       #06030F;        /* Pitch-black canvas with a deep violet tint */
+      --sidebar:  #0D071C;        /* Dark slate-purple container surfaces */
+      --card:     rgba(255, 255, 255, 0.02); /* Translucent frost-glass backplate */
+      --accent:   #A855F7;        /* Base branding glowing neon purple */
+      --accent2:  #00F0FF;        /* Electric Cyan — High-contrast for focus headers and active text */
+      --accent3:  #3DFFA8;        /* Neon Green / Mint — For data health flags and success labels */
+      --border:   rgba(0, 240, 255, 0.15); /* Sleek, low-intensity cyan input border frames */
+      --text:     #FFFFFF;        /* Pure bright white for user-typed value clarity inside boxes */
+      --muted:    #D8B4FE;        /* Soft lilac silver — highly readable for input field titles */
+      --font-d:   'Syne', sans-serif;
+      --font-m:   'Space Mono', monospace;
+    }
+
+    body {
+      font-family: var(--font-m);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 24px;
+    }
+
+    /* Glowing grid background lines styled in low-opacity purple */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header, main, footer {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    header h1 {
+      font-family: var(--font-d);
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+      margin-bottom: 5px;
+    }
+
+    header p {
+      color: var(--accent2);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 20px 0;
+    }
+
+    /* CYAN BACK LINK NAVIGATION BUTTON */
+    .back-link {
+      display: inline-block;
+      text-decoration: none;
+      font-family: var(--font-d);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent2);
+      border: 1px solid var(--border);
+      padding: 8px 18px;
+      border-radius: 6px;
+      background: rgba(0, 240, 255, 0.02);
+      margin-bottom: 24px;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .back-link:hover {
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+      background: rgba(0, 240, 255, 0.08);
+      border-color: var(--accent2);
+    }
+
+    /* CONTAINERS AND BLOCKS */
+    fieldset {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      backdrop-filter: blur(8px);
+      margin-bottom: 24px;
+    }
+
+    legend {
+      font-family: var(--font-d);
+      font-size: 14px;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+      padding: 0 10px;
+      letter-spacing: 0.05em;
+    }
+
+    p { margin-bottom: 16px; }
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+
+    abbr[title="Required"] {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* THE THEMED DIGITAL INPUT BOXES */
+    input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select, textarea {
+      width: 100%;
+      background: #0d091a;        /* Sleek deep-purple slate background inside the box */
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: var(--text);          /* Clear crisp white user typing value text */
+      font-family: var(--font-m);
+      font-size: 13px;
+      margin-top: 6px;
+      transition: all 0.2s ease;
+    }
+
+    #event-id {
+      width: auto;
+      display: inline-block;
+      margin-left: 10px;
+      padding: 4px 12px;
+      font-weight: bold;
+      color: var(--accent2);       /* Electric Cyan highlight for form identifier code */
+      background: rgba(0, 240, 255, 0.05);
+      text-align: center;
+    }
+
+    /* GLOW EFFECTS WHEN CLICKING BOXES */
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent2);
+      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+    }
+
+    textarea { resize: vertical; }
+
+    details {
+      background: rgba(168, 85, 247, 0.02);
+      border: 1px dashed var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 14px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--accent2);
+      font-weight: bold;
+      outline: none;
+    }
+
+    input[type="checkbox"] {
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    /* GLOWING BLOCKCHAIN BLOCK SUBMIT BUTTON */
+    input[type="submit"] {
+      padding: 12px 28px;
+      background: linear-gradient(135deg, var(--accent), #6d28d9);
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-d);
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.15s ease;
+    }
+
+    input[type="submit"]:hover {
+      box-shadow: 0 0 18px rgba(168, 85, 247, 0.5);
+      transform: translateY(-1px);
+    }
+
+    input[type="reset"] {
+      padding: 12px 24px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--font-d);
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    input[type="reset"]:hover {
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+
+    footer p {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
 </head>
 <body>
 
