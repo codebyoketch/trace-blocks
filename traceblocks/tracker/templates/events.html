@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Supply Chain Event — TraceBlocks</title>
+</head>
+<body>
+
+  <header>
+    <h1>&#9632; TraceBlocks</h1>
+    <p><strong>Supply Chain Event Form</strong></p>
+   <p>Event ID: <input type="text" id="event-id" value="TB-EVT-2025-001"></p>
+
+    <hr />
+  </header>
+
+  <main>
+    <form action="/api/events/" method="post">
+
+      <input type="hidden" name="csrfmiddlewaretoken" value="" />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 1 — IDENTITY
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>1. Identity</strong></legend>
+
+        <p>
+          <label for="user-id">User ID <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="user-id"
+            name="user_id"
+            placeholder="e.g. USR-00142"
+            size="40"
+            required
+            autocomplete="off"
+          />
+        </p>
+
+        <p>
+          <label for="full-name">Full Name <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="full-name"
+            name="full_name"
+            placeholder="As registered on the platform"
+            size="40"
+            required
+            autocomplete="name"
+          />
+        </p>
+      </fieldset>
+
+      <br />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 2 — EVENT DESCRIPTION
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>2. Event Description</strong></legend>
+
+        <p>
+          <label for="event-name">Event Name <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="event-name"
+            name="event_name"
+            placeholder="e.g. Dispatch from Kisumu Warehouse"
+            size="50"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="short-description">Short Description</label><br />
+          <textarea
+            id="short-description"
+            name="short_description"
+            rows="3"
+            cols="60"
+            placeholder="Brief summary of what happened at this supply chain stage... (optional)"
+          ></textarea>
+        </p>
+
+        <p>
+          <label>
+            <input
+              type="checkbox"
+              id="needs-detail"
+              name="needs_detail"
+              value="yes"
+            />
+            &nbsp;This event requires a detailed explanation
+          </label>
+        </p>
+
+        <details>
+          <summary>Detailed Explanation (expand to fill)</summary>
+          <p>
+            <label for="detailed-explanation">Full Explanation</label><br />
+            <textarea
+              id="detailed-explanation"
+              name="detailed_explanation"
+              rows="8"
+              cols="70"
+              placeholder="Provide a full paragraph explanation of the event — include context, any exceptions, temperature readings, seal conditions, quality notes, or regulatory flags..."
+              style="resize: both;"
+            ></textarea>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" name="exceptions_noted" value="yes" />
+              &nbsp;Exceptions or anomalies were noted during this event
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" name="regulatory_flag" value="yes" />
+              &nbsp;This event has a regulatory or compliance flag
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" name="quality_check_passed" value="yes" />
+              &nbsp;Quality check passed at this stage
+            </label>
+          </p>
+        </details>
+
+      </fieldset>
+
+      <br />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 3 — GOODS
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>3. Goods</strong></legend>
+
+        <p>
+          <label for="goods-name">Goods Name / Type <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="goods-name"
+            name="goods_name"
+            placeholder="e.g. Nile Perch — Frozen, Grade A"
+            size="45"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="goods-category">Goods Category <abbr title="Required">*</abbr></label><br />
+          <select id="goods-category" name="goods_category" required>
+            <option value="" disabled selected>— Select category —</option>
+            <option value="food">Food &amp; Agriculture</option>
+            <option value="pharma">Pharmaceuticals</option>
+            <option value="electronics">Electronics</option>
+            <option value="textiles">Textiles &amp; Apparel</option>
+            <option value="chemicals">Chemicals</option>
+            <option value="machinery">Machinery &amp; Equipment</option>
+            <option value="livestock">Livestock</option>
+            <option value="other">Other</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="quantity">Quantity / Number of Units <abbr title="Required">*</abbr></label><br />
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            placeholder="0"
+            min="1"
+            step="1"
+            size="15"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="unit-of-measure">Unit of Measure <abbr title="Required">*</abbr></label><br />
+          <select id="unit-of-measure" name="unit_of_measure" required>
+            <option value="" disabled selected>— Select unit —</option>
+            <option value="kg">Kilograms (kg)</option>
+            <option value="g">Grams (g)</option>
+            <option value="tonnes">Tonnes (t)</option>
+            <option value="litres">Litres (L)</option>
+            <option value="units">Units / Pieces</option>
+            <option value="boxes">Boxes / Cartons</option>
+            <option value="bags">Bags / Sacks</option>
+            <option value="pallets">Pallets</option>
+            <option value="containers">Containers</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="batch-number">Batch / Lot Number</label><br />
+          <input
+            type="text"
+            id="batch-number"
+            name="batch_number"
+            placeholder="e.g. KSM-BATCH-2025-044"
+            size="40"
+          />
+        </p>
+
+        <p>
+          <label for="goods-condition">Condition of Goods</label><br />
+          <select id="goods-condition" name="goods_condition">
+            <option value="" disabled selected>— Select condition —</option>
+            <option value="excellent">Excellent</option>
+            <option value="good">Good</option>
+            <option value="fair">Fair</option>
+            <option value="damaged">Damaged</option>
+            <option value="rejected">Rejected / Returned</option>
+          </select>
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="cold_chain" value="yes" />
+            &nbsp;This shipment is part of a cold chain (temperature-controlled)
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="hazardous" value="yes" />
+            &nbsp;Contains hazardous or controlled materials
+          </label>
+        </p>
+
+      </fieldset>
+
+      <br />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 4 — DISPERSED BY (SENDER)
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>4. Dispersed By</strong></legend>
+        <p><em>The person or entity releasing / sending the goods at this stage.</em></p>
+
+        <p>
+          <label for="dispatcher-name">Full Name <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="dispatcher-name"
+            name="dispatcher_name"
+            placeholder="Full legal name"
+            size="40"
+            required
+            autocomplete="off"
+          />
+        </p>
+
+        <p>
+          <label for="dispatcher-role">Role / Title</label><br />
+          <input
+            type="text"
+            id="dispatcher-role"
+            name="dispatcher_role"
+            placeholder="e.g. Warehouse Manager, Supplier, Logistics Officer"
+            size="45"
+          />
+        </p>
+
+        <p>
+          <label for="dispatcher-signature">Signature (type full name as signature)</label><br />
+          <input
+            type="text"
+            id="dispatcher-signature"
+            name="dispatcher_signature"
+            placeholder="Type your full name to sign"
+            size="40"
+            autocomplete="off"
+          />
+        </p>
+
+        <p>
+          <label for="dispatcher-date">Date <abbr title="Required">*</abbr></label><br />
+          <input
+            type="date"
+            id="dispatcher-date"
+            name="dispatcher_date"
+            required
+          />
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="dispatcher_confirmed" value="yes" required />
+            &nbsp;I confirm the above goods have been released and the details above are accurate
+          </label>
+        </p>
+
+      </fieldset>
+
+      <br />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 5 — RECIPIENT
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>5. Recipient</strong></legend>
+        <p><em>The person or entity receiving the goods at this stage.</em></p>
+
+        <p>
+          <label for="recipient-name">Full Name <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="recipient-name"
+            name="recipient_name"
+            placeholder="Full legal name"
+            size="40"
+            required
+            autocomplete="off"
+          />
+        </p>
+
+        <p>
+          <label for="recipient-role">Role / Title</label><br />
+          <input
+            type="text"
+            id="recipient-role"
+            name="recipient_role"
+            placeholder="e.g. Retailer, Distributor, End Consumer"
+            size="45"
+          />
+        </p>
+
+        <p>
+          <label for="recipient-signature">Signature (type full name as signature)</label><br />
+          <input
+            type="text"
+            id="recipient-signature"
+            name="recipient_signature"
+            placeholder="Type your full name to sign"
+            size="40"
+            autocomplete="off"
+          />
+        </p>
+
+        <p>
+          <label for="recipient-date">Date <abbr title="Required">*</abbr></label><br />
+          <input
+            type="date"
+            id="recipient-date"
+            name="recipient_date"
+            required
+          />
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="recipient_confirmed" value="yes" required />
+            &nbsp;I confirm receipt of the above goods and that the details are accurate
+          </label>
+        </p>
+
+      </fieldset>
+
+      <br />
+
+      <!-- ═══════════════════════════════════════════
+           SECTION 6 — LOGISTICS
+      ════════════════════════════════════════════ -->
+      <fieldset>
+        <legend><strong>6. Logistics</strong></legend>
+        <p><em>Transport and movement details for this supply chain leg.</em></p>
+
+        <p>
+          <label for="carrier-name">Carrier / Logistics Company <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="carrier-name"
+            name="carrier_name"
+            placeholder="e.g. Siginon Logistics, G4S Kenya, Own Transport"
+            size="45"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="tracking-number">Tracking / Waybill Number</label><br />
+          <input
+            type="text"
+            id="tracking-number"
+            name="tracking_number"
+            placeholder="e.g. SGNK-20250529-007"
+            size="40"
+          />
+        </p>
+
+        <p>
+          <label for="transport-mode">Transport Mode <abbr title="Required">*</abbr></label><br />
+          <select id="transport-mode" name="transport_mode" required>
+            <option value="" disabled selected>— Select mode —</option>
+            <option value="road">Road (Truck / Van)</option>
+            <option value="rail">Rail</option>
+            <option value="air">Air Freight</option>
+            <option value="sea">Sea / Lake Freight</option>
+            <option value="motorcycle">Motorcycle / Boda Boda</option>
+            <option value="foot">On Foot / Manual</option>
+            <option value="pipeline">Pipeline</option>
+            <option value="multimodal">Multimodal</option>
+          </select>
+        </p>
+
+        <p>
+          <label for="origin-location">Origin Location <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="origin-location"
+            name="origin_location"
+            placeholder="e.g. Kisumu Cold Storage, Kondele, Kisumu"
+            size="45"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="destination-location">Destination <abbr title="Required">*</abbr></label><br />
+          <input
+            type="text"
+            id="destination-location"
+            name="destination_location"
+            placeholder="e.g. Nairobi City Market, Gikomba"
+            size="45"
+            required
+          />
+        </p>
+
+        <p>
+          <label for="dispatch-datetime">Dispatch Date &amp; Time</label><br />
+          <input
+            type="datetime-local"
+            id="dispatch-datetime"
+            name="dispatch_datetime"
+          />
+        </p>
+
+        <p>
+          <label for="estimated-delivery">Estimated Delivery Date</label><br />
+          <input
+            type="date"
+            id="estimated-delivery"
+            name="estimated_delivery"
+          />
+        </p>
+
+        <p>
+          <label for="vehicle-plate">Vehicle Plate / Registration</label><br />
+          <input
+            type="text"
+            id="vehicle-plate"
+            name="vehicle_plate"
+            placeholder="e.g. KDA 123B"
+            size="20"
+          />
+        </p>
+
+        <p>
+          <label for="driver-name">Driver / Handler Name</label><br />
+          <input
+            type="text"
+            id="driver-name"
+            name="driver_name"
+            placeholder="Full name of driver or handler"
+            size="40"
+          />
+        </p>
+
+        <p>
+          <label for="logistics-notes">Logistics Notes</label><br />
+          <textarea
+            id="logistics-notes"
+            name="logistics_notes"
+            rows="4"
+            cols="60"
+            placeholder="Any additional logistics details — route taken, delays, border crossings, storage stops..."
+            style="resize: both;"
+          ></textarea>
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="insurance_covered" value="yes" />
+            &nbsp;Goods are insured for this transit leg
+          </label>
+        </p>
+
+        <p>
+          <label>
+            <input type="checkbox" name="customs_cleared" value="yes" />
+            &nbsp;Customs / border clearance completed
+          </label>
+        </p>
+
+      </fieldset>
+
+      <br />
+      <hr />
+
+      <!-- ═══════════════════════════════════════════
+           SUBMIT
+      ════════════════════════════════════════════ -->
+      <p>
+        <label>
+          <input type="checkbox" name="final_confirm" value="yes" required />
+          &nbsp;<strong>I confirm all the information in this form is accurate and I authorise recording this event on the TraceBlocks supply chain ledger.</strong>
+        </label>
+      </p>
+
+      <p>
+        <input
+          type="submit"
+          value="Submit Event to TraceBlocks"
+        />
+        &nbsp;&nbsp;
+        <input
+          type="reset"
+          value="Clear Form"
+        />
+      </p>
+
+    </form>
+  </main>
+
+  <hr />
+
+  <footer>
+    <p>
+      <small>
+        TraceBlocks &mdash; Supply Chain Transparency on VeChain &nbsp;|&nbsp;
+        Zone01 Kisumu Hackathon 2025 &nbsp;|&nbsp;
+        All events are recorded immutably on the VeChainThor blockchain.
+      </small>
+    </p>
+  </footer>
+
+</body>
+</html>
