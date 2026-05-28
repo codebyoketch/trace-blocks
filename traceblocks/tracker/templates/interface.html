@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard | Trace-Blockz</title>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+  
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon"></div>
+      Trace-Blockz
+    </div>
+    
+    <nav class="nav-menu">
+      <a href="#" class="nav-item active"> Dashboard</a>
+      <a href="#" class="nav-item">On-Chain Data</a>
+      <a href="#" class="nav-item"> Mint Assets</a>
+      <a href="#" class="nav-item"> Governance</a>
+      <a href="#" class="nav-item">Settings</a>
+    </nav>
+
+    <div class="user-profile-footer">
+      <div class="user-avatar"></div>
+      <div class="user-info">
+        <span id="display-username">Loading...</span>
+        <button onclick="handleLogout()" class="logout-btn">Log out</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN INTERFACE CONTENT AREA -->
+  <main class="main-content">
+    <header class="content-header">
+      <h2>Network Overview</h2>
+      <div class="wallet-status">
+        <span class="status-indicator"></span> Connected to Mainnet
+      </div>
+    </header>
+
+    <!-- CONTENT CARDS / WORKSPACE -->
+    <div class="dashboard-grid">
+      
+      <!-- Card 1 -->
+      <div class="data-card">
+        <h3>Tracked Assets</h3>
+        <p class="data-value">0</p>
+        <p class="data-sub">// No active supply chains registered</p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="data-card">
+        <h3>Account Verification</h3>
+        <p class="data-status-text">Pending Approval</p>
+        <p class="data-sub">// Waiting for network validator consensus</p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="data-card">
+        <h3>Recent Activity</h3>
+        <ul class="activity-list">
+          <li>// Account initialized successfully.</li>
+        </ul>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script>
+    
+// Simple security check: redirect back to login if user isn't logged in
+//window.onload = function() {
+  //const loggedInUser = sessionStorage.getItem('currentUser');
+ // if (!loggedInUser) {
+   // alert('Access Denied. Please log in first.');
+    //window.location.href = 'login.html';
+  //} else {
+   // document.getElementById('display-username').innerText = loggedInUser;
+  //}
+//}
+
+//function handleLogout() {
+  //sessionStorage.removeItem('currentUser');
+  //window.location.href = 'login.html';
+//}
+</script>
+
+</body>
+</html>
