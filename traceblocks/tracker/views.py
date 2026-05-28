@@ -20,7 +20,7 @@ def _get_chain():
 
 def index(request):
     products = Product.objects.prefetch_related("events").order_by("-created_at")
-    return render(request, "tracker/index.html", {"products": products})
+    return render(request, "index.html", {"products": products})
 
 
 def product_detail(request, sku):
