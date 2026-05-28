@@ -26,7 +26,7 @@ def index(request):
 def product_detail(request, sku):
     product = get_object_or_404(Product, sku=sku)
     events  = product.events.order_by("-timestamp")
-    return render(request, "tracker/product_detail.html", {
+    return render(request, "product_detail.html", {
         "product": product,
         "events":  events,
         "status_choices": TrackingEvent.STATUS_CHOICES,
