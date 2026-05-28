@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ product.name }} — Traceblocks</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; }
+    header { background: #1a1a2e; color: white; padding: 1rem 2rem;
+             display: flex; align-items: center; gap: 1rem; }
+    header a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
+    header a:hover { color: white; }
+    header h1 { font-size: 1.2rem; }
+    .container { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    .messages { margin-bottom: 1rem; }
+    .messages li { padding: 0.75rem 1rem; border-radius: 6px; list-style: none;
+                   margin-bottom: 0.5rem; }
+    .messages .success { background: #d4edda; color: #155724; }
+    .messages .error   { background: #f8d7da; color: #721c24; }
+    .messages .warning { background: #fff3cd; color: #856404; }
+    .card { background: white; border-radius: 10px; padding: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
+    .meta { display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.9rem; color: #555; }
+    .meta strong { color: #222; }
+    .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .form-row input, .form-row textarea, .form-row select {
+      flex: 1; min-width: 160px; padding: 0.6rem 0.75rem;
+      border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    button[type=submit] {
+      background: #1a1a2e; color: white; border: none;
+      padding: 0.65rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    button[type=submit]:hover { background: #16213e; }
+    /* Timeline */
+    .timeline { position: relative; padding-left: 1.5rem; }
+    .timeline::before {
+      content: ""; position: absolute; left: 0.4rem; top: 0; bottom: 0;
+      width: 2px; background: #e0e0e0; }
+    .event { position: relative; margin-bottom: 1.5rem; }
+    .event::before {
+      content: ""; position: absolute; left: -1.15rem; top: 0.4rem;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #1a1a2e; border: 2px solid white;
+      box-shadow: 0 0 0 2px #1a1a2e; }
+    .event-header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px;
+             font-size: 0.75rem; font-weight: 600; }
+    .badge-manufactured   { background: #e3f2fd; color: #1565c0; }
+    .badge-shipped         { background: #f3e5f5; color: #6a1b9a; }
+    .badge-in_transit      { background: #fff8e1; color: #f57f17; }
+    .badge-at_hub          { background: #fce4ec; color: #880e4f; }
+    .badge-out_for_delivery{ background: #e8f5e9; color: #1b5e20; }
+    .badge-delivered       { background: #e8f5e9; color: #2e7d32; }
+    .time { font-size: 0.8rem; color: #999; }
+    .location { font-size: 0.9rem; margin-top: 0.25rem; }
+    .notes { font-size: 0.85rem; color: #666; margin-top: 0.2rem; font-style: italic; }
+    .tx-info { font-size: 0.75rem; margin-top: 0.4rem; color: #888; }
+    .tx-info a { color: #1a1a2e; }
+    .tx-pending  { color: #f57f17; }
+    .tx-confirmed{ color: #2e7d32; }
+    .tx-reverted { color: #c62828; }
+    .tx-error    { color: #c62828; }
+    .empty { color: #999; font-style: italic; }
+  </style>
+</head>
+<body>
+<header>
+  <a href="{% url 'index' %}">← All Products</a>
+  <h1>{{ product.name }}</h1>
+</header>
+
+<div class="container">
+
+  {% if messages %}
+  <ul class="messages">
+    {% for m in messages %}
+    <li class="{{ m.tags }}">{{ m }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <!-- Product info -->
+  <div class="card">
+    <div class="meta">
+      <div><strong>SKU</strong><br>{{ product.sku }}</div>
+      <div><strong>Manufacturer</strong><br>{{ product.manufacturer|default:"—" }}</div>
+      <div><strong>Registered</strong><br>{{ product.created_at|date:"d M Y H:i" }}</div>
+      {% if product.description %}
+      <div><strong>Description</strong><br>{{ product.description }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Add event -->
+  <div class="card">
+    <h2 style="margin-bottom:1rem">Log Tracking Event</h2>
+    <form method="post" action="{% url 'add_event' product.sku %}">
+      {% csrf_token %}
+      <div class="form-row">
+        <select name="status" required>
+          <option value="">— Select status —</option>
+          {% for val, label in status_choices %}
+          <option value="{{ val }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+        <input name="location" placeholder="Location (e.g. Nairobi Warehouse)" required>
+      </div>
+      <div class="form-row">
+        <textarea name="notes" placeholder="Notes (optional)" rows="2"></textarea>
+      </div>
+      <button type="submit">Record on VeChain</button>
+    </form>
+  </div>
+
+  <!-- Timeline -->
+  <div class="card">
+    <h2 style="margin-bottom:1.25rem">Tracking History</h2>
+    {% if events %}
+    <div class="timeline">
+      {% for e in events %}
+      <div class="event" id="event-{{ e.id }}">
+        <div class="event-header">
+          <span class="badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
+          <span class="time">{{ e.timestamp|date:"d M Y H:i" }}</span>
+        </div>
+        <div class="location">📍 {{ e.location }}</div>
+        {% if e.notes %}<div class="notes">{{ e.notes }}</div>{% endif %}
+        <div class="tx-info">
+          {% if e.tx_id %}
+            Chain:
+            <span class="tx-{{ e.tx_status }}" id="status-{{ e.id }}">
+              {{ e.tx_status }}
+            </span>
+            ·
+            <a href="{{ e.explorer_url }}" target="_blank">
+              {{ e.tx_id|slice:":20" }}…
+            </a>
+            {% if e.tx_status == "pending" %}
+            <button onclick="checkStatus({{ e.id }})"
+              style="margin-left:6px;font-size:0.72rem;padding:2px 8px;
+                     border:1px solid #ddd;border-radius:4px;cursor:pointer;background:white;">
+              Refresh
+            </button>
+            {% endif %}
+          {% else %}
+            <span class="tx-error">Not recorded on chain</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="empty">No events yet.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+async function checkStatus(eventId) {
+  const res  = await fetch(`/events/${eventId}/status/`);
+  const data = await res.json();
+  const el   = document.getElementById(`status-${eventId}`);
+  if (el) {
+    el.textContent  = data.tx_status;
+    el.className    = `tx-${data.tx_status}`;
+  }
+}
+</script>
+</body>
+</html>

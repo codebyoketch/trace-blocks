@@ -1,30 +1,53 @@
 from django.db import models
 
-class Batch(models.Model):
-    """A product batch entering the supply chain."""
-    name        = models.CharField(max_length=255)  # e.g. "Tilapia - Lake Victoria, 50kg"
-    origin      = models.CharField(max_length=255)  # farm/village name
-    producer    = models.CharField(max_length=255)
-    created_at  = models.DateTimeField(auto_now_add=True)
-    tx_id       = models.CharField(max_length=66, blank=True)
-    on_chain    = models.BooleanField(default=False)
+
+class Product(models.Model):
+    name         = models.CharField(max_length=200)
+    sku          = models.CharField(max_length=100, unique=True)
+    description  = models.TextField(blank=True)
+    manufacturer = models.CharField(max_length=200)
+    created_at   = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.sku})"
 
-class Checkpoint(models.Model):
-    """Each step in the chain: processing, transport, retail."""
-    STAGES = [
-        ("harvest",   "Harvest"),
-        ("process",   "Processing"),
-        ("transport", "Transport"),
-        ("retail",    "Retail"),
+    def current_status(self):
+        event = self.events.order_by("-timestamp").first()
+        return event.status if event else "unknown"
+
+
+class TrackingEvent(models.Model):
+    STATUS_CHOICES = [
+        ("manufactured", "Manufactured"),
+        ("shipped",      "Shipped"),
+        ("in_transit",   "In Transit"),
+        ("at_hub",       "At Hub"),
+        ("out_for_delivery", "Out for Delivery"),
+        ("delivered",    "Delivered"),
     ]
-    batch      = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name="checkpoints")
-    stage      = models.CharField(max_length=20, choices=STAGES)
-    location   = models.CharField(max_length=255)
-    handler    = models.CharField(max_length=255)
-    notes      = models.TextField(blank=True)
-    timestamp  = models.DateTimeField(auto_now_add=True)
-    tx_id      = models.CharField(max_length=66, blank=True)
-    on_chain   = models.BooleanField(default=False)
+
+    product   = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                  related_name="events")
+    status    = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    location  = models.CharField(max_length=200)
+    notes     = models.TextField(blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    # VeChain fields
+    tx_id     = models.CharField(max_length=100, blank=True, db_index=True)
+    tx_status = models.CharField(max_length=20, default="pending")
+    # pending | confirmed | reverted | error
+
+    class Meta:
+        ordering = ["-timestamp"]
+
+    def __str__(self):
+        return f"{self.product.sku} — {self.status} @ {self.location}"
+
+    @property
+    def explorer_url(self):
+        if self.tx_id:
+            return (
+                f"https://explore-testnet.vechain.org/transactions/{self.tx_id}"
+            )
+        return ""
