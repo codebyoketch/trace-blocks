@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+
 # Create your models here.
 
 from django.db import models
@@ -21,9 +22,11 @@ class User(AbstractUser):
         default=TYPE_NORMAL
     )
     
-    #Fields for Normal users 
+    #Fields for Normal users
+    first_name = models.CharField(max_length=100, blank=True)
+    second_name = models.CharField(max_length=100, blank=False) 
     middle_name = models.CharField(max_length=100, blank=True)
     phonenumber = models.CharField(max_length=15, blank=True, null=True)
     
     #Fields for Organisation users
-    organisation_name = models.CharField(max_length=100, blank=True, null=True)
+    organisation_name = models.CharField(max_length=100, blank=False, null=True)
