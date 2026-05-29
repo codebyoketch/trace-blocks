@@ -522,6 +522,22 @@
     document.getElementById('event-page').style.display = 'none';
     document.body.style.overflow = '';
   }
+    
+// Simple security check: redirect back to login if user isn't logged in
+//window.onload = function() {
+  //const loggedInUser = sessionStorage.getItem('currentUser');
+ // if (!loggedInUser) {
+   // alert('Access Denied. Please log in first.');
+    //window.location.href = 'login.html';
+  //} else {
+   // document.getElementById('display-username').innerText = loggedInUser;
+  //}
+//}
+
+//function handleLogout() {
+  //sessionStorage.removeItem('currentUser');
+  //window.location.href = 'login.html';
+//}
 </script>
 
 </body>

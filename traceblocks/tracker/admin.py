@@ -1,4 +1,5 @@
 from django.contrib import admin
+from .models import User
 
 from .models import Product, TrackingEvent
  
@@ -15,3 +16,6 @@ class TrackingEventAdmin(admin.ModelAdmin):
     list_filter   = ("status", "tx_status")
     search_fields = ("product__sku", "location", "tx_id")
     readonly_fields = ("tx_id", "tx_status", "timestamp")
+# Register your models here.
+
+admin.site.register(User)
