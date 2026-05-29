@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -689,7 +690,7 @@ body {
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           Dashboard
         </a>
-        <a href="{% url 'index' %}" class="nav-item">
+        <a href="{% url 'profile' %}" class="nav-item">
           <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
           All Products
         </a>
@@ -708,7 +709,7 @@ body {
     </div>
 
     <div class="sidebar-footer">
-      <a href="{% url 'index' %}" class="accounts-link">// Accounts &amp; Products →</a>
+      <a href="{% url 'profile' %}" class="accounts-link">// Accounts &amp; Products →</a>
       <div class="user-row">
         <div class="user-avatar" id="avatar-initials">U</div>
         <div class="user-info">
