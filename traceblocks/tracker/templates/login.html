@@ -83,9 +83,13 @@
     <h2>Login to Add Content</h2>
     <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
+        {% if error %}
+          <p style="color: red; font-size: 0.85rem;">{{ error }}</p>
+        {% endif %}
+
       <p>
         <label for="id_username">Email:</label>
-        <input type="text" name="Email" id_username="id_username" required placeholder="Enter Email">
+        <input type="text" name="email" id_username="id_username" required placeholder="Enter Email">
       </p>
       <p>
         <label for="id_password">Password:</label>
