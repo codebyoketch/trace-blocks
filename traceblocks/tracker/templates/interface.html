@@ -1,0 +1,477 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard | Trace-Blockz</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #080412;
+    --sidebar: #100a21;
+    --card:    rgba(255, 255, 255, 0.02);
+    --border:  rgba(168, 85, 247, 0.15);
+    --accent:  #A855F7;
+    --accent2: #D8B4FE;
+    --accent3: #00F0FF;
+    --text:    #F3E8FF;
+    --muted:   #7C6E95;
+    --font-d:  'Syne', sans-serif;
+    --font-m:  'Space Mono', monospace;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--font-m);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .dashboard-wrapper { display: flex; width: 100%; position: relative; z-index: 1; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 10;
+    width: 220px;
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 32px 0 24px;
+  }
+
+  .logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--font-d); font-size: 15px; font-weight: 800;
+    letter-spacing: 0.06em; color: var(--accent2);
+    padding: 0 24px; margin-bottom: 40px;
+  }
+  .logo-icon {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--accent); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .logo-icon::before {
+    content: ''; width: 12px; height: 12px;
+    border: 1.5px solid var(--accent2); border-radius: 3px; transform: rotate(12deg);
+  }
+
+  .nav-menu { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 8px;
+    font-size: 12px; font-family: var(--font-m);
+    color: var(--muted); text-decoration: none;
+    transition: all .18s; letter-spacing: 0.03em;
+  }
+  .nav-item:hover { background: rgba(168,85,247,0.06); color: var(--text); }
+  .nav-item.active {
+    background: rgba(168,85,247,0.12); color: #fff;
+    border-left: 2px solid var(--accent);
+  }
+
+  .nav-section-label {
+    font-size: 9px; font-family: var(--font-d); font-weight: 700;
+    letter-spacing: 0.12em; color: var(--muted);
+    padding: 16px 26px 6px; text-transform: uppercase;
+  }
+
+  .user-profile-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .accounts-link {
+    display: block; font-size: 11px; font-family: var(--font-m);
+    color: var(--muted); text-decoration: none; letter-spacing: 0.04em;
+    margin-bottom: 14px; transition: color .15s;
+  }
+  .accounts-link:hover { color: var(--accent2); }
+
+  .user-row { display: flex; align-items: center; gap: 10px; }
+  .user-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-d); font-size: 13px; font-weight: 700;
+    color: var(--bg); flex-shrink: 0;
+  }
+  .user-info { display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
+  #display-username {
+    font-size: 12px; font-weight: 700; color: var(--text);
+    font-family: var(--font-d); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .logout-btn {
+    font-size: 10px; font-family: var(--font-m); color: var(--muted);
+    background: none; border: none; cursor: pointer;
+    padding: 0; text-align: left; letter-spacing: 0.05em; transition: color .15s;
+  }
+  .logout-btn:hover { color: #ff5a6e; }
+
+  /* ── Main ── */
+  .main-content {
+    margin-left: 220px;
+    flex: 1; display: flex; flex-direction: column;
+    overflow-y: auto; min-height: 100vh;
+  }
+
+  .content-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 36px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(8,4,18,0.8); backdrop-filter: blur(8px);
+    position: sticky; top: 0; z-index: 5; gap: 16px; flex-wrap: wrap;
+  }
+  .content-header h2 {
+    font-family: var(--font-d); font-size: 18px; font-weight: 800;
+    color: var(--text); letter-spacing: -0.01em;
+  }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .wallet-status {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 11px; color: var(--muted); letter-spacing: 0.05em;
+    background: rgba(168,85,247,0.05); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+  }
+  .status-indicator {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent3); box-shadow: 0 0 6px var(--accent3);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .event-btn {
+    padding: 8px 20px; background: var(--accent); color: #fff;
+    border: none; border-radius: 7px; font-size: 12px; font-weight: 700;
+    font-family: var(--font-d); letter-spacing: 0.06em; cursor: pointer;
+    text-transform: uppercase; text-decoration: none;
+    transition: background .18s, transform .12s, box-shadow .18s;
+    display: inline-block;
+  }
+  .event-btn:hover {
+    background: var(--accent2); color: var(--bg);
+    box-shadow: 0 0 18px rgba(168,85,247,0.35); transform: translateY(-1px);
+  }
+
+  .inner { padding: 28px 36px; }
+
+  /* ── Stat cards ── */
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px 22px;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .stat-card:hover { border-color: rgba(168,85,247,0.3); box-shadow: 0 4px 20px rgba(168,85,247,0.15); }
+  .stat-label {
+    font-size: 9px; font-family: var(--font-d); font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
+  }
+  .stat-value {
+    font-size: 36px; font-weight: 800; font-family: var(--font-d);
+    color: var(--accent2); line-height: 1; margin-bottom: 6px;
+  }
+  .stat-sub { font-size: 10px; color: var(--muted); }
+  .stat-value.green { color: #3dffa8; }
+  .stat-value.amber { color: #f5c842; }
+  .stat-value.cyan  { color: var(--accent3); }
+
+  /* ── Section title ── */
+  .section-title {
+    font-family: var(--font-d); font-size: 13px; font-weight: 700;
+    color: var(--text); letter-spacing: 0.04em; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::before {
+    content: ''; width: 3px; height: 14px;
+    background: var(--accent); border-radius: 2px;
+  }
+
+  /* ── Two-col layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px; }
+  @media(max-width:900px) { .two-col { grid-template-columns: 1fr; } .stat-grid { grid-template-columns: 1fr 1fr; } }
+
+  /* ── Products list ── */
+  .product-list { display: flex; flex-direction: column; gap: 8px; }
+  .product-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(168,85,247,0.03); border: 1px solid var(--border);
+    border-radius: 8px; text-decoration: none;
+    transition: background .18s, border-color .18s; gap: 12px;
+  }
+  .product-row:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
+  .product-row-left { display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
+  .product-name { font-size: 13px; font-weight: 700; font-family: var(--font-d); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .product-sku  { font-size: 10px; color: var(--muted); font-family: var(--font-m); letter-spacing: 0.04em; }
+  .product-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .event-count {
+    font-size: 10px; font-family: var(--font-m); color: var(--accent2);
+    background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2);
+    border-radius: 999px; padding: 2px 10px; white-space: nowrap;
+  }
+  .arrow { font-size: 12px; color: var(--muted); }
+  .empty-state { font-size: 12px; color: var(--muted); font-style: italic; padding: 16px 0; }
+
+  /* ── Events feed ── */
+  .event-feed { display: flex; flex-direction: column; gap: 0; }
+  .event-row {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid rgba(168,85,247,0.07);
+    cursor: pointer; transition: background .15s; border-radius: 4px;
+    text-decoration: none;
+  }
+  .event-row:last-child { border-bottom: none; }
+  .event-row:hover { background: rgba(168,85,247,0.05); padding-left: 8px; }
+
+  .event-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
+  }
+  .dot-manufactured { background: #60a5fa; }
+  .dot-shipped      { background: #c084fc; }
+  .dot-in_transit   { background: #fbbf24; }
+  .dot-at_hub       { background: #f472b6; }
+  .dot-out_for_delivery { background: #34d399; }
+  .dot-delivered    { background: #34d399; }
+  .dot-handover     { background: #a78bfa; }
+  .dot-default      { background: var(--muted); }
+
+  .event-body { flex: 1; overflow: hidden; }
+  .event-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+  .event-badge {
+    font-size: 9px; font-weight: 700; font-family: var(--font-d);
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px;
+  }
+  .badge-manufactured    { background: rgba(96,165,250,0.15);  color: #93c5fd; }
+  .badge-shipped         { background: rgba(192,132,252,0.15); color: #d8b4fe; }
+  .badge-in_transit      { background: rgba(251,191,36,0.15);  color: #fcd34d; }
+  .badge-at_hub          { background: rgba(244,114,182,0.15); color: #f9a8d4; }
+  .badge-out_for_delivery{ background: rgba(52,211,153,0.15);  color: #6ee7b7; }
+  .badge-delivered       { background: rgba(52,211,153,0.15);  color: #6ee7b7; }
+  .badge-handover        { background: rgba(167,139,250,0.15); color: #c4b5fd; }
+  .badge-default         { background: rgba(124,110,149,0.15); color: var(--muted); }
+
+  .event-product { font-size: 11px; font-family: var(--font-d); font-weight: 700; color: var(--text); }
+  .event-location { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .event-meta { display: flex; align-items: center; gap: 10px; margin-top: 2px; flex-wrap: wrap; }
+  .event-time { font-size: 10px; color: var(--muted); font-family: var(--font-m); }
+  .event-tx {
+    font-size: 10px; font-family: var(--font-m); color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
+  }
+  .tx-confirmed-dot { color: #3dffa8; }
+  .tx-pending-dot   { color: #f5c842; }
+  .tx-error-dot     { color: #ff5a6e; }
+
+  /* card wrapper */
+  .panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px 24px;
+  }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="dashboard-wrapper">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon"></div>
+      <span>Trace-Blockz</span>
+    </div>
+
+    <nav class="nav-menu">
+      <div class="nav-section-label">Main</div>
+      <a href="{% url 'interface' %}" class="nav-item active">Dashboard</a>
+
+      <div class="nav-section-label">Chain</div>
+      <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">Explorer ↗</a>
+    </nav>
+
+    <div class="user-profile-footer">
+      <a href="{% url 'profile' %}" class="accounts-link">// Accounts &amp; Products →</a>
+      <div class="user-row">
+        <div class="user-avatar" id="avatar-initials">U</div>
+        <div class="user-info">
+          <span id="display-username">{{ request.user.username|default:"User" }}</span>
+          <form method="post" action="{% url 'logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Log out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <header class="content-header">
+      <h2>Network Overview</h2>
+      <div class="header-right">
+        <div class="wallet-status">
+          <span class="status-indicator"></span> VeChain Testnet
+        </div>
+        <a href="{% url 'events' %}" class="event-btn">+ Log Event</a>
+      </div>
+    </header>
+
+    <div class="inner">
+
+      <!-- Stat cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Tracked assets</div>
+          <div class="stat-value">{{ total_products }}</div>
+          <div class="stat-sub">registered products</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total events</div>
+          <div class="stat-value cyan">{{ total_events }}</div>
+          <div class="stat-sub">on-chain records</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Confirmed TX</div>
+          <div class="stat-value green">{{ confirmed_tx }}</div>
+          <div class="stat-sub">verified on VeChain</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending TX</div>
+          <div class="stat-value amber">{{ pending_tx }}</div>
+          <div class="stat-sub">awaiting confirmation</div>
+        </div>
+      </div>
+
+      <!-- Products + Events feed -->
+      <div class="two-col">
+
+        <!-- Products -->
+        <div class="panel">
+          <div class="section-title">Products</div>
+          {% if products %}
+          <div class="product-list">
+            {% for p in products %}
+            <a href="{% url 'product_detail' p.sku %}" class="product-row">
+              <div class="product-row-left">
+                <span class="product-name">{{ p.name }}</span>
+                <span class="product-sku">{{ p.sku }}</span>
+              </div>
+              <div class="product-row-right">
+                <span class="event-count">{{ p.events.count }} event{{ p.events.count|pluralize }}</span>
+                <span class="arrow">→</span>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="empty-state">// No products registered yet.</p>
+          {% endif %}
+        </div>
+
+        <!-- Recent events feed -->
+        <div class="panel">
+          <div class="section-title">Recent Events</div>
+          {% if recent_events %}
+          <div class="event-feed">
+            {% for e in recent_events %}
+            <a href="{% url 'product_detail' e.product.sku %}#event-{{ e.id }}" class="event-row">
+              <div class="event-dot dot-{{ e.status }}"></div>
+              <div class="event-body">
+                <div class="event-top">
+                  <span class="event-badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
+                  <span class="event-product">{{ e.product.name }}</span>
+                </div>
+                <div class="event-location">📍 {{ e.location }}</div>
+                <div class="event-meta">
+                  <span class="event-time">{{ e.timestamp|date:"d M Y H:i" }}</span>
+                  {% if e.tx_id %}
+                  <span class="event-tx
+                    {% if e.tx_status == 'confirmed' %}tx-confirmed-dot
+                    {% elif e.tx_status == 'pending' %}tx-pending-dot
+                    {% else %}tx-error-dot{% endif %}">
+                    ● {{ e.tx_id|slice:":16" }}…
+                  </span>
+                  {% endif %}
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="empty-state">// No events recorded yet.</p>
+          {% endif %}
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<script>
+  const username = "{{ request.user.username|default:'User' }}";
+  document.getElementById('display-username').textContent = username;
+  document.getElementById('avatar-initials').textContent = username.charAt(0).toUpperCase();
+
+  /* Logout */
+  function handleLogout() {
+    if (confirm('Sign out of Trace-Blockz?')) {
+      localStorage.removeItem('tb_username');
+      window.location.href = 'trace-blockz-signup.html';
+    }
+  }
+
+  /* Event page */
+  function goToEvents() {
+   window.location.href = 'events.html';
+  }
+
+  function closeEvents() {
+    document.getElementById('event-page').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+    
+// Simple security check: redirect back to login if user isn't logged in
+//window.onload = function() {
+  //const loggedInUser = sessionStorage.getItem('currentUser');
+ // if (!loggedInUser) {
+   // alert('Access Denied. Please log in first.');
+    //window.location.href = 'login.html';
+  //} else {
+   // document.getElementById('display-username').innerText = loggedInUser;
+  //}
+//}
+
+//function handleLogout() {
+  //sessionStorage.removeItem('currentUser');
+  //window.location.href = 'login.html';
+//}
+</script>
+</body>
+</html>
