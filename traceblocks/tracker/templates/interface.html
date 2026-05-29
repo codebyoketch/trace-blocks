@@ -1,322 +1,713 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard | Trace-Blockz</title>
+<title>Dashboard — TraceBlocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg:      #080412;
-    --sidebar: #100a21;
-    --card:    rgba(255, 255, 255, 0.02);
-    --border:  rgba(168, 85, 247, 0.15);
-    --accent:  #A855F7;
-    --accent2: #D8B4FE;
-    --accent3: #00F0FF;
-    --text:    #F3E8FF;
-    --muted:   #7C6E95;
-    --font-d:  'Syne', sans-serif;
-    --font-m:  'Space Mono', monospace;
-  }
+:root {
+  --bg:        #F5F3EE;
+  --surface:   #FFFFFF;
+  --surface2:  #F9F8F5;
+  --sidebar:   #1A2E22;
+  --border:    #E2DED6;
+  --border2:   #CCC9BF;
+  --text:      #1C1A17;
+  --muted:     #7A7669;
+  --soft:      #A8A49A;
+  --accent:    #2D6A4F;
+  --accent-lt: #E8F4EE;
+  --accent2:   #B5653A;
+  --accent2-lt:#FBF0EA;
+  --info:      #1E5FA6;
+  --info-lt:   #E8F1FB;
+  --warn:      #8A5E0A;
+  --warn-lt:   #FEF6E4;
+  --font-d:    'Fraunces', serif;
+  --font-b:    'DM Sans', sans-serif;
+  --font-m:    'DM Mono', monospace;
+  --radius:    10px;
+  --radius-lg: 14px;
+  --shadow:    0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+  --sidebar-w: 228px;
+}
 
-  html, body { height: 100%; }
+html, body { height: 100%; }
 
-  body {
-    font-family: var(--font-m);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-  }
+body {
+  font-family: var(--font-b);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  -webkit-font-smoothing: antialiased;
+}
 
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
-    background-size: 36px 36px;
-    pointer-events: none;
-    z-index: 0;
-  }
+/* ══════════════ SIDEBAR ══════════════ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--sidebar);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  overflow: hidden;
+}
 
-  .dashboard-wrapper { display: flex; width: 100%; position: relative; z-index: 1; }
+.sidebar-noise {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(45,106,79,0.15) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,106,79,0.15) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+}
 
-  /* ── Sidebar ── */
-  .sidebar {
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    z-index: 10;
-    width: 220px;
-    background: var(--sidebar);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    padding: 32px 0 24px;
-  }
+.sidebar-glow {
+  position: absolute;
+  bottom: -80px; left: -80px;
+  width: 360px; height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,106,79,0.3) 0%, transparent 65%);
+  pointer-events: none;
+}
 
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-family: var(--font-d); font-size: 15px; font-weight: 800;
-    letter-spacing: 0.06em; color: var(--accent2);
-    padding: 0 24px; margin-bottom: 40px;
-  }
-  .logo-icon {
-    width: 28px; height: 28px;
-    border: 1.5px solid var(--accent); border-radius: 6px;
-    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  }
-  .logo-icon::before {
-    content: ''; width: 12px; height: 12px;
-    border: 1.5px solid var(--accent2); border-radius: 3px; transform: rotate(12deg);
-  }
+.sidebar > * { position: relative; z-index: 1; }
 
-  .nav-menu { display: flex; flex-direction: column; gap: 2px; padding: 0 12px; flex: 1; }
+.sidebar-top {
+  padding: 28px 20px 0;
+}
 
-  .nav-item {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px 14px; border-radius: 8px;
-    font-size: 12px; font-family: var(--font-m);
-    color: var(--muted); text-decoration: none;
-    transition: all .18s; letter-spacing: 0.03em;
-  }
-  .nav-item:hover { background: rgba(168,85,247,0.06); color: var(--text); }
-  .nav-item.active {
-    background: rgba(168,85,247,0.12); color: #fff;
-    border-left: 2px solid var(--accent);
-  }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  margin-bottom: 36px;
+}
 
-  .nav-section-label {
-    font-size: 9px; font-family: var(--font-d); font-weight: 700;
-    letter-spacing: 0.12em; color: var(--muted);
-    padding: 16px 26px 6px; text-transform: uppercase;
-  }
+.logo-mark {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
 
-  .user-profile-footer {
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-    margin-top: 16px;
-  }
-  .accounts-link {
-    display: block; font-size: 11px; font-family: var(--font-m);
-    color: var(--muted); text-decoration: none; letter-spacing: 0.04em;
-    margin-bottom: 14px; transition: color .15s;
-  }
-  .accounts-link:hover { color: var(--accent2); }
+.logo-mark svg {
+  width: 15px; height: 15px;
+  stroke: #fff; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
 
-  .user-row { display: flex; align-items: center; gap: 10px; }
-  .user-avatar {
-    width: 34px; height: 34px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-d); font-size: 13px; font-weight: 700;
-    color: var(--bg); flex-shrink: 0;
-  }
-  .user-info { display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-  #display-username {
-    font-size: 12px; font-weight: 700; color: var(--text);
-    font-family: var(--font-d); white-space: nowrap;
-    overflow: hidden; text-overflow: ellipsis;
-  }
-  .logout-btn {
-    font-size: 10px; font-family: var(--font-m); color: var(--muted);
-    background: none; border: none; cursor: pointer;
-    padding: 0; text-align: left; letter-spacing: 0.05em; transition: color .15s;
-  }
-  .logout-btn:hover { color: #ff5a6e; }
+.logo-name {
+  font-family: var(--font-d);
+  font-size: 16px;
+  font-weight: 400;
+  color: #E8F4EE;
+  letter-spacing: -0.01em;
+}
 
-  /* ── Main ── */
-  .main-content {
-    margin-left: 220px;
-    flex: 1; display: flex; flex-direction: column;
-    overflow-y: auto; min-height: 100vh;
-  }
+.nav-section-label {
+  font-family: var(--font-m);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(111,196,154,0.45);
+  padding: 14px 8px 6px;
+}
 
-  .content-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 22px 36px;
-    border-bottom: 1px solid var(--border);
-    background: rgba(8,4,18,0.8); backdrop-filter: blur(8px);
-    position: sticky; top: 0; z-index: 5; gap: 16px; flex-wrap: wrap;
-  }
-  .content-header h2 {
-    font-family: var(--font-d); font-size: 18px; font-weight: 800;
-    color: var(--text); letter-spacing: -0.01em;
-  }
-  .header-right { display: flex; align-items: center; gap: 12px; }
-  .wallet-status {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 11px; color: var(--muted); letter-spacing: 0.05em;
-    background: rgba(168,85,247,0.05); border: 1px solid var(--border);
-    border-radius: 20px; padding: 6px 14px;
-  }
-  .status-indicator {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent3); box-shadow: 0 0 6px var(--accent3);
-    animation: blink 2s ease-in-out infinite;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  padding: 0 8px;
+  overflow-y: auto;
+}
 
-  .event-btn {
-    padding: 8px 20px; background: var(--accent); color: #fff;
-    border: none; border-radius: 7px; font-size: 12px; font-weight: 700;
-    font-family: var(--font-d); letter-spacing: 0.06em; cursor: pointer;
-    text-transform: uppercase; text-decoration: none;
-    transition: background .18s, transform .12s, box-shadow .18s;
-    display: inline-block;
-  }
-  .event-btn:hover {
-    background: var(--accent2); color: var(--bg);
-    box-shadow: 0 0 18px rgba(168,85,247,0.35); transform: translateY(-1px);
-  }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(208,235,224,0.55);
+  text-decoration: none;
+  transition: all 0.18s;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
 
-  .inner { padding: 28px 36px; }
+.nav-item svg {
+  width: 15px; height: 15px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
 
-  /* ── Stat cards ── */
-  .stat-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-    margin-bottom: 28px;
-  }
-  .stat-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 20px 22px;
-    transition: border-color .2s, box-shadow .2s;
-  }
-  .stat-card:hover { border-color: rgba(168,85,247,0.3); box-shadow: 0 4px 20px rgba(168,85,247,0.15); }
-  .stat-label {
-    font-size: 9px; font-family: var(--font-d); font-weight: 700;
-    letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px;
-  }
-  .stat-value {
-    font-size: 36px; font-weight: 800; font-family: var(--font-d);
-    color: var(--accent2); line-height: 1; margin-bottom: 6px;
-  }
-  .stat-sub { font-size: 10px; color: var(--muted); }
-  .stat-value.green { color: #3dffa8; }
-  .stat-value.amber { color: #f5c842; }
-  .stat-value.cyan  { color: var(--accent3); }
+.nav-item:hover {
+  background: rgba(45,106,79,0.25);
+  color: #D0EBE0;
+}
 
-  /* ── Section title ── */
-  .section-title {
-    font-family: var(--font-d); font-size: 13px; font-weight: 700;
-    color: var(--text); letter-spacing: 0.04em; margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-title::before {
-    content: ''; width: 3px; height: 14px;
-    background: var(--accent); border-radius: 2px;
-  }
+.nav-item.active {
+  background: rgba(45,106,79,0.35);
+  color: #E8F4EE;
+  font-weight: 600;
+}
 
-  /* ── Two-col layout ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 28px; }
-  @media(max-width:900px) { .two-col { grid-template-columns: 1fr; } .stat-grid { grid-template-columns: 1fr 1fr; } }
+.nav-item.active svg { opacity: 1; }
 
-  /* ── Products list ── */
-  .product-list { display: flex; flex-direction: column; gap: 8px; }
-  .product-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px;
-    background: rgba(168,85,247,0.03); border: 1px solid var(--border);
-    border-radius: 8px; text-decoration: none;
-    transition: background .18s, border-color .18s; gap: 12px;
-  }
-  .product-row:hover { background: rgba(168,85,247,0.08); border-color: rgba(168,85,247,0.3); }
-  .product-row-left { display: flex; flex-direction: column; gap: 3px; overflow: hidden; }
-  .product-name { font-size: 13px; font-weight: 700; font-family: var(--font-d); color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .product-sku  { font-size: 10px; color: var(--muted); font-family: var(--font-m); letter-spacing: 0.04em; }
-  .product-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .event-count {
-    font-size: 10px; font-family: var(--font-m); color: var(--accent2);
-    background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.2);
-    border-radius: 999px; padding: 2px 10px; white-space: nowrap;
-  }
-  .arrow { font-size: 12px; color: var(--muted); }
-  .empty-state { font-size: 12px; color: var(--muted); font-style: italic; padding: 16px 0; }
+.nav-ext { font-size: 11px; opacity: 0.5; margin-left: auto; }
 
-  /* ── Events feed ── */
-  .event-feed { display: flex; flex-direction: column; gap: 0; }
-  .event-row {
-    display: flex; align-items: flex-start; gap: 12px;
-    padding: 12px 0; border-bottom: 1px solid rgba(168,85,247,0.07);
-    cursor: pointer; transition: background .15s; border-radius: 4px;
-    text-decoration: none;
-  }
-  .event-row:last-child { border-bottom: none; }
-  .event-row:hover { background: rgba(168,85,247,0.05); padding-left: 8px; }
+/* ── Sidebar footer ── */
+.sidebar-footer {
+  padding: 16px 16px 20px;
+  border-top: 1px solid rgba(45,106,79,0.25);
+  margin-top: auto;
+}
 
-  .event-dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px;
-  }
-  .dot-manufactured { background: #60a5fa; }
-  .dot-shipped      { background: #c084fc; }
-  .dot-in_transit   { background: #fbbf24; }
-  .dot-at_hub       { background: #f472b6; }
-  .dot-out_for_delivery { background: #34d399; }
-  .dot-delivered    { background: #34d399; }
-  .dot-handover     { background: #a78bfa; }
-  .dot-default      { background: var(--muted); }
+.accounts-link {
+  display: block;
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: rgba(111,196,154,0.5);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  margin-bottom: 14px;
+  transition: color 0.15s;
+}
 
-  .event-body { flex: 1; overflow: hidden; }
-  .event-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
-  .event-badge {
-    font-size: 9px; font-weight: 700; font-family: var(--font-d);
-    letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 2px 8px; border-radius: 999px;
-  }
-  .badge-manufactured    { background: rgba(96,165,250,0.15);  color: #93c5fd; }
-  .badge-shipped         { background: rgba(192,132,252,0.15); color: #d8b4fe; }
-  .badge-in_transit      { background: rgba(251,191,36,0.15);  color: #fcd34d; }
-  .badge-at_hub          { background: rgba(244,114,182,0.15); color: #f9a8d4; }
-  .badge-out_for_delivery{ background: rgba(52,211,153,0.15);  color: #6ee7b7; }
-  .badge-delivered       { background: rgba(52,211,153,0.15);  color: #6ee7b7; }
-  .badge-handover        { background: rgba(167,139,250,0.15); color: #c4b5fd; }
-  .badge-default         { background: rgba(124,110,149,0.15); color: var(--muted); }
+.accounts-link:hover { color: #6FC49A; }
 
-  .event-product { font-size: 11px; font-family: var(--font-d); font-weight: 700; color: var(--text); }
-  .event-location { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .event-meta { display: flex; align-items: center; gap: 10px; margin-top: 2px; flex-wrap: wrap; }
-  .event-time { font-size: 10px; color: var(--muted); font-family: var(--font-m); }
-  .event-tx {
-    font-size: 10px; font-family: var(--font-m); color: var(--muted);
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;
-  }
-  .tx-confirmed-dot { color: #3dffa8; }
-  .tx-pending-dot   { color: #f5c842; }
-  .tx-error-dot     { color: #ff5a6e; }
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-  /* card wrapper */
-  .panel {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 12px; padding: 22px 24px;
-  }
+.user-avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-d);
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  flex-shrink: 0;
+  border: 2px solid rgba(111,196,154,0.3);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+
+#display-username {
+  font-size: 13px;
+  font-weight: 600;
+  color: #D0EBE0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.logout-btn {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: rgba(111,196,154,0.45);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  letter-spacing: 0.04em;
+  transition: color 0.15s;
+}
+
+.logout-btn:hover { color: #F09595; }
+
+/* ══════════════ MAIN ══════════════ */
+.main-content {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* ── Top bar ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 36px;
+  height: 62px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.topbar-title {
+  font-family: var(--font-d);
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+
+.topbar-title em { font-style: italic; color: var(--accent); }
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.network-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 6px 14px;
+  letter-spacing: 0.04em;
+}
+
+.net-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.btn-log-event {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+}
+
+.btn-log-event svg {
+  width: 14px; height: 14px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.btn-log-event:hover {
+  background: #255A42;
+  box-shadow: 0 4px 12px rgba(45,106,79,0.3);
+  transform: translateY(-1px);
+}
+
+/* ── Inner content ── */
+.inner { padding: 28px 36px 48px; }
+
+/* ── Stat grid ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  border-radius: 2px 0 0 2px;
+}
+
+.stat-card.c-green::after { background: var(--accent); }
+.stat-card.c-amber::after { background: var(--accent2); }
+.stat-card.c-blue::after  { background: var(--info); }
+.stat-card.c-warn::after  { background: #D4A017; }
+
+.stat-card:hover {
+  border-color: var(--border2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-family: var(--font-d);
+  font-size: 38px;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
+}
+
+.stat-value.c-green { color: var(--accent); }
+.stat-value.c-amber { color: var(--accent2); }
+.stat-value.c-blue  { color: var(--info); }
+.stat-value.c-warn  { color: var(--warn); }
+
+.stat-sub {
+  font-size: 11px;
+  color: var(--soft);
+}
+
+/* ── Two-col panels ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-title-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.panel-count {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.panel-body { padding: 12px 16px; }
+
+/* ── Product list ── */
+.product-list { display: flex; flex-direction: column; gap: 6px; }
+
+.product-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: all 0.15s;
+  gap: 10px;
+}
+
+.product-row:hover {
+  background: var(--accent-lt);
+  border-color: #B5D9C8;
+}
+
+.product-row-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.product-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-sku {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--soft);
+  letter-spacing: 0.03em;
+}
+
+.product-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.event-count {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--accent);
+  background: var(--accent-lt);
+  border: 1px solid #B5D9C8;
+  border-radius: 20px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+.row-arrow {
+  width: 16px; height: 16px;
+  stroke: var(--soft); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: var(--soft);
+  padding: 20px 4px;
+  text-align: center;
+}
+
+/* ── Event feed ── */
+.event-feed { display: flex; flex-direction: column; }
+
+.event-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.event-row:last-child { border-bottom: none; }
+
+.event-row:hover {
+  background: var(--surface2);
+  padding-left: 10px;
+}
+
+/* status dots */
+.event-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.dot-manufactured    { background: #378ADD; }
+.dot-shipped         { background: var(--accent); }
+.dot-in_transit      { background: #D4A017; }
+.dot-at_hub          { background: var(--accent2); }
+.dot-out_for_delivery{ background: #3B6D11; }
+.dot-delivered       { background: var(--accent); }
+.dot-handover        { background: var(--info); }
+.dot-default         { background: var(--soft); }
+
+.event-body { flex: 1; overflow: hidden; }
+
+.event-top {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-bottom: 3px;
+}
+
+/* status badges */
+.event-badge {
+  font-size: 9px;
+  font-weight: 600;
+  font-family: var(--font-m);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.badge-manufactured     { background: #E8F1FB; color: #1E5FA6; }
+.badge-shipped          { background: var(--accent-lt); color: var(--accent); }
+.badge-in_transit       { background: var(--warn-lt); color: var(--warn); }
+.badge-at_hub           { background: var(--accent2-lt); color: var(--accent2); }
+.badge-out_for_delivery { background: #EAF3DE; color: #3B6D11; }
+.badge-delivered        { background: var(--accent-lt); color: var(--accent); }
+.badge-handover         { background: #E8F1FB; color: var(--info); }
+.badge-default          { background: var(--bg); color: var(--muted); }
+
+.event-product {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.event-location {
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 3px;
+}
+
+.event-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.event-time {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--soft);
+}
+
+.event-tx {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 130px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.tx-dot.confirmed { background: var(--accent); }
+.tx-dot.pending   { background: var(--warn); }
+.tx-dot.error     { background: #A32D2D; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .two-col { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  :root { --sidebar-w: 0px; }
+  .sidebar { transform: translateX(-228px); }
+  .main-content { margin-left: 0; }
+  .inner { padding: 20px 18px 40px; }
+  .topbar { padding: 0 18px; }
+}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Space+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="dashboard-wrapper">
+<div style="display:flex;width:100%;">
 
-  <!-- SIDEBAR -->
+  <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar">
-    <div class="logo">
-      <div class="logo-icon"></div>
-      <span>Trace-Blockz</span>
+    <div class="sidebar-noise"></div>
+    <div class="sidebar-glow"></div>
+
+    <div class="sidebar-top">
+      <a href="/" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+        </div>
+        <span class="logo-name">TraceBlocks</span>
+      </a>
+
+      <div class="nav-menu">
+        <div class="nav-section-label">Main</div>
+        <a href="{% url 'interface' %}" class="nav-item active">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="{% url 'index' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          All Products
+        </a>
+        <a href="{% url 'events' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Log Event
+        </a>
+
+        <div class="nav-section-label">Chain</div>
+        <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Explorer
+          <span class="nav-ext">↗</span>
+        </a>
+      </div>
     </div>
 
-    <nav class="nav-menu">
-      <div class="nav-section-label">Main</div>
-      <a href="{% url 'interface' %}" class="nav-item active">Dashboard</a>
-      <a href="{% url 'index' %}" class="nav-item">All Products</a>
-      <a href="{% url 'events' %}" class="nav-item">Log Event</a>
-
-      <div class="nav-section-label">Chain</div>
-      <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">Explorer ↗</a>
-    </nav>
-
-    <div class="user-profile-footer">
+    <div class="sidebar-footer">
       <a href="{% url 'index' %}" class="accounts-link">// Accounts &amp; Products →</a>
       <div class="user-row">
         <div class="user-avatar" id="avatar-initials">U</div>
@@ -324,23 +715,28 @@
           <span id="display-username">{{ request.user.username|default:"User" }}</span>
           <form method="post" action="{% url 'logout' %}" style="margin:0">
             {% csrf_token %}
-            <button type="submit" class="logout-btn">Log out</button>
+            <button type="submit" class="logout-btn">Sign out</button>
           </form>
         </div>
       </div>
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- ══ MAIN ══ -->
   <main class="main-content">
 
-    <header class="content-header">
-      <h2>Network Overview</h2>
-      <div class="header-right">
-        <div class="wallet-status">
-          <span class="status-indicator"></span> VeChain Testnet
+    <!-- Top bar -->
+    <header class="topbar">
+      <h1 class="topbar-title">Network <em>Overview</em></h1>
+      <div class="topbar-right">
+        <div class="network-badge">
+          <div class="net-dot"></div>
+          VeChain Testnet
         </div>
-        <a href="{% url 'events' %}" class="event-btn">+ Log Event</a>
+        <a href="{% url 'events' %}" class="btn-log-event">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Log Event
+        </a>
       </div>
     </header>
 
@@ -348,90 +744,103 @@
 
       <!-- Stat cards -->
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">Tracked assets</div>
-          <div class="stat-value">{{ total_products }}</div>
+        <div class="stat-card c-green">
+          <div class="stat-label">Tracked Assets</div>
+          <div class="stat-value c-green">{{ total_products }}</div>
           <div class="stat-sub">registered products</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Total events</div>
-          <div class="stat-value cyan">{{ total_events }}</div>
+        <div class="stat-card c-blue">
+          <div class="stat-label">Total Events</div>
+          <div class="stat-value c-blue">{{ total_events }}</div>
           <div class="stat-sub">on-chain records</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card c-amber">
           <div class="stat-label">Confirmed TX</div>
-          <div class="stat-value green">{{ confirmed_tx }}</div>
+          <div class="stat-value c-amber">{{ confirmed_tx }}</div>
           <div class="stat-sub">verified on VeChain</div>
         </div>
-        <div class="stat-card">
+        <div class="stat-card c-warn">
           <div class="stat-label">Pending TX</div>
-          <div class="stat-value amber">{{ pending_tx }}</div>
+          <div class="stat-value c-warn">{{ pending_tx }}</div>
           <div class="stat-sub">awaiting confirmation</div>
         </div>
       </div>
 
-      <!-- Products + Events feed -->
+      <!-- Products + Events -->
       <div class="two-col">
 
-        <!-- Products -->
+        <!-- Products panel -->
         <div class="panel">
-          <div class="section-title">Products</div>
-          {% if products %}
-          <div class="product-list">
-            {% for p in products %}
-            <a href="{% url 'product_detail' p.sku %}" class="product-row">
-              <div class="product-row-left">
-                <span class="product-name">{{ p.name }}</span>
-                <span class="product-sku">{{ p.sku }}</span>
-              </div>
-              <div class="product-row-right">
-                <span class="event-count">{{ p.events.count }} event{{ p.events.count|pluralize }}</span>
-                <span class="arrow">→</span>
-              </div>
-            </a>
-            {% endfor %}
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              Products
+            </div>
+            {% if products %}<span class="panel-count">{{ products|length }}</span>{% endif %}
           </div>
-          {% else %}
-          <p class="empty-state">// No products registered yet.</p>
-          {% endif %}
+          <div class="panel-body">
+            {% if products %}
+            <div class="product-list">
+              {% for p in products %}
+              <a href="{% url 'product_detail' p.sku %}" class="product-row">
+                <div class="product-row-left">
+                  <span class="product-name">{{ p.name }}</span>
+                  <span class="product-sku">{{ p.sku }}</span>
+                </div>
+                <div class="product-row-right">
+                  <span class="event-count">{{ p.events.count }} event{{ p.events.count|pluralize }}</span>
+                  <svg class="row-arrow" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">No products registered yet.</p>
+            {% endif %}
+          </div>
         </div>
 
-        <!-- Recent events feed -->
+        <!-- Recent events panel -->
         <div class="panel">
-          <div class="section-title">Recent Events</div>
-          {% if recent_events %}
-          <div class="event-feed">
-            {% for e in recent_events %}
-            <a href="{% url 'product_detail' e.product.sku %}#event-{{ e.id }}" class="event-row">
-              <div class="event-dot dot-{{ e.status }}"></div>
-              <div class="event-body">
-                <div class="event-top">
-                  <span class="event-badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
-                  <span class="event-product">{{ e.product.name }}</span>
-                </div>
-                <div class="event-location">📍 {{ e.location }}</div>
-                <div class="event-meta">
-                  <span class="event-time">{{ e.timestamp|date:"d M Y H:i" }}</span>
-                  {% if e.tx_id %}
-                  <span class="event-tx
-                    {% if e.tx_status == 'confirmed' %}tx-confirmed-dot
-                    {% elif e.tx_status == 'pending' %}tx-pending-dot
-                    {% else %}tx-error-dot{% endif %}">
-                    ● {{ e.tx_id|slice:":16" }}…
-                  </span>
-                  {% endif %}
-                </div>
-              </div>
-            </a>
-            {% endfor %}
+          <div class="panel-header">
+            <div class="panel-title">
+              <div class="panel-title-dot"></div>
+              Recent Events
+            </div>
+            {% if recent_events %}<span class="panel-count">{{ recent_events|length }}</span>{% endif %}
           </div>
-          {% else %}
-          <p class="empty-state">// No events recorded yet.</p>
-          {% endif %}
+          <div class="panel-body">
+            {% if recent_events %}
+            <div class="event-feed">
+              {% for e in recent_events %}
+              <a href="{% url 'product_detail' e.product.sku %}#event-{{ e.id }}" class="event-row">
+                <div class="event-dot dot-{{ e.status }}"></div>
+                <div class="event-body">
+                  <div class="event-top">
+                    <span class="event-badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
+                    <span class="event-product">{{ e.product.name }}</span>
+                  </div>
+                  <div class="event-location">📍 {{ e.location }}</div>
+                  <div class="event-meta">
+                    <span class="event-time">{{ e.timestamp|date:"d M Y H:i" }}</span>
+                    {% if e.tx_id %}
+                    <span class="event-tx">
+                      <span class="tx-dot {% if e.tx_status == 'confirmed' %}confirmed{% elif e.tx_status == 'pending' %}pending{% else %}error{% endif %}"></span>
+                      {{ e.tx_id|slice:":16" }}…
+                    </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="empty-state">No events recorded yet.</p>
+            {% endif %}
+          </div>
         </div>
 
       </div>
-
     </div>
   </main>
 </div>
@@ -440,40 +849,6 @@
   const username = "{{ request.user.username|default:'User' }}";
   document.getElementById('display-username').textContent = username;
   document.getElementById('avatar-initials').textContent = username.charAt(0).toUpperCase();
-
-  /* Logout */
-  function handleLogout() {
-    if (confirm('Sign out of Trace-Blockz?')) {
-      localStorage.removeItem('tb_username');
-      window.location.href = 'trace-blockz-signup.html';
-    }
-  }
-
-  /* Event page */
-  function goToEvents() {
-   window.location.href = 'events.html';
-  }
-
-  function closeEvents() {
-    document.getElementById('event-page').style.display = 'none';
-    document.body.style.overflow = '';
-  }
-    
-// Simple security check: redirect back to login if user isn't logged in
-//window.onload = function() {
-  //const loggedInUser = sessionStorage.getItem('currentUser');
- // if (!loggedInUser) {
-   // alert('Access Denied. Please log in first.');
-    //window.location.href = 'login.html';
-  //} else {
-   // document.getElementById('display-username').innerText = loggedInUser;
-  //}
-//}
-
-//function handleLogout() {
-  //sessionStorage.removeItem('currentUser');
-  //window.location.href = 'login.html';
-//}
 </script>
 </body>
 </html>

@@ -4,608 +4,1118 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Supply Chain Event — TraceBlocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
   <style>
-   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:       #06030F;
-      --sidebar:  #0D071C;
-      --card:     rgba(255, 255, 255, 0.02);
-      --accent:   #A855F7;
-      --accent2:  #00F0FF;
-      --accent3:  #3DFFA8;
-      --border:   rgba(0, 240, 255, 0.15);
-      --text:     #FFFFFF;
-      --muted:    #D8B4FE;
-      --font-d:   'Syne', sans-serif;
-      --font-m:   'Space Mono', monospace;
+      --bg:         #F5F3EE;
+      --surface:    #FFFFFF;
+      --surface2:   #F9F8F5;
+      --border:     #E2DED6;
+      --border2:    #CCC9BF;
+      --text:       #1C1A17;
+      --muted:      #7A7669;
+      --soft:       #A8A49A;
+      --accent:     #2D6A4F;
+      --accent-lt:  #E8F4EE;
+      --accent2:    #B5653A;
+      --accent2-lt: #FBF0EA;
+      --info:       #1E5FA6;
+      --info-lt:    #E8F1FB;
+      --warn:       #8A5E0A;
+      --warn-lt:    #FEF6E4;
+      --err:        #A12B2B;
+      --err-lt:     #FDEAEA;
+      --font-d:     'Fraunces', serif;
+      --font-b:     'DM Sans', sans-serif;
+      --font-m:     'DM Mono', monospace;
+      --radius:     10px;
+      --radius-lg:  16px;
+      --shadow:     0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.04);
     }
 
     body {
-      font-family: var(--font-m);
+      font-family: var(--font-b);
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      padding: 40px 24px;
+      padding: 0;
     }
 
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(168, 85, 247, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(168, 85, 247, 0.04) 1px, transparent 1px);
-      background-size: 36px 36px;
-      pointer-events: none;
-      z-index: 0;
+    /* ── TOP NAV ── */
+    .topnav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    header, main, footer {
-      position: relative;
-      z-index: 1;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    header h1 {
-      font-family: var(--font-d);
-      font-size: 28px;
-      font-weight: 800;
-      color: #ffffff;
-      text-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
-      margin-bottom: 5px;
-    }
-
-    header p {
-      color: var(--accent2);
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 20px 0;
-    }
-
-    .back-link {
-      display: inline-block;
-      text-decoration: none;
-      font-family: var(--font-d);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--accent2);
-      border: 1px solid var(--border);
-      padding: 8px 18px;
-      border-radius: 6px;
-      background: rgba(0, 240, 255, 0.02);
-      margin-bottom: 24px;
-      transition: all 0.2s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .back-link:hover {
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
-      background: rgba(0, 240, 255, 0.08);
-      border-color: var(--accent2);
-    }
-
-    fieldset {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      backdrop-filter: blur(8px);
-      margin-bottom: 24px;
-    }
-
-    legend {
-      font-family: var(--font-d);
-      font-size: 14px;
-      color: #ffffff;
-      text-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
-      padding: 0 10px;
-      letter-spacing: 0.05em;
-    }
-
-    p { margin-bottom: 16px; }
-
-    label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: bold;
-      letter-spacing: 0.03em;
-    }
-
-    abbr[title="Required"] {
-      color: var(--accent);
+    .topnav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
     }
 
-    input[type="text"], input[type="number"], input[type="date"], input[type="datetime-local"], select, textarea {
-      width: 100%;
-      background: #0d091a;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px 14px;
+    .topnav-logo {
+      width: 30px;
+      height: 30px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .topnav-logo svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .topnav-name {
+      font-family: var(--font-d);
+      font-size: 17px;
+      font-weight: 400;
       color: var(--text);
-      font-family: var(--font-m);
-      font-size: 13px;
-      margin-top: 6px;
-      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
     }
 
-    #event-id {
-      width: auto;
-      display: inline-block;
-      margin-left: 10px;
-      padding: 4px 12px;
-      font-weight: bold;
-      color: var(--accent2);
-      background: rgba(0, 240, 255, 0.05);
-      text-align: center;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      outline: none;
-      border-color: var(--accent2);
-      box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
-    }
-
-    textarea { resize: vertical; }
-
-    details {
-      background: rgba(168, 85, 247, 0.02);
-      border: 1px dashed var(--border);
-      border-radius: 6px;
-      padding: 12px;
-      margin-top: 14px;
-    }
-
-    summary {
-      cursor: pointer;
-      font-size: 12px;
-      color: var(--accent2);
-      font-weight: bold;
-      outline: none;
-    }
-
-    input[type="checkbox"] {
-      accent-color: var(--accent);
-      cursor: pointer;
-    }
-
-    input[type="submit"] {
-      padding: 12px 28px;
-      background: linear-gradient(135deg, var(--accent), #6d28d9);
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
-      font-family: var(--font-d);
+    .topnav-tag {
+      font-size: 11px;
+      font-weight: 500;
       letter-spacing: 0.06em;
-      cursor: pointer;
       text-transform: uppercase;
-      transition: all 0.15s ease;
-    }
-
-    input[type="submit"]:hover {
-      box-shadow: 0 0 18px rgba(168, 85, 247, 0.5);
-      transform: translateY(-1px);
-    }
-
-    input[type="submit"]:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    input[type="reset"] {
-      padding: 12px 24px;
-      background: transparent;
       color: var(--muted);
+      background: var(--bg);
+      padding: 4px 10px;
+      border-radius: 20px;
       border: 1px solid var(--border);
-      border-radius: 6px;
-      font-size: 12px;
-      font-family: var(--font-d);
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: all 0.2s;
     }
 
-    input[type="reset"]:hover {
-      color: #ffffff;
-      border-color: #ffffff;
-    }
-
-    footer p {
-      font-size: 10px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.6;
-    }
-
-    /* Toast */
-    #toast {
-      display: none;
-      position: fixed;
-      bottom: 32px;
-      right: 32px;
-      z-index: 999;
-      padding: 16px 24px;
-      border-radius: 10px;
-      font-family: var(--font-m);
-      font-size: 13px;
-      max-width: 380px;
-      line-height: 1.6;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
-      transition: opacity 0.3s ease;
-    }
-    #toast.success {
-      background: rgba(61, 255, 168, 0.1);
-      border: 1px solid var(--accent3);
-      color: var(--accent3);
-    }
-    #toast.error {
-      background: rgba(255, 90, 110, 0.1);
-      border: 1px solid #ff5a6e;
-      color: #ff5a6e;
-    }
-    #toast.info {
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid var(--accent2);
-      color: var(--accent2);
-    }
-
-    /* TX status bar */
-    #tx-status-bar {
-      display: none;
-      max-width: 800px;
-      margin: 0 auto 24px;
-      position: relative;
-      z-index: 1;
-      padding: 14px 20px;
-      border-radius: 10px;
-      font-size: 12px;
-      font-family: var(--font-m);
-      background: rgba(0, 240, 255, 0.05);
-      border: 1px solid var(--border);
-      color: var(--accent2);
-      display: none;
+    .topnav-right {
+      display: flex;
       align-items: center;
       gap: 12px;
     }
-    #tx-status-bar .tx-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--accent2);
-      box-shadow: 0 0 6px var(--accent2);
-      animation: blink 1.2s ease-in-out infinite;
-      flex-shrink: 0;
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: all 0.15s ease;
     }
+
+    .back-btn:hover {
+      color: var(--text);
+      border-color: var(--border2);
+      background: var(--surface2);
+    }
+
+    .back-btn svg {
+      width: 14px; height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── PAGE LAYOUT ── */
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      margin-bottom: 36px;
+    }
+
+    .event-id-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .event-id-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .event-id-input {
+      font-family: var(--font-m);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-lt);
+      border: 1px solid #B5D9C8;
+      border-radius: 6px;
+      padding: 4px 12px;
+      width: 200px;
+      outline: none;
+    }
+
+    .event-id-input:focus {
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.12);
+    }
+
+    .page-title {
+      font-family: var(--font-d);
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .page-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── TX STATUS BAR ── */
+    #tx-status-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border-radius: var(--radius);
+      background: var(--info-lt);
+      border: 1px solid #C0D7F0;
+      color: var(--info);
+      font-size: 13px;
+      font-family: var(--font-m);
+      margin-bottom: 28px;
+    }
+
     #tx-status-bar.confirmed {
-      background: rgba(61, 255, 168, 0.07);
-      border-color: var(--accent3);
-      color: var(--accent3);
+      background: var(--accent-lt);
+      border-color: #B5D9C8;
+      color: var(--accent);
     }
-    #tx-status-bar.confirmed .tx-dot {
-      background: var(--accent3);
-      box-shadow: 0 0 6px var(--accent3);
-      animation: none;
-    }
+
     #tx-status-bar.reverted {
-      background: rgba(255, 90, 110, 0.07);
-      border-color: #ff5a6e;
-      color: #ff5a6e;
+      background: var(--err-lt);
+      border-color: #EFC0C0;
+      color: var(--err);
     }
-    #tx-status-bar.reverted .tx-dot {
-      background: #ff5a6e;
-      box-shadow: 0 0 6px #ff5a6e;
-      animation: none;
+
+    .tx-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+      animation: blink 1.4s ease-in-out infinite;
     }
+
+    #tx-status-bar.confirmed .tx-dot,
+    #tx-status-bar.reverted .tx-dot { animation: none; }
+
     @keyframes blink {
       0%, 100% { opacity: 1; }
-      50%       { opacity: 0.3; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ── PROGRESS STEPS ── */
+    .progress-bar {
+      display: flex;
+      align-items: center;
+      margin-bottom: 36px;
+      gap: 0;
+    }
+
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--soft);
+    }
+
+    .progress-step.active { color: var(--accent); }
+
+    .progress-step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .progress-step.active .progress-step-num {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .progress-step-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin: 0 8px;
+    }
+
+    /* ── SECTION CARD ── */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .section-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .section-icon svg {
+      width: 16px; height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .section-icon.green { background: var(--accent-lt); color: var(--accent); }
+    .section-icon.amber { background: var(--warn-lt); color: var(--warn); }
+    .section-icon.blue  { background: var(--info-lt); color: var(--info); }
+    .section-icon.coral { background: var(--accent2-lt); color: var(--accent2); }
+    .section-icon.gray  { background: var(--bg); color: var(--muted); }
+
+    .section-title-wrap {}
+    .section-num {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--soft);
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .section-body {
+      padding: 24px;
+    }
+
+    .section-note {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+      padding: 10px 14px;
+      background: var(--surface2);
+      border-radius: 8px;
+      border-left: 3px solid var(--border2);
+    }
+
+    /* ── FORM FIELDS ── */
+    .field-row {
+      display: grid;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .field-row.cols-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .field-row.cols-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    @media (max-width: 640px) {
+      .field-row.cols-2,
+      .field-row.cols-3 { grid-template-columns: 1fr; }
+    }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+
+    label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+
+    .req { color: var(--accent2); margin-left: 2px; font-style: normal; }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    select,
+    textarea {
+      font-family: var(--font-b);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 10px 14px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: var(--soft);
+      font-size: 13px;
+    }
+
+    select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23A8A49A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+
+    textarea { resize: vertical; line-height: 1.6; min-height: 90px; }
+
+    /* ── CHECKBOXES ── */
+    .check-field {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .check-field:hover {
+      background: var(--accent-lt);
+      border-color: #B5D9C8;
+    }
+
+    .check-field input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .check-label {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 400;
+      line-height: 1.5;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .check-label strong { font-weight: 600; }
+
+    .check-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    /* ── EXPANDABLE ── */
+    .expandable {
+      border: 1px dashed var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .expandable-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      user-select: none;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-lt);
+      gap: 10px;
+      list-style: none;
+    }
+
+    .expandable-trigger::-webkit-details-marker { display: none; }
+    .expandable-trigger::before { display: none; }
+
+    details[open] .expandable-trigger {
+      border-bottom: 1px dashed var(--border2);
+    }
+
+    .expand-icon {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+
+    details[open] .expand-icon { transform: rotate(45deg); }
+
+    .expandable-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 28px 0;
+    }
+
+    /* ── SUBMIT AREA ── */
+    .submit-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+    }
+
+    .submit-confirm {
+      margin-bottom: 24px;
+    }
+
+    .submit-confirm .check-field {
+      background: #FFFBF5;
+      border-color: #DDD0B0;
+    }
+
+    .submit-confirm .check-field:hover {
+      background: var(--warn-lt);
+      border-color: #DDBF7A;
+    }
+
+    .submit-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary svg {
+      width: 16px; height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .btn-primary:hover {
+      background: #255A42;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(45,106,79,0.3);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 20px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      border-color: var(--text);
+      background: var(--surface2);
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 12px;
+      color: var(--soft);
+      border-top: 1px solid var(--border);
+      margin-top: 20px;
+    }
+
+    .site-footer a { color: var(--accent); text-decoration: none; }
+
+    .chain-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-m);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--accent);
+      background: var(--accent-lt);
+      border: 1px solid #B5D9C8;
+      padding: 4px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .chain-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ── TOAST ── */
+    #toast {
+      display: none;
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      padding: 14px 20px;
+      border-radius: var(--radius);
+      font-family: var(--font-b);
+      font-size: 13px;
+      max-width: 360px;
+      line-height: 1.5;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      border: 1px solid;
+    }
+
+    #toast.success { background: var(--accent-lt); border-color: #B5D9C8; color: var(--accent); }
+    #toast.error   { background: var(--err-lt);    border-color: #EFC0C0; color: var(--err); }
+    #toast.info    { background: var(--info-lt);   border-color: #C0D7F0; color: var(--info); }
+
+    /* ── FIELD HINT ── */
+    .field-hint {
+      font-size: 11px;
+      color: var(--soft);
+      margin-top: 3px;
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>&#9632; TraceBlocks</h1>
-    <p><strong>Supply Chain Event Form</strong></p>
-    <p>Event ID: <input type="text" id="event-id" value="TB-EVT-2025-001"></p>
-    <hr />
-  </header>
+  <!-- TOP NAV -->
+  <nav class="topnav">
+    <a href="/" class="topnav-brand">
+      <div class="topnav-logo">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+      </div>
+      <span class="topnav-name">TraceBlocks</span>
+    </a>
+    <div class="topnav-right">
+      <span class="topnav-tag">VeChainThor</span>
+      <a href="/" class="back-btn">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+        Back
+      </a>
+    </div>
+  </nav>
 
   <!-- TX STATUS BAR -->
-  <div id="tx-status-bar">
-    <div class="tx-dot"></div>
-    <span id="tx-status-text">Waiting for confirmation...</span>
+  <div style="max-width:800px;margin:0 auto;padding:0 24px;">
+    <div id="tx-status-bar">
+      <div class="tx-dot"></div>
+      <span id="tx-status-text">Waiting for confirmation...</span>
+    </div>
   </div>
 
-  <main>
+  <div class="page">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div class="event-id-row">
+        <span class="event-id-label">Event ID</span>
+        <input type="text" class="event-id-input" id="event-id" value="TB-EVT-2025-001" />
+      </div>
+      <h1 class="page-title">Record Supply<br/><em>Chain Event</em></h1>
+      <p class="page-subtitle">All details are immutably recorded on the VeChainThor blockchain once submitted.</p>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress-bar" aria-label="Form sections">
+      <div class="progress-step active"><div class="progress-step-num">1</div><span>Identity</span></div>
+      <div class="progress-step-line"></div>
+      <div class="progress-step"><div class="progress-step-num">2</div><span>Event</span></div>
+      <div class="progress-step-line"></div>
+      <div class="progress-step"><div class="progress-step-num">3</div><span>Goods</span></div>
+      <div class="progress-step-line"></div>
+      <div class="progress-step"><div class="progress-step-num">4</div><span>Parties</span></div>
+      <div class="progress-step-line"></div>
+      <div class="progress-step"><div class="progress-step-num">5</div><span>Logistics</span></div>
+    </div>
+
     <form id="event-form">
 
-      <!-- ═══ SECTION 1 — IDENTITY ═══ -->
-      <fieldset>
-        <legend><strong>1. Identity</strong></legend>
-        <p>
-          <label for="user-id">User ID <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="user-id" name="user_id" placeholder="e.g. USR-00142" size="40" required autocomplete="off" />
-        </p>
-        <p>
-          <label for="full-name">Full Name <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="full-name" name="full_name" placeholder="As registered on the platform" size="40" required autocomplete="name" />
-        </p>
-      </fieldset>
+      <!-- ── SECTION 1: IDENTITY ── -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon green">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="section-title-wrap">
+            <div class="section-num">Section 01</div>
+            <div class="section-title">Identity</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="user-id">User ID <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="user-id" name="user_id" placeholder="e.g. USR-00142" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="full-name">Full Name <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="full-name" name="full_name" placeholder="As registered on the platform" required autocomplete="name" />
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <br />
+      <!-- ── SECTION 2: EVENT DESCRIPTION ── -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon blue">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </div>
+          <div class="section-title-wrap">
+            <div class="section-num">Section 02</div>
+            <div class="section-title">Event Description</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field-row">
+            <div class="field">
+              <label for="event-name">Event Name <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="event-name" name="event_name" placeholder="e.g. Dispatch from Kisumu Warehouse" required />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="short-description">Short Description</label>
+              <textarea id="short-description" name="short_description" rows="3" placeholder="Brief summary of what happened at this supply chain stage... (optional)"></textarea>
+            </div>
+          </div>
+          <div class="check-group">
+            <label class="check-field">
+              <input type="checkbox" id="needs-detail" name="needs_detail" value="yes" />
+              <span class="check-label">This event requires a detailed explanation</span>
+            </label>
+          </div>
+          <details class="expandable">
+            <summary class="expandable-trigger">
+              <span>Detailed Explanation</span>
+              <div class="expand-icon">+</div>
+            </summary>
+            <div class="expandable-body">
+              <div class="field">
+                <label for="detailed-explanation">Full Explanation</label>
+                <textarea id="detailed-explanation" name="detailed_explanation" rows="6" placeholder="Provide a full paragraph explanation of the event..."></textarea>
+              </div>
+              <div class="check-group">
+                <label class="check-field">
+                  <input type="checkbox" name="exceptions_noted" value="yes" />
+                  <span class="check-label">Exceptions or anomalies were noted during this event</span>
+                </label>
+                <label class="check-field">
+                  <input type="checkbox" name="regulatory_flag" value="yes" />
+                  <span class="check-label">This event has a regulatory or compliance flag</span>
+                </label>
+                <label class="check-field">
+                  <input type="checkbox" name="quality_check_passed" value="yes" />
+                  <span class="check-label">Quality check passed at this stage</span>
+                </label>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
 
-      <!-- ═══ SECTION 2 — EVENT DESCRIPTION ═══ -->
-      <fieldset>
-        <legend><strong>2. Event Description</strong></legend>
-        <p>
-          <label for="event-name">Event Name <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="event-name" name="event_name" placeholder="e.g. Dispatch from Kisumu Warehouse" size="50" required />
-        </p>
-        <p>
-          <label for="short-description">Short Description</label><br />
-          <textarea id="short-description" name="short_description" rows="3" cols="60" placeholder="Brief summary of what happened at this supply chain stage... (optional)"></textarea>
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" id="needs-detail" name="needs_detail" value="yes" />
-            &nbsp;This event requires a detailed explanation
+      <!-- ── SECTION 3: GOODS ── -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon amber">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <div class="section-title-wrap">
+            <div class="section-num">Section 03</div>
+            <div class="section-title">Goods</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="goods-name">Goods Name / Type <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="goods-name" name="goods_name" placeholder="e.g. Nile Perch — Frozen, Grade A" required />
+            </div>
+            <div class="field">
+              <label for="goods-category">Goods Category <abbr class="req" title="Required">*</abbr></label>
+              <select id="goods-category" name="goods_category" required>
+                <option value="" disabled selected>— Select category —</option>
+                <option value="food">Food &amp; Agriculture</option>
+                <option value="pharma">Pharmaceuticals</option>
+                <option value="electronics">Electronics</option>
+                <option value="textiles">Textiles &amp; Apparel</option>
+                <option value="chemicals">Chemicals</option>
+                <option value="machinery">Machinery &amp; Equipment</option>
+                <option value="livestock">Livestock</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row cols-3">
+            <div class="field">
+              <label for="quantity">Quantity <abbr class="req" title="Required">*</abbr></label>
+              <input type="number" id="quantity" name="quantity" placeholder="0" min="1" step="1" required />
+            </div>
+            <div class="field">
+              <label for="unit-of-measure">Unit of Measure <abbr class="req" title="Required">*</abbr></label>
+              <select id="unit-of-measure" name="unit_of_measure" required>
+                <option value="" disabled selected>— Select unit —</option>
+                <option value="kg">Kilograms (kg)</option>
+                <option value="g">Grams (g)</option>
+                <option value="tonnes">Tonnes (t)</option>
+                <option value="litres">Litres (L)</option>
+                <option value="units">Units / Pieces</option>
+                <option value="boxes">Boxes / Cartons</option>
+                <option value="bags">Bags / Sacks</option>
+                <option value="pallets">Pallets</option>
+                <option value="containers">Containers</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="goods-condition">Condition</label>
+              <select id="goods-condition" name="goods_condition">
+                <option value="" disabled selected>— Select —</option>
+                <option value="excellent">Excellent</option>
+                <option value="good">Good</option>
+                <option value="fair">Fair</option>
+                <option value="damaged">Damaged</option>
+                <option value="rejected">Rejected / Returned</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="batch-number">Batch / Lot Number</label>
+              <input type="text" id="batch-number" name="batch_number" placeholder="e.g. KSM-BATCH-2025-044" />
+              <p class="field-hint">Used to generate the product SKU if left blank</p>
+            </div>
+          </div>
+          <div class="check-group">
+            <label class="check-field">
+              <input type="checkbox" name="cold_chain" value="yes" />
+              <span class="check-label">This shipment is part of a <strong>cold chain</strong> (temperature-controlled)</span>
+            </label>
+            <label class="check-field">
+              <input type="checkbox" name="hazardous" value="yes" />
+              <span class="check-label">Contains <strong>hazardous or controlled</strong> materials</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION 4: PARTIES ── -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon coral">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="section-title-wrap">
+            <div class="section-num">Section 04</div>
+            <div class="section-title">Dispatcher &amp; Recipient</div>
+          </div>
+        </div>
+        <div class="section-body">
+
+          <!-- Dispatcher sub-section -->
+          <p style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:14px;">Dispersed By</p>
+          <div class="section-note">The person or entity releasing / sending the goods at this stage.</div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="dispatcher-name">Full Name <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="dispatcher-name" name="dispatcher_name" placeholder="Full legal name" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="dispatcher-role">Role / Title</label>
+              <input type="text" id="dispatcher-role" name="dispatcher_role" placeholder="e.g. Warehouse Manager" />
+            </div>
+          </div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="dispatcher-signature">Signature (type full name)</label>
+              <input type="text" id="dispatcher-signature" name="dispatcher_signature" placeholder="Type full name to sign" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="dispatcher-date">Date <abbr class="req" title="Required">*</abbr></label>
+              <input type="date" id="dispatcher-date" name="dispatcher_date" required />
+            </div>
+          </div>
+          <div class="check-group" style="margin-bottom:28px;">
+            <label class="check-field">
+              <input type="checkbox" name="dispatcher_confirmed" value="yes" required />
+              <span class="check-label">I confirm the above goods have been released and the details are accurate</span>
+            </label>
+          </div>
+
+          <hr class="divider" />
+
+          <!-- Recipient sub-section -->
+          <p style="font-size:13px;font-weight:600;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:14px;">Recipient</p>
+          <div class="section-note">The person or entity receiving the goods at this stage.</div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="recipient-name">Full Name <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="recipient-name" name="recipient_name" placeholder="Full legal name" required autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="recipient-role">Role / Title</label>
+              <input type="text" id="recipient-role" name="recipient_role" placeholder="e.g. Retailer, Distributor" />
+            </div>
+          </div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="recipient-signature">Signature (type full name)</label>
+              <input type="text" id="recipient-signature" name="recipient_signature" placeholder="Type full name to sign" autocomplete="off" />
+            </div>
+            <div class="field">
+              <label for="recipient-date">Date <abbr class="req" title="Required">*</abbr></label>
+              <input type="date" id="recipient-date" name="recipient_date" required />
+            </div>
+          </div>
+          <div class="check-group">
+            <label class="check-field">
+              <input type="checkbox" name="recipient_confirmed" value="yes" required />
+              <span class="check-label">I confirm receipt of the above goods and that the details are accurate</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECTION 5: LOGISTICS ── -->
+      <div class="section-card">
+        <div class="section-header">
+          <div class="section-icon gray">
+            <svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <div class="section-title-wrap">
+            <div class="section-num">Section 05</div>
+            <div class="section-title">Logistics</div>
+          </div>
+        </div>
+        <div class="section-body">
+          <div class="section-note">Transport and movement details for this supply chain leg.</div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="carrier-name">Carrier / Logistics Company <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="carrier-name" name="carrier_name" placeholder="e.g. Siginon Logistics, Own Transport" required />
+            </div>
+            <div class="field">
+              <label for="transport-mode">Transport Mode <abbr class="req" title="Required">*</abbr></label>
+              <select id="transport-mode" name="transport_mode" required>
+                <option value="" disabled selected>— Select mode —</option>
+                <option value="road">Road (Truck / Van)</option>
+                <option value="rail">Rail</option>
+                <option value="air">Air Freight</option>
+                <option value="sea">Sea / Lake Freight</option>
+                <option value="motorcycle">Motorcycle / Boda Boda</option>
+                <option value="foot">On Foot / Manual</option>
+                <option value="pipeline">Pipeline</option>
+                <option value="multimodal">Multimodal</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="origin-location">Origin Location <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="origin-location" name="origin_location" placeholder="e.g. Kisumu Cold Storage, Kondele" required />
+            </div>
+            <div class="field">
+              <label for="destination-location">Destination <abbr class="req" title="Required">*</abbr></label>
+              <input type="text" id="destination-location" name="destination_location" placeholder="e.g. Nairobi City Market, Gikomba" required />
+            </div>
+          </div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="dispatch-datetime">Dispatch Date &amp; Time</label>
+              <input type="datetime-local" id="dispatch-datetime" name="dispatch_datetime" />
+            </div>
+            <div class="field">
+              <label for="estimated-delivery">Estimated Delivery</label>
+              <input type="date" id="estimated-delivery" name="estimated_delivery" />
+            </div>
+          </div>
+          <div class="field-row cols-2">
+            <div class="field">
+              <label for="tracking-number">Tracking / Waybill Number</label>
+              <input type="text" id="tracking-number" name="tracking_number" placeholder="e.g. SGNK-20250529-007" />
+            </div>
+            <div class="field">
+              <label for="vehicle-plate">Vehicle Plate / Registration</label>
+              <input type="text" id="vehicle-plate" name="vehicle_plate" placeholder="e.g. KDA 123B" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="driver-name">Driver / Handler Name</label>
+              <input type="text" id="driver-name" name="driver_name" placeholder="Full name of driver or handler" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="logistics-notes">Logistics Notes</label>
+              <textarea id="logistics-notes" name="logistics_notes" rows="4" placeholder="Route taken, delays, border crossings, storage stops..."></textarea>
+            </div>
+          </div>
+          <div class="check-group">
+            <label class="check-field">
+              <input type="checkbox" name="insurance_covered" value="yes" />
+              <span class="check-label">Goods are <strong>insured</strong> for this transit leg</span>
+            </label>
+            <label class="check-field">
+              <input type="checkbox" name="customs_cleared" value="yes" />
+              <span class="check-label">Customs / border clearance <strong>completed</strong></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SUBMIT ── -->
+      <div class="submit-card">
+        <div class="submit-confirm">
+          <label class="check-field">
+            <input type="checkbox" name="final_confirm" value="yes" required />
+            <span class="check-label"><strong>I confirm all the information in this form is accurate</strong> and I authorise recording this event on the TraceBlocks supply chain ledger.</span>
           </label>
-        </p>
-        <details>
-          <summary>Detailed Explanation (expand to fill)</summary>
-          <p>
-            <label for="detailed-explanation">Full Explanation</label><br />
-            <textarea id="detailed-explanation" name="detailed_explanation" rows="8" cols="70" placeholder="Provide a full paragraph explanation of the event..." style="resize: both;"></textarea>
-          </p>
-          <p>
-            <label><input type="checkbox" name="exceptions_noted" value="yes" /> &nbsp;Exceptions or anomalies were noted during this event</label>
-          </p>
-          <p>
-            <label><input type="checkbox" name="regulatory_flag" value="yes" /> &nbsp;This event has a regulatory or compliance flag</label>
-          </p>
-          <p>
-            <label><input type="checkbox" name="quality_check_passed" value="yes" /> &nbsp;Quality check passed at this stage</label>
-          </p>
-        </details>
-      </fieldset>
-
-      <br />
-
-      <!-- ═══ SECTION 3 — GOODS ═══ -->
-      <fieldset>
-        <legend><strong>3. Goods</strong></legend>
-        <p>
-          <label for="goods-name">Goods Name / Type <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="goods-name" name="goods_name" placeholder="e.g. Nile Perch — Frozen, Grade A" size="45" required />
-        </p>
-        <p>
-          <label for="goods-category">Goods Category <abbr title="Required">*</abbr></label><br />
-          <select id="goods-category" name="goods_category" required>
-            <option value="" disabled selected>— Select category —</option>
-            <option value="food">Food &amp; Agriculture</option>
-            <option value="pharma">Pharmaceuticals</option>
-            <option value="electronics">Electronics</option>
-            <option value="textiles">Textiles &amp; Apparel</option>
-            <option value="chemicals">Chemicals</option>
-            <option value="machinery">Machinery &amp; Equipment</option>
-            <option value="livestock">Livestock</option>
-            <option value="other">Other</option>
-          </select>
-        </p>
-        <p>
-          <label for="quantity">Quantity / Number of Units <abbr title="Required">*</abbr></label><br />
-          <input type="number" id="quantity" name="quantity" placeholder="0" min="1" step="1" size="15" required />
-        </p>
-        <p>
-          <label for="unit-of-measure">Unit of Measure <abbr title="Required">*</abbr></label><br />
-          <select id="unit-of-measure" name="unit_of_measure" required>
-            <option value="" disabled selected>— Select unit —</option>
-            <option value="kg">Kilograms (kg)</option>
-            <option value="g">Grams (g)</option>
-            <option value="tonnes">Tonnes (t)</option>
-            <option value="litres">Litres (L)</option>
-            <option value="units">Units / Pieces</option>
-            <option value="boxes">Boxes / Cartons</option>
-            <option value="bags">Bags / Sacks</option>
-            <option value="pallets">Pallets</option>
-            <option value="containers">Containers</option>
-          </select>
-        </p>
-        <p>
-          <label for="batch-number">Batch / Lot Number</label><br />
-          <input type="text" id="batch-number" name="batch_number" placeholder="e.g. KSM-BATCH-2025-044" size="40" />
-        </p>
-        <p>
-          <label for="goods-condition">Condition of Goods</label><br />
-          <select id="goods-condition" name="goods_condition">
-            <option value="" disabled selected>— Select condition —</option>
-            <option value="excellent">Excellent</option>
-            <option value="good">Good</option>
-            <option value="fair">Fair</option>
-            <option value="damaged">Damaged</option>
-            <option value="rejected">Rejected / Returned</option>
-          </select>
-        </p>
-        <p>
-          <label><input type="checkbox" name="cold_chain" value="yes" /> &nbsp;This shipment is part of a cold chain (temperature-controlled)</label>
-        </p>
-        <p>
-          <label><input type="checkbox" name="hazardous" value="yes" /> &nbsp;Contains hazardous or controlled materials</label>
-        </p>
-      </fieldset>
-
-      <br />
-
-      <!-- ═══ SECTION 4 — DISPERSED BY ═══ -->
-      <fieldset>
-        <legend><strong>4. Dispersed By</strong></legend>
-        <p><em>The person or entity releasing / sending the goods at this stage.</em></p>
-        <p>
-          <label for="dispatcher-name">Full Name <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="dispatcher-name" name="dispatcher_name" placeholder="Full legal name" size="40" required autocomplete="off" />
-        </p>
-        <p>
-          <label for="dispatcher-role">Role / Title</label><br />
-          <input type="text" id="dispatcher-role" name="dispatcher_role" placeholder="e.g. Warehouse Manager, Supplier, Logistics Officer" size="45" />
-        </p>
-        <p>
-          <label for="dispatcher-signature">Signature (type full name as signature)</label><br />
-          <input type="text" id="dispatcher-signature" name="dispatcher_signature" placeholder="Type your full name to sign" size="40" autocomplete="off" />
-        </p>
-        <p>
-          <label for="dispatcher-date">Date <abbr title="Required">*</abbr></label><br />
-          <input type="date" id="dispatcher-date" name="dispatcher_date" required />
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" name="dispatcher_confirmed" value="yes" required />
-            &nbsp;I confirm the above goods have been released and the details above are accurate
-          </label>
-        </p>
-      </fieldset>
-
-      <br />
-
-      <!-- ═══ SECTION 5 — RECIPIENT ═══ -->
-      <fieldset>
-        <legend><strong>5. Recipient</strong></legend>
-        <p><em>The person or entity receiving the goods at this stage.</em></p>
-        <p>
-          <label for="recipient-name">Full Name <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="recipient-name" name="recipient_name" placeholder="Full legal name" size="40" required autocomplete="off" />
-        </p>
-        <p>
-          <label for="recipient-role">Role / Title</label><br />
-          <input type="text" id="recipient-role" name="recipient_role" placeholder="e.g. Retailer, Distributor, End Consumer" size="45" />
-        </p>
-        <p>
-          <label for="recipient-signature">Signature (type full name as signature)</label><br />
-          <input type="text" id="recipient-signature" name="recipient_signature" placeholder="Type your full name to sign" size="40" autocomplete="off" />
-        </p>
-        <p>
-          <label for="recipient-date">Date <abbr title="Required">*</abbr></label><br />
-          <input type="date" id="recipient-date" name="recipient_date" required />
-        </p>
-        <p>
-          <label>
-            <input type="checkbox" name="recipient_confirmed" value="yes" required />
-            &nbsp;I confirm receipt of the above goods and that the details are accurate
-          </label>
-        </p>
-      </fieldset>
-
-      <br />
-
-      <!-- ═══ SECTION 6 — LOGISTICS ═══ -->
-      <fieldset>
-        <legend><strong>6. Logistics</strong></legend>
-        <p><em>Transport and movement details for this supply chain leg.</em></p>
-        <p>
-          <label for="carrier-name">Carrier / Logistics Company <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="carrier-name" name="carrier_name" placeholder="e.g. Siginon Logistics, G4S Kenya, Own Transport" size="45" required />
-        </p>
-        <p>
-          <label for="tracking-number">Tracking / Waybill Number</label><br />
-          <input type="text" id="tracking-number" name="tracking_number" placeholder="e.g. SGNK-20250529-007" size="40" />
-        </p>
-        <p>
-          <label for="transport-mode">Transport Mode <abbr title="Required">*</abbr></label><br />
-          <select id="transport-mode" name="transport_mode" required>
-            <option value="" disabled selected>— Select mode —</option>
-            <option value="road">Road (Truck / Van)</option>
-            <option value="rail">Rail</option>
-            <option value="air">Air Freight</option>
-            <option value="sea">Sea / Lake Freight</option>
-            <option value="motorcycle">Motorcycle / Boda Boda</option>
-            <option value="foot">On Foot / Manual</option>
-            <option value="pipeline">Pipeline</option>
-            <option value="multimodal">Multimodal</option>
-          </select>
-        </p>
-        <p>
-          <label for="origin-location">Origin Location <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="origin-location" name="origin_location" placeholder="e.g. Kisumu Cold Storage, Kondele, Kisumu" size="45" required />
-        </p>
-        <p>
-          <label for="destination-location">Destination <abbr title="Required">*</abbr></label><br />
-          <input type="text" id="destination-location" name="destination_location" placeholder="e.g. Nairobi City Market, Gikomba" size="45" required />
-        </p>
-        <p>
-          <label for="dispatch-datetime">Dispatch Date &amp; Time</label><br />
-          <input type="datetime-local" id="dispatch-datetime" name="dispatch_datetime" />
-        </p>
-        <p>
-          <label for="estimated-delivery">Estimated Delivery Date</label><br />
-          <input type="date" id="estimated-delivery" name="estimated_delivery" />
-        </p>
-        <p>
-          <label for="vehicle-plate">Vehicle Plate / Registration</label><br />
-          <input type="text" id="vehicle-plate" name="vehicle_plate" placeholder="e.g. KDA 123B" size="20" />
-        </p>
-        <p>
-          <label for="driver-name">Driver / Handler Name</label><br />
-          <input type="text" id="driver-name" name="driver_name" placeholder="Full name of driver or handler" size="40" />
-        </p>
-        <p>
-          <label for="logistics-notes">Logistics Notes</label><br />
-          <textarea id="logistics-notes" name="logistics_notes" rows="4" cols="60" placeholder="Any additional logistics details — route taken, delays, border crossings, storage stops..." style="resize: both;"></textarea>
-        </p>
-        <p>
-          <label><input type="checkbox" name="insurance_covered" value="yes" /> &nbsp;Goods are insured for this transit leg</label>
-        </p>
-        <p>
-          <label><input type="checkbox" name="customs_cleared" value="yes" /> &nbsp;Customs / border clearance completed</label>
-        </p>
-      </fieldset>
-
-      <br />
-      <hr />
-
-      <!-- ═══ SUBMIT ═══ -->
-      <p>
-        <label>
-          <input type="checkbox" name="final_confirm" value="yes" required />
-          &nbsp;<strong>I confirm all the information in this form is accurate and I authorise recording this event on the TraceBlocks supply chain ledger.</strong>
-        </label>
-      </p>
-      <p>
-        <input type="submit" value="Submit Event to TraceBlocks" />
-        &nbsp;&nbsp;
-        <input type="reset" value="Clear Form" />
-      </p>
+        </div>
+        <div class="submit-actions">
+          <button type="submit" id="submit-btn" class="btn-primary">
+            <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Submit to TraceBlocks
+          </button>
+          <button type="reset" class="btn-ghost">Clear Form</button>
+        </div>
+      </div>
 
     </form>
-  </main>
+  </div>
 
-  <hr />
-
-  <footer>
-    <p>
-      <small>
-        TraceBlocks &mdash; Supply Chain Transparency on VeChain &nbsp;|&nbsp;
-        Zone01 Kisumu Hackathon 2025 &nbsp;|&nbsp;
-        All events are recorded immutably on the VeChainThor blockchain.
-      </small>
-    </p>
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="chain-badge"><div class="chain-dot"></div> VeChainThor Mainnet</div>
+    <p>TraceBlocks &mdash; Supply Chain Transparency &nbsp;·&nbsp; Zone01 Kisumu Hackathon 2025 &nbsp;·&nbsp; Events recorded immutably on-chain</p>
   </footer>
 
   <div id="toast"></div>
 
   <script>
-    // ── Toast ────────────────────────────────────────────────────────────────
     let toastTimer = null;
+
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
       toast.textContent = message;
@@ -615,9 +1125,8 @@
       toastTimer = setTimeout(() => { toast.style.display = 'none'; }, 6000);
     }
 
-    // ── TX status bar ────────────────────────────────────────────────────────
     function setTxBar(message, state = 'pending') {
-      const bar  = document.getElementById('tx-status-bar');
+      const bar = document.getElementById('tx-status-bar');
       const text = document.getElementById('tx-status-text');
       text.textContent = message;
       bar.className = state;
@@ -628,15 +1137,13 @@
       document.getElementById('tx-status-bar').style.display = 'none';
     }
 
-    // ── Form submit ──────────────────────────────────────────────────────────
     document.getElementById('event-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-
       const form = e.target;
       const data = {};
 
       new FormData(form).forEach((value, key) => {
-        if (key === 'csrfmiddlewaretoken' || key === 'final_confirm') return;
+        if (key === 'final_confirm') return;
         data[key] = value;
       });
 
@@ -648,50 +1155,39 @@
         'dispatcher_confirmed', 'recipient_confirmed',
         'insurance_covered', 'customs_cleared',
       ];
-      checkboxes.forEach(name => {
-        if (!(name in data)) data[name] = 'no';
-      });
+      checkboxes.forEach(name => { if (!(name in data)) data[name] = 'no'; });
 
-      const submitBtn = form.querySelector('input[type="submit"]');
-      submitBtn.value = 'Submitting…';
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.textContent = 'Submitting…';
       submitBtn.disabled = true;
       hideTxBar();
 
       try {
-        const res  = await fetch('/api/events/', {
+        const res = await fetch('/api/events/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
         });
-
         const json = await res.json();
 
         if (res.ok && json.ok) {
-          // ✅ Show brief toast then redirect to the product detail page
-          showToast(`✅ Event recorded! TX: ${json.tx_id.slice(0, 20)}… Redirecting…`, 'success');
-          setTxBar(`⏳ Waiting for VeChain confirmation… TX: ${json.tx_id.slice(0, 20)}…`, 'pending');
-
-          // Derive the SKU from batch_number the same way add_event_api does
+          showToast('✓ Event recorded! TX: ' + json.tx_id.slice(0, 20) + '… Redirecting…', 'success');
+          setTxBar('Waiting for VeChain confirmation… TX: ' + json.tx_id.slice(0, 20) + '…', 'pending');
           let sku = data['batch_number'] ? data['batch_number'].trim() : '';
           if (!sku) {
-            const goods   = (data['goods_name'] || 'GOODS').trim().replace(/\s+/g, '-').toUpperCase();
+            const goods = (data['goods_name'] || 'GOODS').trim().replace(/\s+/g, '-').toUpperCase();
             const eventId = (data['event_id'] || '').trim().replace(/\s+/g, '-').toUpperCase();
-            sku = `${goods}-${eventId}`;
+            sku = goods + '-' + eventId;
           }
-
-          // Redirect after 1.5 s so the user sees the toast
-          setTimeout(() => {
-            window.location.href = `/products/${sku}/`;
-          }, 1500);
-
+          setTimeout(() => { window.location.href = '/products/' + sku + '/'; }, 1500);
         } else {
-          showToast(`❌ Error: ${json.error || 'Unknown error'}`, 'error');
-          submitBtn.value = 'Submit Event to TraceBlocks';
+          showToast('Error: ' + (json.error || 'Unknown error'), 'error');
+          submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit to TraceBlocks';
           submitBtn.disabled = false;
         }
       } catch (err) {
-        showToast(`❌ Network error: ${err.message}`, 'error');
-        submitBtn.value = 'Submit Event to TraceBlocks';
+        showToast('Network error: ' + err.message, 'error');
+        submitBtn.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" style="stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Submit to TraceBlocks';
         submitBtn.disabled = false;
       }
     });
