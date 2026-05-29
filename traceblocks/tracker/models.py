@@ -112,8 +112,10 @@ class User(AbstractUser):
     
     #Fields for Organisation users
     organisation_name = models.CharField(max_length=100, blank=False, null=True)
-            return f"https://explore-testnet.vechain.org/transactions/{self.tx_id}"
-        return ""
+    
+    def get_transaction_url(self):
+        return f"https://explore-testnet.vechain.org/transactions/{self.tx_id}"
+            
     
 class Product(models.Model):
     name         = models.CharField(max_length=200)
