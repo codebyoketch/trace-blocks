@@ -3,6 +3,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+import random
+from django.contrib.auth import authenticate, login
 
 from .models import Product, TrackingEvent
 from .blockchain import VeChainService
@@ -133,3 +135,106 @@ from django.contrib.auth.decorators import login_required
 @login_required
 def profile_view(request):
     return render(request, 'interface.html')
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import User 
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import User 
+
+import random
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import User 
+
+def CreateUser_view(request):
+    if request.method == "POST":
+        u_n = request.POST.get('username', '').strip()
+        e = request.POST.get('email', '').strip()
+        p = request.POST.get('password')
+        ph = request.POST.get('phonenumber')
+        u_type = request.POST.get('user_type')
+
+        f_n, s_n, m_n = "", "", ""
+        org_name = None
+
+        if u_type == 'NORMAL':
+            f_n = request.POST.get('firstname', '')
+            s_n = request.POST.get('lastname', '') 
+            m_n = request.POST.get('middlename', '')
+            
+            if not s_n:
+                messages.error(request, "Last name is required.")
+                return render(request, 'user_creation_form_v2.html')
+                
+        elif u_type == 'ORGANISATION':
+            org_name = request.POST.get('organisation_name', '').strip()
+            if not org_name:
+                messages.error(request, "Organisation name is required.")
+                return render(request, 'user_creation_form_v2.html')
+            
+            # Auto-generate username from org name if field was left blank
+            if not u_n:
+                u_n = org_name.replace(" ", "").lower()
+
+        # FIX 1: If it's an organization and username exists, make it unique dynamically
+        if u_type == 'ORGANISATION' and User.objects.filter(username=u_n).exists():
+            u_n = f"{u_n}{random.randint(100, 999)}"
+
+        # FIX 2: If a normal user manually picks an existing username, reject it safely
+        if User.objects.filter(username=u_n).exists():
+            messages.error(request, f"The username '{u_n}' is already taken. Please choose another one.")
+            return render(request, 'index.html')
+
+        # FIX 3: Check for duplicate emails while we are here
+        if User.objects.filter(email=e).exists():
+            messages.error(request, "A user with this email address already exists.")
+            return render(request, 'index.html')
+            # Inside your CreateUser_view registration endpoint:
+        
+        if not e:
+            messages.error(request, "An email address is required.")
+            return render(request, 'user_creation_form_v2.html')
+
+        if User.objects.filter(email__iexact=e).exists():
+            messages.error(request, "A user with this email address already exists.")
+            return render(request, 'user_creation_form_v2.html')
+
+
+        try:
+            User.objects.create_user(
+                username=u_n,
+                email=e,
+                password=p,
+                user_type=u_type,
+                first_name=f_n,
+                second_name=s_n,
+                middle_name=m_n,
+                phonenumber=ph,
+                organisation_name=org_name
+            )
+            return redirect('login')
+        except Exception as error:
+            messages.error(request, f"Database registration failed: {error}")
+            
+    return render(request, 'index.html')
+
+def Login_view(request):
+    if request.method == "POST":
+        email_input = request.POST.get('email', '').strip()
+        password_input = request.POST.get('password')
+
+        # Pass email into the username parameter—our backend handles the rest
+        user = authenticate(request, username=email_input, password=password_input)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Logged in successfully!")
+            return redirect('dashboard')  # Redirect to your landing dashboard page
+        else:
+            messages.error(request, "Invalid email or password.")
+            return render(request, 'login.html')
+
+    return render(request, 'login.html')
