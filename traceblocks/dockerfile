@@ -1,0 +1,27 @@
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
+
+# Set environment variables
+# Prevents Python from writing .pyc files to disk
+ENV PYTHONDONTWRITEBYTECODE=1
+# Ensures console output is not buffered
+ENV PYTHONUNBUFFERED=1
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Install system dependencies (optional, but often needed for Postgres/other libs)
+# RUN apt-get update && apt-get install -y gcc libpq-dev
+
+# Install Python dependencies
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Copy the rest of the project files
+COPY . /app/
+
+# Expose the port Django runs on
+EXPOSE 8000
+
+# Start the Django development server
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
