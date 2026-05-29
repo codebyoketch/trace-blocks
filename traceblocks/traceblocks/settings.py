@@ -29,8 +29,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = 'profile'
-LOGOUT_REDIRECT_URL = 'login'
+AUTHENTICATION_BACKENDS = [
+    'tracker.backends.EmailBackend',  
+    'django.contrib.auth.backends.ModelBackend',  
+]
+
 
 LOGIN_REDIRECT_URL = 'interface'
 LOGOUT_REDIRECT_URL = 'login'
