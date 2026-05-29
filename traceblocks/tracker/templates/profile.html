@@ -1,0 +1,854 @@
+```html
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Profile & Settings — TraceBlocks</title>
+
+  <!-- TRACEBLOCKS THEME -->
+  <style>
+
+    ```css
+/* ════════════════════════════════════════
+   TRACEBLOCKS — PROFILE & SETTINGS THEME
+════════════════════════════════════════ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ════════════════════════════════════════
+   ROOT COLORS
+════════════════════════════════════════ */
+
+:root {
+  --bg: #080412;
+  --sidebar: #100a21;
+
+  --card: rgba(255,255,255,0.03);
+
+  --border: rgba(168,85,247,0.15);
+
+  --accent: #A855F7;
+  --accent2: #D8B4FE;
+  --accent3: #00F0FF;
+
+  --text: #F3E8FF;
+  --muted: #7C6E95;
+
+  --danger: #ff5a6e;
+
+  --font-d: 'Syne', sans-serif;
+  --font-m: 'Space Mono', monospace;
+}
+
+/* ════════════════════════════════════════
+   BODY
+════════════════════════════════════════ */
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-m);
+  line-height: 1.7;
+  padding: 40px 24px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* GRID BACKGROUND */
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  background-image:
+    linear-gradient(rgba(168,85,247,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168,85,247,0.04) 1px, transparent 1px);
+
+  background-size: 36px 36px;
+}
+
+/* ════════════════════════════════════════
+   CONTAINER
+════════════════════════════════════════ */
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ════════════════════════════════════════
+   HEADER
+════════════════════════════════════════ */
+
+header {
+  background: rgba(16,10,33,0.7);
+  backdrop-filter: blur(10px);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 22px 28px;
+
+  margin-bottom: 32px;
+}
+
+header p {
+  color: var(--accent2);
+  font-family: var(--font-d);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+}
+
+nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--muted);
+
+  padding: 8px 14px;
+
+  border-radius: 8px;
+
+  transition: 0.2s ease;
+  font-size: 13px;
+}
+
+nav a:hover {
+  background: rgba(168,85,247,0.08);
+  color: var(--text);
+}
+
+/* ════════════════════════════════════════
+   TYPOGRAPHY
+════════════════════════════════════════ */
+
+h2 {
+  font-family: var(--font-d);
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+h3 {
+  font-family: var(--font-d);
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+  color: var(--accent2);
+}
+
+p {
+  color: var(--muted);
+}
+
+strong {
+  color: var(--text);
+}
+
+small {
+  color: var(--muted);
+}
+
+/* ════════════════════════════════════════
+   SECTION CARDS
+════════════════════════════════════════ */
+
+section {
+  background: var(--card);
+
+  border: 1px solid var(--border);
+
+  border-radius: 18px;
+
+  padding: 32px;
+
+  margin-bottom: 28px;
+
+  backdrop-filter: blur(10px);
+
+  transition: 0.25s ease;
+}
+
+section:hover {
+  border-color: rgba(168,85,247,0.35);
+
+  box-shadow:
+    0 0 24px rgba(168,85,247,0.12);
+}
+
+/* ════════════════════════════════════════
+   HR
+════════════════════════════════════════ */
+
+hr {
+  border: none;
+  height: 1px;
+
+  background: var(--border);
+
+  margin: 22px 0;
+}
+
+/* ════════════════════════════════════════
+   PROFILE CARD
+════════════════════════════════════════ */
+
+#display-initials {
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent2)
+    ) !important;
+
+  border: none !important;
+
+  color: var(--bg);
+
+  font-family: var(--font-d);
+
+  box-shadow:
+    0 0 24px rgba(168,85,247,0.4);
+}
+
+#display-name-val {
+  font-family: var(--font-d);
+  color: var(--text);
+}
+
+#display-account-type-badge {
+  color: var(--accent3);
+  font-size: 13px;
+}
+
+/* ════════════════════════════════════════
+   TABLES
+════════════════════════════════════════ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 12px 8px;
+  vertical-align: middle;
+  color: var(--muted);
+}
+
+td strong {
+  color: var(--text);
+}
+
+/* ════════════════════════════════════════
+   RADIO BUTTONS
+════════════════════════════════════════ */
+
+input[type="radio"] {
+  accent-color: var(--accent);
+  transform: scale(1.1);
+}
+
+/* ════════════════════════════════════════
+   FIELDSETS
+════════════════════════════════════════ */
+
+fieldset {
+  border: 1px solid var(--border);
+
+  border-radius: 16px;
+
+  padding: 24px;
+
+  background: rgba(255,255,255,0.02);
+}
+
+legend {
+  padding: 0 10px;
+
+  color: var(--accent2);
+
+  font-family: var(--font-d);
+}
+
+/* ════════════════════════════════════════
+   INPUTS
+════════════════════════════════════════ */
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+
+  max-width: 460px;
+
+  background: rgba(255,255,255,0.03);
+
+  border: 1px solid var(--border);
+
+  border-radius: 10px;
+
+  padding: 14px 16px;
+
+  margin-top: 8px;
+
+  color: var(--text);
+
+  font-family: var(--font-m);
+
+  transition: 0.2s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  outline: none;
+
+  border-color: var(--accent);
+
+  box-shadow:
+    0 0 16px rgba(168,85,247,0.25);
+}
+
+/* ════════════════════════════════════════
+   BUTTONS
+════════════════════════════════════════ */
+
+input[type="submit"],
+input[type="reset"] {
+  border: none;
+
+  padding: 12px 22px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-family: var(--font-d);
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+
+  transition: 0.2s ease;
+}
+
+input[type="submit"] {
+  background: var(--accent);
+  color: white;
+}
+
+input[type="submit"]:hover {
+  background: var(--accent2);
+
+  color: var(--bg);
+
+  box-shadow:
+    0 0 22px rgba(168,85,247,0.35);
+
+  transform: translateY(-2px);
+}
+
+input[type="reset"] {
+  background: transparent;
+
+  border: 1px solid var(--border);
+
+  color: var(--muted);
+}
+
+input[type="reset"]:hover {
+  border-color: var(--danger);
+
+  color: var(--danger);
+}
+
+/* ════════════════════════════════════════
+   LINKS
+════════════════════════════════════════ */
+
+a {
+  color: var(--accent2);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent3);
+}
+
+/* ════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════ */
+
+footer {
+  max-width: 1100px;
+
+  margin: 40px auto 0;
+
+  text-align: center;
+
+  padding: 22px;
+
+  border-top: 1px solid var(--border);
+
+  color: var(--muted);
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+
+  body {
+    padding: 22px 14px;
+  }
+
+  section {
+    padding: 24px 18px;
+  }
+
+  table,
+  tbody,
+  tr,
+  td {
+    display: block;
+    width: 100%;
+  }
+
+  td {
+    padding: 8px 0;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    max-width: 100%;
+  }
+}
+```
+
+
+  </style>
+
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════
+       HEADER
+  ═════════════════════════════════════════ -->
+  <header>
+    <p>&#9632; <strong>TRACEBLOCKS</strong> &nbsp;&mdash;&nbsp; Supply Chain Transparency on VeChain</p>
+    <nav>
+      <a href="#profile">&#9654; Profile</a>
+      &nbsp;&nbsp;
+      <a href="#settings">&#9654; Settings</a>
+    </nav>
+    <hr />
+  </header>
+
+  <main>
+
+    <h2>Account</h2>
+    <p>Your identity and security settings on the TraceBlocks network.</p>
+    <hr />
+
+
+    <!-- ════════════════════════════════════════
+         TAB 1 — PROFILE
+         Fully read-only — details set at
+         signup, cannot be edited here.
+    ═════════════════════════════════════════ -->
+    <section id="profile">
+
+      <h3>Profile</h3>
+      <p><em>Your public identity on the TraceBlocks supply chain network.</em></p>
+
+      <br />
+
+      <!-- ── READ-ONLY DISPLAY CARD ── -->
+      <table border="0" cellpadding="8">
+
+        <tr>
+          <td valign="top">
+            <!-- Avatar circle -->
+            <output id="display-initials"
+              style="display:inline-block;
+                     width:56px;height:56px;
+                     border:2px solid #333;
+                     border-radius:50%;
+                     text-align:center;
+                     line-height:56px;
+                     font-size:20px;
+                     font-weight:bold;">
+              TB
+            </output>
+          </td>
+          <td valign="middle">
+            <strong id="display-name-val" style="font-size:1.1em;">TraceBlocks User</strong><br />
+            <span id="display-account-type-badge">&#128100; Individual User</span>
+          </td>
+        </tr>
+
+      </table>
+
+      <br />
+
+      <!-- ── ACCOUNT TYPE RADIO TOGGLE ── -->
+      <p>
+        <strong>Account type:</strong>
+        &nbsp;&nbsp;
+        <label>
+          <input
+            type="radio"
+            name="view_account_type"
+            value="individual"
+            checked
+            onchange="switchProfileView('individual')"
+          />
+          &nbsp;Individual User
+        </label>
+        &nbsp;&nbsp;&nbsp;
+        <label>
+          <input
+            type="radio"
+            name="view_account_type"
+            value="organisation"
+            onchange="switchProfileView('organisation')"
+          />
+          &nbsp;Organisation / Business
+        </label>
+      </p>
+
+      <hr />
+
+      <!-- Individual user details (shown by default) -->
+      <div id="display-individual">
+        <table border="0" cellpadding="6">
+          <tr>
+            <td><strong>First name</strong></td>
+            <td id="display-firstname">—</td>
+          </tr>
+          <tr>
+            <td><strong>Last name</strong></td>
+            <td id="display-lastname">—</td>
+          </tr>
+          <tr>
+            <td><strong>Username</strong></td>
+            <td id="display-username">—</td>
+          </tr>
+          <tr>
+            <td><strong>Email</strong></td>
+            <td id="display-email">—</td>
+          </tr>
+          <tr>
+            <td><strong>Account type</strong></td>
+            <td>Individual User</td>
+          </tr>
+          <tr>
+            <td><strong>Member since</strong></td>
+            <td id="display-joined">—</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Organisation details (hidden by default) -->
+      <div id="display-organisation" style="display:none;">
+        <table border="0" cellpadding="6">
+          <tr>
+            <td><strong>Organisation name</strong></td>
+            <td id="display-orgname">—</td>
+          </tr>
+          <tr>
+            <td><strong>Registration no.</strong></td>
+            <td id="display-regnumber">—</td>
+          </tr>
+          <tr>
+            <td><strong>Organisation type</strong></td>
+            <td id="display-orgtype">—</td>
+          </tr>
+          <tr>
+            <td><strong>Organisation handle</strong></td>
+            <td id="display-orghandle">—</td>
+          </tr>
+          <tr>
+            <td><strong>Contact email</strong></td>
+            <td id="display-orgemail">—</td>
+          </tr>
+          <tr>
+            <td><strong>Phone</strong></td>
+            <td id="display-orgphone">—</td>
+          </tr>
+          <tr>
+            <td><strong>Account type</strong></td>
+            <td>Organisation / Business</td>
+          </tr>
+          <tr>
+            <td><strong>Member since</strong></td>
+            <td id="display-org-joined">—</td>
+          </tr>
+        </table>
+      </div>
+
+      <br />
+      <p>
+        <small>
+          &#128274; &nbsp;Account details are set at registration and cannot be changed here.
+          To update your security credentials go to <a href="#settings">Settings &darr;</a>.
+        </small>
+      </p>
+
+    </section>
+
+
+    <hr />
+    <br />
+
+
+    <!-- ════════════════════════════════════════
+         TAB 2 — SETTINGS
+         Account Security only
+    ═════════════════════════════════════════ -->
+    <section id="settings">
+
+      <h3>Settings</h3>
+      <p><em>Manage your account security credentials.</em></p>
+
+      <form action="/api/auth/settings/" method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="" />
+        <input type="hidden" name="form_type" value="settings" />
+
+
+        <!-- ── ACCOUNT SECURITY ── -->
+        <fieldset>
+          <legend><strong>Account Security</strong></legend>
+
+          <p><strong>Change Email Address</strong></p>
+
+          <p>
+            <label for="new-email">New Email Address</label><br />
+            <input
+              type="email"
+              id="new-email"
+              name="new_email"
+              placeholder="new@example.com"
+              size="40"
+              autocomplete="email"
+            />
+          </p>
+
+          <p>
+            <label for="confirm-email">Confirm New Email</label><br />
+            <input
+              type="email"
+              id="confirm-email"
+              name="confirm_email"
+              placeholder="Repeat new email"
+              size="40"
+              autocomplete="email"
+            />
+          </p>
+
+          <br />
+          <p><strong>Change Password</strong></p>
+
+          <p>
+            <label for="current-password">Current Password <abbr title="Required">*</abbr></label><br />
+            <input
+              type="password"
+              id="current-password"
+              name="current_password"
+              placeholder="Your current password"
+              size="35"
+              autocomplete="current-password"
+            />
+          </p>
+
+          <p>
+            <label for="new-password">New Password <abbr title="Required">*</abbr></label><br />
+            <input
+              type="password"
+              id="new-password"
+              name="new_password"
+              placeholder="Min 8 chars, upper, lower, number, symbol"
+              size="35"
+              minlength="8"
+              autocomplete="new-password"
+            />
+            <br />
+            <small>Must be at least 8 characters with uppercase, lowercase, a number, and a special character.</small>
+          </p>
+
+          <p>
+            <label for="confirm-password">Confirm New Password <abbr title="Required">*</abbr></label><br />
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm_password"
+              placeholder="Repeat new password"
+              size="35"
+              autocomplete="new-password"
+            />
+          </p>
+
+          <p>
+            <input type="submit" name="action" value="Update Password" />
+          </p>
+
+        </fieldset>
+
+        <br />
+        <hr />
+
+        <p>
+          <input type="submit" name="action" value="Save Settings" />
+          &nbsp;&nbsp;
+          <input type="reset" value="Discard Changes" />
+        </p>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <hr />
+
+  <footer>
+    <p>
+      <small>
+        TraceBlocks &mdash; Supply Chain Transparency on VeChain &nbsp;|&nbsp;
+        Zone01 Kisumu Hackathon 2025 &nbsp;|&nbsp;
+        On-chain records are permanent and governed by the VeChainThor protocol.
+      </small>
+    </p>
+  </footer>
+
+
+  <script>
+    /*
+     * populateProfile(data)
+     * Called by Django template or a fetch() call after page load.
+     * Fills in all read-only display fields from the backend response.
+     *
+     * Expected data shape:
+     * {
+     *   account_type : "individual" | "organisation",
+     *   initials     : "AO",
+     *   display_name : "Achieng Otieno",
+     *   joined       : "May 2025",
+     *   // individual fields
+     *   first_name   : "Achieng",
+     *   last_name    : "Otieno",
+     *   username     : "achieng_ke",
+     *   email        : "achieng@company.co.ke",
+     *   // organisation fields
+     *   org_name     : "",
+     *   reg_number   : "",
+     *   org_type     : "",
+     *   org_handle   : "",
+     *   org_email    : "",
+     *   org_phone    : ""
+     * }
+     */
+    function populateProfile(data) {
+      var type = data.account_type || 'individual';
+
+      /* Avatar circle */
+      document.getElementById('display-initials').textContent =
+        data.initials || (data.first_name ? data.first_name[0] : 'TB');
+
+      /* Header name + badge */
+      document.getElementById('display-name-val').textContent =
+        data.display_name || data.first_name || data.org_name || 'TraceBlocks User';
+
+      document.getElementById('display-account-type-badge').textContent =
+        type === 'individual'
+          ? '\uD83D\uDC64 Individual User'
+          : '\uD83C\uDFE2 Organisation / Business';
+
+      if (type === 'individual') {
+        document.getElementById('display-individual').style.display   = '';
+        document.getElementById('display-organisation').style.display = 'none';
+
+        document.getElementById('display-firstname').textContent = data.first_name || '—';
+        document.getElementById('display-lastname').textContent  = data.last_name  || '—';
+        document.getElementById('display-username').textContent  = data.username   ? '@' + data.username : '—';
+        document.getElementById('display-email').textContent     = data.email      || '—';
+        document.getElementById('display-joined').textContent    = data.joined     || '—';
+
+      } else {
+        document.getElementById('display-individual').style.display   = 'none';
+        document.getElementById('display-organisation').style.display = '';
+
+        document.getElementById('display-orgname').textContent    = data.org_name   || '—';
+        document.getElementById('display-regnumber').textContent  = data.reg_number || '—';
+        document.getElementById('display-orgtype').textContent    = data.org_type   || '—';
+        document.getElementById('display-orghandle').textContent  = data.org_handle ? '@' + data.org_handle : '—';
+        document.getElementById('display-orgemail').textContent   = data.org_email  || '—';
+        document.getElementById('display-orgphone').textContent   = data.org_phone  || '—';
+        document.getElementById('display-org-joined').textContent = data.joined     || '—';
+      }
+    }
+
+    /*
+     * Wired to Django: replace the placeholder call below with
+     * your actual fetch or template injection once the backend is ready.
+     *
+     * Example using fetch:
+     *   fetch('/api/auth/me/')
+     *     .then(r => r.json())
+     *     .then(data => populateProfile(data));
+     *
+     * Example using Django template variables (remove the JS call entirely
+     * and inline the values directly in the HTML using {{ user.first_name }} etc.)
+     */
+    /* ── Radio toggle: switch between individual and organisation view ── */
+    function switchProfileView(type) {
+      var ind = document.getElementById('display-individual');
+      var org = document.getElementById('display-organisation');
+      if (type === 'individual') {
+        ind.style.display = '';
+        org.style.display = 'none';
+      } else {
+        ind.style.display = 'none';
+        org.style.display = '';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      /* Placeholder — replace with real fetch('/api/auth/me/') call */
+      populateProfile({
+        account_type : 'individual',
+        initials     : '',
+        display_name : '',
+        joined       : '',
+        first_name   : '',
+        last_name    : '',
+        username     : '',
+        email        : ''
+      });
+    });
+  </script>
+
+</body>
+</html>
