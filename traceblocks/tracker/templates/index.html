@@ -2,8 +2,271 @@
 <html lang="en">
 <head>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/blockchain
 <meta charset="UTF-8">
 <title>Sign Up | Trace-Blockz</title>
+
+<sytle> 
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Sign Up</title>
+<style>
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  background: #042C53;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: #378ADD;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+a:hover { color: #185FA5; }
+
+body {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+}
+
+.left {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 56px;
+  padding-right: calc(420px + 56px);
+  background: #042C53;
+  overflow: hidden;
+}
+
+.right {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 420px;
+  height: 100vh;
+  overflow-y: auto;
+  background: rgba(135, 206, 235, 1)
+  border-left: 1px solid rgba(55, 138, 221, 0.12);
+  padding: 48px 40px;
+  z-index: 10;
+}
+
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(55, 138, 221, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(55, 138, 221, 0.12) 1px, transparent 1px);
+  background-size: 36px 36px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.left > * { position: relative; z-index: 1; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #B5D4F4;
+  margin-bottom: auto;
+}
+
+.logo-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #378ADD;
+  box-shadow: 0 0 0 4px rgba(55, 138, 221, 0.2);
+  flex-shrink: 0;
+}
+
+.hero-text { margin-top: 64px; }
+
+.hero-text h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #E6F1FB;
+  margin-bottom: 20px;
+  max-width: 380px;
+}
+
+.hero-text h1 span { color: #378ADD; }
+
+.hero-text p {
+  font-family: 'Inter', monospace;
+  font-size: 13px;
+  line-height: 2;
+  color: #378ADD;
+  opacity: 0.8;
+}
+
+.form-container { width: 100%; }
+
+.form-header { margin-bottom: 28px; }
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #378ADD;
+  margin-bottom: 8px;
+}
+
+.form-header h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0a0e1a;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.form-header p {
+  font-size: 12.5px;
+  color: #5a6a7e;
+  line-height: 1.65;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+}
+
+.row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.row-2 .form-group { margin-bottom: 0; }
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a6a7e;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 9px 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13.5px;
+  color: #0a0e1a;
+  background: #ffffff;
+  border: 1px solid #ccd6e3;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-group input::placeholder {
+  color: #9aaabb;
+  font-size: 12.5px;
+}
+
+.form-group input:focus {
+  border-color: #378ADD;
+  box-shadow: 0 0 0 3px rgba(55, 138, 221, 0.14);
+}
+
+.form-group input.error { border-color: #E24B4A; }
+
+.error-msg {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #A32D2D;
+  display: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 10px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #E6F1FB;
+  background: #185FA5;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.1s ease;
+}
+
+.submit-btn:hover { background: #0C447C; }
+.submit-btn:active { transform: scale(0.985); }
+
+.terms {
+  font-size: 11.5px;
+  color: #7a8a9a;
+  margin-top: 14px;
+  line-height: 1.65;
+  text-align: center;
+}
+
+.terms a { color: #378ADD; font-weight: 500; }
+
+.login-link {
+  font-size: 12.5px;
+  color: #5a6a7e;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.login-link a { color: #185FA5; font-weight: 600; }
+
+@media (max-width: 900px) {
+  .right { position: static; width: 100%; height: auto; border-left: none; }
+  .left  { padding-right: 56px; min-height: auto; padding-bottom: 0; }
+  body   { flex-direction: column; }
+}
+
+@media (max-width: 520px) {
+  .left  { padding: 32px 24px; }
+  .right { padding: 32px 24px; }
+  .row-2 { grid-template-columns: 1fr; }
+  .hero-text h1 { font-size: 26px; }
+}
+
+</style>
 </head>
 <body>
 
@@ -132,6 +395,7 @@ function toggleAccountFields(type) {
 
 </body>
 </html>
+<<<<<<< HEAD
 =======
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -245,4 +509,6 @@ function toggleAccountFields(type) {
 </div>
 </body>
 </html>
+>>>>>>> origin/blockchain
+=======
 >>>>>>> origin/blockchain

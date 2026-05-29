@@ -32,6 +32,9 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'login'
 
+LOGIN_REDIRECT_URL = 'interface'
+LOGOUT_REDIRECT_URL = 'login'
+
 # Application definition
 
 INSTALLED_APPS = [
