@@ -11,5 +11,6 @@ urlpatterns = [
     path("products/events/",    views.add_event,        name="add_event"),
     path("events/<int:event_id>/status/", views.refresh_tx_status,name="refresh_tx_status"),
     path("interface/",                    views.interface_view,   name="interface"),
+    path("new/event/", views.events_view, name="events")
 ]
  
