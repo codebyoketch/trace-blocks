@@ -84,10 +84,6 @@ class TrackingEvent(models.Model):
                 f"https://explore-testnet.vechain.org/transactions/{self.tx_id}"
             )
         return ""
-# Create your models here.
-
-from django.db import models
-from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     TYPE_NORMAL = 'NORMAL'
