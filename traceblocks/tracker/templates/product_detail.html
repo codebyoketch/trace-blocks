@@ -12,55 +12,117 @@
     header a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
     header a:hover { color: white; }
     header h1 { font-size: 1.2rem; }
-    .container { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
     .messages { margin-bottom: 1rem; }
-    .messages li { padding: 0.75rem 1rem; border-radius: 6px; list-style: none;
-                   margin-bottom: 0.5rem; }
+    .messages li { padding: 0.75rem 1rem; border-radius: 6px; list-style: none; margin-bottom: 0.5rem; }
     .messages .success { background: #d4edda; color: #155724; }
     .messages .error   { background: #f8d7da; color: #721c24; }
     .messages .warning { background: #fff3cd; color: #856404; }
     .card { background: white; border-radius: 10px; padding: 1.5rem;
             box-shadow: 0 2px 6px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
     .meta { display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.9rem; color: #555; }
-    .meta strong { color: #222; }
+    .meta strong { color: #222; display: block; margin-bottom: 2px; }
     .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
     .form-row input, .form-row textarea, .form-row select {
       flex: 1; min-width: 160px; padding: 0.6rem 0.75rem;
       border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    .form-row label { flex: 1; min-width: 160px; font-size: 0.82rem; color: #555; }
+    .form-row label input { width: 100%; margin-top: 4px; }
     button[type=submit] {
       background: #1a1a2e; color: white; border: none;
       padding: 0.65rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
     button[type=submit]:hover { background: #16213e; }
+    .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+                     letter-spacing: 0.07em; color: #888; margin: 1rem 0 0.4rem; }
+
+    /* Tabs */
+    .tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; border-bottom: 2px solid #eee; }
+    .tab-btn { background: none; border: none; padding: 0.5rem 1rem; font-size: 0.88rem;
+               cursor: pointer; color: #777; border-bottom: 2px solid transparent;
+               margin-bottom: -2px; transition: all 0.15s; }
+    .tab-btn.active { color: #1a1a2e; border-bottom-color: #1a1a2e; font-weight: 600; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
     /* Timeline */
     .timeline { position: relative; padding-left: 1.5rem; }
-    .timeline::before {
-      content: ""; position: absolute; left: 0.4rem; top: 0; bottom: 0;
-      width: 2px; background: #e0e0e0; }
-    .event { position: relative; margin-bottom: 1.5rem; }
-    .event::before {
-      content: ""; position: absolute; left: -1.15rem; top: 0.4rem;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: #1a1a2e; border: 2px solid white;
-      box-shadow: 0 0 0 2px #1a1a2e; }
-    .event-header { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
-    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px;
-             font-size: 0.75rem; font-weight: 600; }
-    .badge-manufactured   { background: #e3f2fd; color: #1565c0; }
+    .timeline::before { content: ""; position: absolute; left: 0.4rem; top: 0; bottom: 0;
+                        width: 2px; background: #e0e0e0; }
+    .event { position: relative; margin-bottom: 2rem; }
+    .event::before { content: ""; position: absolute; left: -1.15rem; top: 0.45rem;
+                     width: 10px; height: 10px; border-radius: 50%;
+                     background: #1a1a2e; border: 2px solid white;
+                     box-shadow: 0 0 0 2px #1a1a2e; }
+    .event.is-handover::before { background: #7c3aed; box-shadow: 0 0 0 2px #7c3aed; }
+    .event-header { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+    .badge-manufactured    { background: #e3f2fd; color: #1565c0; }
     .badge-shipped         { background: #f3e5f5; color: #6a1b9a; }
     .badge-in_transit      { background: #fff8e1; color: #f57f17; }
     .badge-at_hub          { background: #fce4ec; color: #880e4f; }
     .badge-out_for_delivery{ background: #e8f5e9; color: #1b5e20; }
     .badge-delivered       { background: #e8f5e9; color: #2e7d32; }
-    .time { font-size: 0.8rem; color: #999; }
-    .location { font-size: 0.9rem; margin-top: 0.25rem; }
+    .badge-handover        { background: #ede9fe; color: #5b21b6; }
+    .time  { font-size: 0.8rem; color: #999; }
     .notes { font-size: 0.85rem; color: #666; margin-top: 0.2rem; font-style: italic; }
-    .tx-info { font-size: 0.75rem; margin-top: 0.4rem; color: #888; }
-    .tx-info a { color: #1a1a2e; }
+    .empty { color: #999; font-style: italic; }
+
+    /* Accountability */
+    .accountability { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+    @media(max-width:600px) { .accountability { grid-template-columns: 1fr; } }
+    .party { border: 1px solid #e8e8e8; border-radius: 8px; padding: 0.8rem 1rem; background: #fafafa; }
+    .party-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+                   letter-spacing: 0.06em; color: #888; margin-bottom: 0.4rem; }
+    .party-name  { font-size: 0.92rem; font-weight: 600; color: #1a1a2e; }
+    .party-role  { font-size: 0.78rem; color: #777; margin: 2px 0 6px; }
+    .party-sig   { font-size: 0.78rem; color: #555; border-top: 1px dashed #ddd;
+                   padding-top: 0.35rem; font-style: italic; }
+    .party-date  { font-size: 0.72rem; color: #999; margin-top: 2px; }
+
+    /* Handover qty block */
+    .handover-qty { display: flex; gap: 0; margin-top: 0.75rem; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+    .qty-cell { flex: 1; padding: 0.75rem 1rem; background: #fff; text-align: center; border-right: 1px solid #eee; }
+    .qty-cell:last-child { border-right: none; }
+    .qty-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+                 letter-spacing: 0.06em; color: #888; margin-bottom: 4px; }
+    .qty-value { font-size: 1.25rem; font-weight: 700; color: #1a1a2e; }
+    .qty-value.discrepancy { color: #c62828; }
+    .qty-unit  { font-size: 0.72rem; color: #999; }
+    .discrepancy-note { font-size: 0.8rem; color: #c62828; background: #fff5f5;
+                        border: 1px solid #fecaca; border-radius: 6px;
+                        padding: 0.5rem 0.75rem; margin-top: 0.5rem; }
+
+    /* Goods / logistics strips */
+    .goods-strip { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.6rem;
+                   padding: 0.65rem 1rem; background: #f0f4ff;
+                   border-radius: 8px; border: 1px solid #dce4ff; font-size: 0.82rem; color: #444; }
+    .goods-strip strong { color: #1a1a2e; }
+    .logistics-strip { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.5rem;
+                       padding: 0.6rem 1rem; background: #f5f5f5;
+                       border-radius: 8px; border: 1px solid #e0e0e0; font-size: 0.8rem; color: #555; }
+    .logistics-strip strong { color: #333; }
+    .flag { display: inline-block; font-size: 0.68rem; font-weight: 600;
+            padding: 0.12rem 0.45rem; border-radius: 999px; margin: 2px 3px 0 0; }
+    .flag-cold    { background: #e0f7fa; color: #00695c; }
+    .flag-hazard  { background: #fff3e0; color: #e65100; }
+    .flag-insured { background: #e8f5e9; color: #2e7d32; }
+    .flag-customs { background: #ede7f6; color: #4527a0; }
+
+    /* TX row */
+    .tx-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
+              font-size: 0.75rem; margin-top: 0.6rem; color: #888; }
+    .tx-row a { color: #1a1a2e; text-decoration: none; font-family: monospace; }
+    .tx-row a:hover { text-decoration: underline; }
     .tx-pending  { color: #f57f17; }
     .tx-confirmed{ color: #2e7d32; }
     .tx-reverted { color: #c62828; }
     .tx-error    { color: #c62828; }
-    .empty { color: #999; font-style: italic; }
+    .copy-btn { background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px;
+                padding: 2px 8px; font-size: 0.7rem; cursor: pointer; color: #444;
+                transition: background 0.15s; }
+    .copy-btn:hover { background: #e0e0e0; }
+    .copy-btn.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
   </style>
 </head>
 <body>
@@ -82,70 +144,236 @@
   <!-- Product info -->
   <div class="card">
     <div class="meta">
-      <div><strong>SKU</strong><br>{{ product.sku }}</div>
-      <div><strong>Manufacturer</strong><br>{{ product.manufacturer|default:"—" }}</div>
-      <div><strong>Registered</strong><br>{{ product.created_at|date:"d M Y H:i" }}</div>
-      {% if product.description %}
-      <div><strong>Description</strong><br>{{ product.description }}</div>
-      {% endif %}
+      <div><strong>SKU</strong>{{ product.sku }}</div>
+      <div><strong>Manufacturer</strong>{{ product.manufacturer|default:"—" }}</div>
+      <div><strong>Registered</strong>{{ product.created_at|date:"d M Y H:i" }}</div>
+      {% if product.description %}<div><strong>Description</strong>{{ product.description }}</div>{% endif %}
     </div>
   </div>
 
-  <!-- Add event -->
+  <!-- Log event card with tabs -->
   <div class="card">
-    <h2 style="margin-bottom:1rem">Log Tracking Event</h2>
-    <form method="post" action="{% url 'add_event' product.sku %}">
-      {% csrf_token %}
-      <div class="form-row">
-        <select name="status" required>
-          <option value="">— Select status —</option>
-          {% for val, label in status_choices %}
-          <option value="{{ val }}">{{ label }}</option>
-          {% endfor %}
-        </select>
-        <input name="location" placeholder="Location (e.g. Nairobi Warehouse)" required>
-      </div>
-      <div class="form-row">
-        <textarea name="notes" placeholder="Notes (optional)" rows="2"></textarea>
-      </div>
-      <button type="submit">Record on VeChain</button>
-    </form>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('quick', this)">Quick Log</button>
+      <button class="tab-btn" onclick="switchTab('handover', this)">Record Handover</button>
+    </div>
+
+    <!-- Quick log tab -->
+    <div id="tab-quick" class="tab-pane active">
+      <p style="font-size:0.83rem;color:#888;margin-bottom:1rem">
+        Simple status update, or use the
+        <a href="{% url 'events' %}" style="color:#1a1a2e;font-weight:600">full event form</a>
+        for complete dispatcher/recipient details.
+      </p>
+      <form method="post" action="{% url 'add_event' product.sku %}">
+        {% csrf_token %}
+        <div class="form-row">
+          <select name="status" required>
+            <option value="">— Select status —</option>
+            {% for val, label in status_choices %}
+            <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+          <input name="location" placeholder="Location (e.g. Nairobi Warehouse)" required>
+        </div>
+        <div class="form-row">
+          <textarea name="notes" placeholder="Notes (optional)" rows="2"></textarea>
+        </div>
+        <button type="submit">Record on VeChain</button>
+      </form>
+    </div>
+
+    <!-- Handover tab -->
+    <div id="tab-handover" class="tab-pane">
+      <p style="font-size:0.83rem;color:#888;margin-bottom:1rem">
+        Record when one transporter hands goods to the next. Both parties and quantities are logged on-chain.
+      </p>
+      <form method="post" action="{% url 'add_handover' product.sku %}">
+        {% csrf_token %}
+
+        <div class="section-label">Handover details</div>
+        <div class="form-row">
+          <label>Handover location<input name="handover_location" placeholder="e.g. Kisumu Hub Gate 3" required></label>
+          <label>Date &amp; time<input type="datetime-local" name="handover_datetime" required></label>
+        </div>
+
+        <div class="section-label">Quantities</div>
+        <div class="form-row">
+          <label>Qty dispatched<input name="qty_dispatched" type="number" min="0" step="any" placeholder="0" required></label>
+          <label>Qty received<input name="qty_received" type="number" min="0" step="any" placeholder="0" required></label>
+          <label>Unit
+            <select name="unit_of_measure" required>
+              <option value="">—</option>
+              <option value="kg">kg</option>
+              <option value="tonnes">Tonnes</option>
+              <option value="litres">Litres</option>
+              <option value="units">Units</option>
+              <option value="boxes">Boxes</option>
+              <option value="bags">Bags</option>
+              <option value="pallets">Pallets</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-row">
+          <textarea name="qty_discrepancy_note" placeholder="Discrepancy note (if quantities differ)" rows="2"></textarea>
+        </div>
+
+        <div class="section-label">Outgoing transporter (handing over)</div>
+        <div class="form-row">
+          <label>Full name<input name="outgoing_transporter" placeholder="Name of person releasing goods" required></label>
+          <label>Role / title<input name="outgoing_role" placeholder="e.g. Driver, Warehouse Manager"></label>
+        </div>
+        <div class="form-row">
+          <label>Signature (type full name)<input name="outgoing_signature" placeholder="Type full name to sign"></label>
+        </div>
+
+        <div class="section-label">Incoming transporter (receiving)</div>
+        <div class="form-row">
+          <label>Full name<input name="incoming_transporter" placeholder="Name of person receiving goods" required></label>
+          <label>Role / title<input name="incoming_role" placeholder="e.g. Driver, Distributor"></label>
+        </div>
+        <div class="form-row">
+          <label>Signature (type full name)<input name="incoming_signature" placeholder="Type full name to sign"></label>
+        </div>
+
+        <div class="section-label">Transport (optional)</div>
+        <div class="form-row">
+          <label>Carrier<input name="carrier_name" placeholder="e.g. Siginon Logistics"></label>
+          <label>Vehicle plate<input name="vehicle_plate" placeholder="e.g. KDA 123B"></label>
+          <label>Mode
+            <select name="transport_mode">
+              <option value="">—</option>
+              <option value="road">Road</option>
+              <option value="rail">Rail</option>
+              <option value="air">Air</option>
+              <option value="sea">Sea / Lake</option>
+              <option value="motorcycle">Motorcycle</option>
+            </select>
+          </label>
+        </div>
+
+        <div style="margin-top:1rem">
+          <button type="submit">Record Handover on VeChain</button>
+        </div>
+      </form>
+    </div>
   </div>
 
   <!-- Timeline -->
   <div class="card">
-    <h2 style="margin-bottom:1.25rem">Tracking History</h2>
+    <h2>Tracking History</h2>
     {% if events %}
     <div class="timeline">
       {% for e in events %}
-      <div class="event" id="event-{{ e.id }}">
+      <div class="event {% if e.status == 'handover' %}is-handover{% endif %}" id="event-{{ e.id }}">
+
         <div class="event-header">
           <span class="badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
           <span class="time">{{ e.timestamp|date:"d M Y H:i" }}</span>
+          <span style="font-size:0.85rem">📍 {{ e.location }}</span>
+          {% if e.destination_location %}
+          <span style="font-size:0.82rem;color:#999">→ {{ e.destination_location }}</span>
+          {% endif %}
         </div>
-        <div class="location">📍 {{ e.location }}</div>
+
         {% if e.notes %}<div class="notes">{{ e.notes }}</div>{% endif %}
-        <div class="tx-info">
+
+        {% if e.status == "handover" %}
+        <!-- Handover quantity block -->
+        <div class="handover-qty">
+          <div class="qty-cell">
+            <div class="qty-label">Dispatched</div>
+            <div class="qty-value">{{ e.qty_dispatched|default:"—" }}</div>
+            <div class="qty-unit">{{ e.unit_of_measure }}</div>
+          </div>
+          <div class="qty-cell">
+            <div class="qty-label">Received</div>
+            <div class="qty-value {% if e.qty_dispatched and e.qty_received and e.qty_dispatched != e.qty_received %}discrepancy{% endif %}">
+              {{ e.qty_received|default:"—" }}
+            </div>
+            <div class="qty-unit">{{ e.unit_of_measure }}</div>
+          </div>
+          {% if e.handover_location %}
+          <div class="qty-cell">
+            <div class="qty-label">Handover point</div>
+            <div style="font-size:0.85rem;font-weight:600;color:#1a1a2e">{{ e.handover_location }}</div>
+            {% if e.handover_datetime %}<div class="qty-unit">{{ e.handover_datetime }}</div>{% endif %}
+          </div>
+          {% endif %}
+        </div>
+        {% if e.qty_discrepancy_note %}
+        <div class="discrepancy-note">⚠ {{ e.qty_discrepancy_note }}</div>
+        {% endif %}
+        {% endif %}
+
+        <!-- Goods strip (non-handover) -->
+        {% if e.status != "handover" and e.goods_name or e.quantity %}
+        <div class="goods-strip">
+          {% if e.goods_name %}<span><strong>Goods:</strong> {{ e.goods_name }}</span>{% endif %}
+          {% if e.goods_category %}<span><strong>Category:</strong> {{ e.goods_category }}</span>{% endif %}
+          {% if e.quantity %}<span><strong>Qty:</strong> {{ e.quantity }} {{ e.unit_of_measure }}</span>{% endif %}
+          {% if e.batch_number %}<span><strong>Batch:</strong> {{ e.batch_number }}</span>{% endif %}
+          {% if e.goods_condition %}<span><strong>Condition:</strong> {{ e.goods_condition }}</span>{% endif %}
+          {% if e.cold_chain %}<span class="flag flag-cold">❄ Cold chain</span>{% endif %}
+          {% if e.hazardous  %}<span class="flag flag-hazard">⚠ Hazardous</span>{% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Dispatcher / Recipient -->
+        {% if e.dispatcher_name or e.recipient_name %}
+        <div class="accountability">
+          {% if e.dispatcher_name %}
+          <div class="party">
+            <div class="party-title">{% if e.status == "handover" %}Outgoing transporter{% else %}Dispatched by{% endif %}</div>
+            <div class="party-name">{{ e.dispatcher_name }}</div>
+            {% if e.dispatcher_role %}<div class="party-role">{{ e.dispatcher_role }}</div>{% endif %}
+            {% if e.dispatcher_signature %}<div class="party-sig">Signed: {{ e.dispatcher_signature }}</div>{% endif %}
+            {% if e.dispatcher_date %}<div class="party-date">{{ e.dispatcher_date }}</div>{% endif %}
+          </div>
+          {% endif %}
+          {% if e.recipient_name %}
+          <div class="party">
+            <div class="party-title">{% if e.status == "handover" %}Incoming transporter{% else %}Received by{% endif %}</div>
+            <div class="party-name">{{ e.recipient_name }}</div>
+            {% if e.recipient_role %}<div class="party-role">{{ e.recipient_role }}</div>{% endif %}
+            {% if e.recipient_signature %}<div class="party-sig">Signed: {{ e.recipient_signature }}</div>{% endif %}
+            {% if e.recipient_date %}<div class="party-date">{{ e.recipient_date }}</div>{% endif %}
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Logistics strip -->
+        {% if e.carrier_name or e.transport_mode or e.driver_name %}
+        <div class="logistics-strip">
+          {% if e.carrier_name %}<span><strong>Carrier:</strong> {{ e.carrier_name }}</span>{% endif %}
+          {% if e.transport_mode %}<span><strong>Mode:</strong> {{ e.transport_mode }}</span>{% endif %}
+          {% if e.tracking_number %}<span><strong>Waybill:</strong> {{ e.tracking_number }}</span>{% endif %}
+          {% if e.vehicle_plate %}<span><strong>Plate:</strong> {{ e.vehicle_plate }}</span>{% endif %}
+          {% if e.driver_name %}<span><strong>Driver:</strong> {{ e.driver_name }}</span>{% endif %}
+          {% if e.insurance_covered %}<span class="flag flag-insured">✓ Insured</span>{% endif %}
+          {% if e.customs_cleared   %}<span class="flag flag-customs">✓ Customs cleared</span>{% endif %}
+        </div>
+        {% endif %}
+
+        <!-- TX row with copy button and insight.vecha.in link -->
+        <div class="tx-row">
           {% if e.tx_id %}
-            Chain:
-            <span class="tx-{{ e.tx_status }}" id="status-{{ e.id }}">
-              {{ e.tx_status }}
-            </span>
-            ·
-            <a href="{{ e.explorer_url }}" target="_blank">
-              {{ e.tx_id|slice:":20" }}…
+            <span>Chain:</span>
+            <span class="tx-{{ e.tx_status }}" id="status-{{ e.id }}">{{ e.tx_status }}</span>
+            <span>·</span>
+            <a href="https://insight.vecha.in/#/test/txs/{{ e.tx_id }}" target="_blank" rel="noopener">
+              {{ e.tx_id|slice:":22" }}…
             </a>
+            <button class="copy-btn" onclick="copyHash('{{ e.tx_id }}', this)">Copy hash</button>
             {% if e.tx_status == "pending" %}
-            <button onclick="checkStatus({{ e.id }})"
-              style="margin-left:6px;font-size:0.72rem;padding:2px 8px;
-                     border:1px solid #ddd;border-radius:4px;cursor:pointer;background:white;">
-              Refresh
-            </button>
+            <button class="copy-btn" onclick="checkStatus({{ e.id }})">Refresh</button>
             {% endif %}
           {% else %}
             <span class="tx-error">Not recorded on chain</span>
           {% endif %}
         </div>
+
       </div>
       {% endfor %}
     </div>
@@ -157,15 +385,33 @@
 </div>
 
 <script>
-async function checkStatus(eventId) {
-  const res  = await fetch(`/events/${eventId}/status/`);
-  const data = await res.json();
-  const el   = document.getElementById(`status-${eventId}`);
-  if (el) {
-    el.textContent  = data.tx_status;
-    el.className    = `tx-${data.tx_status}`;
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
   }
-}
+
+  async function checkStatus(eventId) {
+    const res  = await fetch(`/events/${eventId}/status/`);
+    const data = await res.json();
+    const el   = document.getElementById(`status-${eventId}`);
+    if (el) {
+      el.textContent = data.tx_status;
+      el.className   = `tx-${data.tx_status}`;
+    }
+  }
+
+  function copyHash(hash, btn) {
+    navigator.clipboard.writeText(hash).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy hash';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
 </script>
 </body>
 </html>
