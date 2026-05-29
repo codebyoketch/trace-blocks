@@ -13,4 +13,5 @@ urlpatterns = [
     path("interface/",                           views.interface_view,   name="interface"),
     path("new/events/",                          views.events_view,      name="events"),
     path("api/events/",                          views.add_event_api,    name="add_event_api"),
+    path("products/<str:sku>/handover/",         views.add_handover,     name="add_handover"),
 ]
