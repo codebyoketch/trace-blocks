@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -432,7 +433,12 @@
         <div class="wallet-status">
           <span class="status-indicator"></span> Connected
         </div>
-        <button class="event-btn" onclick="goToEvents()">Event</button>
+        <div class="button-wrapper">
+  <a href="{% url 'create_product' %}" class="event-btn-link">
+    <button class="event-btn">Event</button>
+  </a>
+</div>
+
       </div>
     </header>
 
