@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
 <meta charset="UTF-8">
 <title>Sign Up | Trace-Blockz</title>
 </head>
@@ -131,3 +132,117 @@ function toggleAccountFields(type) {
 
 </body>
 </html>
+=======
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traceblocks</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; }
+    header { background: #1a1a2e; color: white; padding: 1rem 2rem;
+             display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.4rem; letter-spacing: 1px; }
+    header span { font-size: 0.8rem; opacity: 0.6; }
+    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
+    .messages { margin-bottom: 1rem; }
+    .messages li { padding: 0.75rem 1rem; border-radius: 6px; list-style: none;
+                   margin-bottom: 0.5rem; }
+    .messages .success { background: #d4edda; color: #155724; }
+    .messages .error   { background: #f8d7da; color: #721c24; }
+    .messages .warning { background: #fff3cd; color: #856404; }
+    .card { background: white; border-radius: 10px; padding: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #1a1a2e; }
+    .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .form-row input, .form-row textarea, .form-row select {
+      flex: 1; min-width: 160px; padding: 0.6rem 0.75rem;
+      border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
+    button[type=submit] {
+      background: #1a1a2e; color: white; border: none;
+      padding: 0.65rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    button[type=submit]:hover { background: #16213e; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th, td { text-align: left; padding: 0.7rem 0.75rem; border-bottom: 1px solid #eee; }
+    th { background: #f9f9f9; font-weight: 600; color: #555; }
+    a { color: #1a1a2e; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px;
+             font-size: 0.75rem; font-weight: 600; }
+    .badge-manufactured   { background: #e3f2fd; color: #1565c0; }
+    .badge-shipped         { background: #f3e5f5; color: #6a1b9a; }
+    .badge-in_transit      { background: #fff8e1; color: #f57f17; }
+    .badge-at_hub          { background: #fce4ec; color: #880e4f; }
+    .badge-out_for_delivery{ background: #e8f5e9; color: #1b5e20; }
+    .badge-delivered       { background: #e8f5e9; color: #2e7d32; }
+    .badge-unknown         { background: #eee; color: #777; }
+    .empty { color: #999; font-style: italic; padding: 1rem 0; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>⛓ Traceblocks</h1>
+  <span>VeChain Testnet</span>
+</header>
+
+<div class="container">
+
+  {% if messages %}
+  <ul class="messages">
+    {% for m in messages %}
+    <li class="{{ m.tags }}">{{ m }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <!-- Add product -->
+  <div class="card">
+    <h2>Register New Product</h2>
+    <form method="post" action="{% url 'create_product' %}">
+      {% csrf_token %}
+      <div class="form-row">
+        <input name="name"         placeholder="Product name"   required>
+        <input name="sku"          placeholder="SKU / Batch ID" required>
+        <input name="manufacturer" placeholder="Manufacturer">
+      </div>
+      <div class="form-row">
+        <textarea name="description" placeholder="Description (optional)" rows="2"></textarea>
+      </div>
+      <button type="submit">Register &amp; Record on Chain</button>
+    </form>
+  </div>
+
+  <!-- Product list -->
+  <div class="card">
+    <h2>Products</h2>
+    {% if products %}
+    <table>
+      <thead>
+        <tr>
+          <th>SKU</th><th>Name</th><th>Manufacturer</th><th>Status</th><th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in products %}
+        <tr>
+          <td><a href="{% url 'product_detail' p.sku %}">{{ p.sku }}</a></td>
+          <td>{{ p.name }}</td>
+          <td>{{ p.manufacturer }}</td>
+          <td>
+            <span class="badge badge-{{ p.current_status }}">
+              {{ p.current_status|title }}
+            </span>
+          </td>
+          <td>{{ p.created_at|date:"d M Y H:i" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="empty">No products yet. Register one above.</p>
+    {% endif %}
+  </div>
+
+</div>
+</body>
+</html>
+>>>>>>> origin/blockchain

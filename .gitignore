@@ -58,7 +58,6 @@ cover/
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
 db.sqlite3-journal
 
 # Flask stuff:
@@ -216,7 +215,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+<<<<<<< HEAD
 
 .env
 
 tracer/
+=======
+trace/
+traceblocks/getKey.js
+traceblocks/node_modules/
+traceblocks/package-lock.json
+traceblocks/package.json
+>>>>>>> origin/blockchain

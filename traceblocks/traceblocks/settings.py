@@ -120,3 +120,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# ==============================================================================
+# VECHAIN BLOCKCHAIN CONFIGURATION
+# ==============================================================================
+
+# Public Testnet Endpoint
+VECHAIN_NODE_URL = "https://node-testnet.vechain.energy"
+
+# Public Testnet Chain Tag ID (Hex 0x27)
+VECHAIN_CHAIN_TAG = "0x27"
+
+# Test Wallet Private Key (Replace with your hackathon development private key string)
+# WARNING: NEVER push real production private keys to public GitHub repositories!
+VECHAIN_PRIVATE_KEY = "2075641d6b38f59fea30d541f2b29ba30be9d7c8cd5917bd7ac5204a7921c680"
