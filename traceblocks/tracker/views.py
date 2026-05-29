@@ -121,3 +121,6 @@ def refresh_tx_status(request, event_id):
 
 def interface_view(request):
     return render(request, "interface.html")
+
+def events_view(request):
+    return render(request, "events.html")
