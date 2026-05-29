@@ -11,18 +11,20 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL = 'tracker.User'
 
-
+load_dotenv(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zx(*j9&y-(p18v^x!epth+hef0)mtxn!az%9^e!+s_2jle3k3h'
+SECRET_KEY = os.getenv('super_secret_key1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -132,11 +134,11 @@ STATIC_URL = 'static/'
 # ==============================================================================
 
 # Public Testnet Endpoint
-VECHAIN_NODE_URL = "https://node-testnet.vechain.energy"
+VECHAIN_NODE_URL = os.getenv('super_secret_key3')
 
 # Public Testnet Chain Tag ID (Hex 0x27)
 VECHAIN_CHAIN_TAG = "0x27"
 
 # Test Wallet Private Key (Replace with your hackathon development private key string)
 # WARNING: NEVER push real production private keys to public GitHub repositories!
-VECHAIN_PRIVATE_KEY = "2075641d6b38f59fea30d541f2b29ba30be9d7c8cd5917bd7ac5204a7921c680"
+VECHAIN_PRIVATE_KEY = os.getenv('super_secret_key2')

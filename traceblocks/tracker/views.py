@@ -14,13 +14,8 @@ from .models import User
 logger = logging.getLogger(__name__)
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
-
 def _get_chain():
     return VeChainService()
-
-
-# ── Product views ─────────────────────────────────────────────────────────────
 
 def index(request):
     products = Product.objects.prefetch_related("events").order_by("-created_at")
@@ -277,9 +272,6 @@ def events_view(request):
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-
-# Create your views here.
-
 @login_required
 def profile_view(request):
     return render(request, 'interface.html')
@@ -287,50 +279,64 @@ def profile_view(request):
 def CreateUser_view(request):
     if request.method != "POST":
         return render(request, 'index.html')
-        
+
     u_n = request.POST.get('username', '').strip()
-    e = request.POST.get('email', '').strip()
-    p = request.POST.get('password')
-    ph = request.POST.get('phonenumber')
-    u_type = request.POST.get('user_type')
-    
+    e   = request.POST.get('email', '').strip()
+    p   = request.POST.get('password')
+    ph  = request.POST.get('phonenumber')
+    u_type = request.POST.get('user_type', '').strip().upper()
+
     f_n, s_n, m_n = "", "", ""
     org_name = None
 
-    if not e:
+    # ── Validate account type ──────────────────────────────────────
+    if u_type not in ('NORMAL', 'ORGANISATION'):
+        messages.error(request, "Invalid account type selected.")
+        return render(request, 'index.html')
+
+ 
         messages.error(request, "An email address is required.")
         return render(request, 'index.html')
-        
+
     if User.objects.filter(email__iexact=e).exists():
         messages.error(request, "A user with this email address already exists.")
         return render(request, 'index.html')
 
+
     if u_type == 'NORMAL':
-        f_n = request.POST.get('firstname', '')
-        s_n = request.POST.get('lastname', '')
-        m_n = request.POST.get('middlename', '')
+        f_n = request.POST.get('firstname', '').strip()
+        s_n = request.POST.get('lastname', '').strip()
+        m_n = request.POST.get('middlename', '').strip()
+
         if not s_n:
             messages.error(request, "Last name is required.")
             return render(request, 'index.html')
-            
+
+        if not u_n:
+            messages.error(request, "Username is required.")
+            return render(request, 'index.html')
+
     elif u_type == 'ORGANISATION':
         org_name = request.POST.get('organisation_name', '').strip()
+
         if not org_name:
             messages.error(request, "Organisation name is required.")
             return render(request, 'index.html')
-        
+
+        # Auto-generate username from org name if not provided
         if not u_n:
             u_n = org_name.replace(" ", "").lower()
-            
-        # Loop guarantees uniqueness if the first random number choice clashes
-        while User.objects.filter(username=u_n).exists():
-            u_n = f"{org_name.replace(' ', '').lower()}{random.randint(100, 999)}"
 
-    # Check manual usernames picked by normal users or fallback org names
-    if User.objects.filter(username=u_n).exists():
-        messages.error(request, f"The username '{u_n}' is already taken. Please choose another one.")
+    
+        s_n = "N/A"
+
+    if not u_n:
+        messages.error(request, "Username is required.")
         return render(request, 'index.html')
 
+    if User.objects.filter(username__iexact=u_n).exists():
+        messages.error(request, f"The username '{u_n}' is already taken. Please choose another.")
+        return render(request, 'index.html')
     try:
         User.objects.create_user(
             username=u_n,
@@ -341,13 +347,14 @@ def CreateUser_view(request):
             second_name=s_n,
             middle_name=m_n,
             phonenumber=ph,
-            organisation_name=org_name
+            organisation_name=org_name,
         )
+        messages.success(request, "Account created successfully. Please log in.")
         return redirect('login')
-    except Exception as error:
-        messages.error(request, f"Database registration failed: {error}")
-        return render(request, 'index.html')
 
+    except Exception as error:
+        messages.error(request, f"Registration failed: {error}")
+        return render(request, 'index.html')
 
 def Login_view(request):
     if request.method == "POST":
@@ -365,6 +372,7 @@ def Login_view(request):
             
     return render(request, 'login.html')
 
+@login_required
 def interface_view(request):
     products = Product.objects.prefetch_related("events").order_by("-created_at")
     recent_events = TrackingEvent.objects.select_related("product").order_by("-timestamp")[:20]
@@ -379,6 +387,10 @@ def interface_view(request):
 
 def events_view(request):
     return render(request, "events.html")
+
+def profile_view(request):
+
+    return render(request, "profile.html", {'User':User})
 
 
 @csrf_exempt
