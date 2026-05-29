@@ -221,3 +221,8 @@ traceblocks/getKey.js
 traceblocks/node_modules/
 traceblocks/package-lock.json
 traceblocks/package.json
+tracer/bin/gunicornc
+tracer/bin/gunicorn
+tracer/bin/dotenv
+traceblocks/tracker/migrations/0003_trackingevent_handover_datetime_and_more.py
+traceblocks/tracker/migrations/0002_trackingevent_batch_number_and_more.py

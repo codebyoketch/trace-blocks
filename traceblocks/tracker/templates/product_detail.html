@@ -3,388 +3,891 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ product.name }} — Traceblocks</title>
+  <title>{{ product.name }} — TraceBlocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #f5f5f5; color: #222; }
-    header { background: #1a1a2e; color: white; padding: 1rem 2rem;
-             display: flex; align-items: center; gap: 1rem; }
-    header a { color: #aaa; text-decoration: none; font-size: 0.9rem; }
-    header a:hover { color: white; }
-    header h1 { font-size: 1.2rem; }
-    .container { max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
-    .messages { margin-bottom: 1rem; }
-    .messages li { padding: 0.75rem 1rem; border-radius: 6px; list-style: none; margin-bottom: 0.5rem; }
-    .messages .success { background: #d4edda; color: #155724; }
-    .messages .error   { background: #f8d7da; color: #721c24; }
-    .messages .warning { background: #fff3cd; color: #856404; }
-    .card { background: white; border-radius: 10px; padding: 1.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,.08); margin-bottom: 1.5rem; }
-    .card h2 { font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
-    .meta { display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.9rem; color: #555; }
-    .meta strong { color: #222; display: block; margin-bottom: 2px; }
-    .form-row { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
-    .form-row input, .form-row textarea, .form-row select {
-      flex: 1; min-width: 160px; padding: 0.6rem 0.75rem;
-      border: 1px solid #ddd; border-radius: 6px; font-size: 0.9rem; }
-    .form-row label { flex: 1; min-width: 160px; font-size: 0.82rem; color: #555; }
-    .form-row label input { width: 100%; margin-top: 4px; }
-    button[type=submit] {
-      background: #1a1a2e; color: white; border: none;
-      padding: 0.65rem 1.5rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
-    button[type=submit]:hover { background: #16213e; }
-    .section-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-                     letter-spacing: 0.07em; color: #888; margin: 1rem 0 0.4rem; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Tabs */
-    .tabs { display: flex; gap: 4px; margin-bottom: 1.25rem; border-bottom: 2px solid #eee; }
-    .tab-btn { background: none; border: none; padding: 0.5rem 1rem; font-size: 0.88rem;
-               cursor: pointer; color: #777; border-bottom: 2px solid transparent;
-               margin-bottom: -2px; transition: all 0.15s; }
-    .tab-btn.active { color: #1a1a2e; border-bottom-color: #1a1a2e; font-weight: 600; }
-    .tab-pane { display: none; }
+    :root {
+      --bg:        #F5F3EE;
+      --surface:   #FFFFFF;
+      --surface2:  #F9F8F5;
+      --sidebar:   #1A2E22;
+      --border:    #E2DED6;
+      --border2:   #CCC9BF;
+      --text:      #1C1A17;
+      --muted:     #7A7669;
+      --soft:      #A8A49A;
+      --accent:    #2D6A4F;
+      --accent-lt: #E8F4EE;
+      --accent2:   #B5653A;
+      --accent2-lt:#FBF0EA;
+      --info:      #1E5FA6;
+      --info-lt:   #E8F1FB;
+      --warn:      #8A5E0A;
+      --warn-lt:   #FEF6E4;
+      --font-d:    'Fraunces', serif;
+      --font-b:    'DM Sans', sans-serif;
+      --font-m:    'DM Mono', monospace;
+      --radius:    10px;
+      --radius-lg: 14px;
+      --shadow:    0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+      --sidebar-w: 228px;
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    .sidebar-noise {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.15) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .sidebar-glow {
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,106,79,0.3) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .sidebar > * { position: relative; z-index: 1; }
+
+    .sidebar-top { padding: 28px 20px 0; }
+
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      text-decoration: none; margin-bottom: 36px;
+    }
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .logo-mark svg {
+      width: 15px; height: 15px; stroke: #fff; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .logo-name {
+      font-family: var(--font-d); font-size: 16px; font-weight: 400;
+      color: #E8F4EE; letter-spacing: -0.01em;
+    }
+
+    .nav-section-label {
+      font-family: var(--font-m); font-size: 9px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(111,196,154,0.45); padding: 14px 8px 6px;
+    }
+
+    .nav-menu {
+      display: flex; flex-direction: column; gap: 1px;
+      flex: 1; padding: 0 8px; overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      color: rgba(208,235,224,0.55); text-decoration: none;
+      transition: all 0.18s; white-space: nowrap;
+    }
+    .nav-item svg {
+      width: 15px; height: 15px; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0; opacity: 0.7;
+    }
+    .nav-item:hover { background: rgba(45,106,79,0.25); color: #D0EBE0; }
+    .nav-item.active { background: rgba(45,106,79,0.35); color: #E8F4EE; font-weight: 600; }
+    .nav-item.active svg { opacity: 1; }
+    .nav-ext { font-size: 11px; opacity: 0.5; margin-left: auto; }
+
+    .sidebar-footer {
+      padding: 16px 16px 20px;
+      border-top: 1px solid rgba(45,106,79,0.25);
+      margin-top: auto;
+    }
+    .accounts-link {
+      display: block; font-family: var(--font-m); font-size: 11px;
+      color: rgba(111,196,154,0.5); text-decoration: none;
+      letter-spacing: 0.04em; margin-bottom: 14px; transition: color 0.15s;
+    }
+    .accounts-link:hover { color: #6FC49A; }
+    .user-row { display: flex; align-items: center; gap: 10px; }
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 14px; font-weight: 400;
+      color: #fff; flex-shrink: 0;
+      border: 2px solid rgba(111,196,154,0.3);
+    }
+    .user-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; flex: 1; }
+    #display-username {
+      font-size: 13px; font-weight: 600; color: #D0EBE0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .logout-btn {
+      font-family: var(--font-m); font-size: 10px;
+      color: rgba(111,196,154,0.45); background: none; border: none;
+      cursor: pointer; padding: 0; text-align: left;
+      letter-spacing: 0.04em; transition: color 0.15s;
+    }
+    .logout-btn:hover { color: #F09595; }
+
+    /* ══ MAIN ══ */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1; display: flex; flex-direction: column;
+      min-height: 100vh; overflow-y: auto;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 62px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10; gap: 16px; flex-wrap: wrap;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 12px; }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-m); font-size: 11px; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.04em; transition: color 0.15s;
+    }
+    .back-link svg {
+      width: 13px; height: 13px; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .back-link:hover { color: var(--accent); }
+    .topbar-divider { color: var(--border2); font-size: 14px; }
+    .topbar-title {
+      font-family: var(--font-d); font-size: 18px; font-weight: 300;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+    .topbar-title em { font-style: italic; color: var(--accent); }
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .network-badge {
+      display: flex; align-items: center; gap: 7px;
+      font-family: var(--font-m); font-size: 11px; color: var(--muted);
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: 20px; padding: 6px 14px; letter-spacing: 0.04em;
+    }
+    .net-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+      animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── Inner ── */
+    .inner { padding: 28px 36px 48px; max-width: 960px; }
+
+    /* ── Flash messages ── */
+    .messages { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .messages li {
+      padding: 10px 16px; border-radius: var(--radius);
+      font-size: 13px; font-weight: 500;
+    }
+    .messages .success { background: var(--accent-lt); color: var(--accent); border: 1px solid #B5D9C8; }
+    .messages .error   { background: #FBE8E8; color: #A32D2D; border: 1px solid #F0BFBF; }
+    .messages .warning { background: var(--warn-lt); color: var(--warn); border: 1px solid #F0D89A; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow);
+      margin-bottom: 18px; overflow: hidden;
+    }
+    .card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+    .card-title {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .card-title-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0;
+    }
+    .card-body { padding: 20px; }
+
+    /* ── Product meta ── */
+    .meta-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+    .meta-item {}
+    .meta-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
+    }
+    .meta-value { font-size: 13px; font-weight: 500; color: var(--text); }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+      padding: 0 20px;
+    }
+    .tab-btn {
+      background: none; border: none; border-bottom: 2px solid transparent;
+      padding: 12px 16px; font-size: 13px; font-weight: 500;
+      font-family: var(--font-b); color: var(--muted);
+      cursor: pointer; margin-bottom: -1px; transition: all 0.15s;
+      letter-spacing: 0;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .tab-pane { display: none; padding: 20px; }
     .tab-pane.active { display: block; }
 
-    /* Timeline */
-    .timeline { position: relative; padding-left: 1.5rem; }
-    .timeline::before { content: ""; position: absolute; left: 0.4rem; top: 0; bottom: 0;
-                        width: 2px; background: #e0e0e0; }
-    .event { position: relative; margin-bottom: 2rem; }
-    .event::before { content: ""; position: absolute; left: -1.15rem; top: 0.45rem;
-                     width: 10px; height: 10px; border-radius: 50%;
-                     background: #1a1a2e; border: 2px solid white;
-                     box-shadow: 0 0 0 2px #1a1a2e; }
-    .event.is-handover::before { background: #7c3aed; box-shadow: 0 0 0 2px #7c3aed; }
-    .event-header { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; }
-    .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
-    .badge-manufactured    { background: #e3f2fd; color: #1565c0; }
-    .badge-shipped         { background: #f3e5f5; color: #6a1b9a; }
-    .badge-in_transit      { background: #fff8e1; color: #f57f17; }
-    .badge-at_hub          { background: #fce4ec; color: #880e4f; }
-    .badge-out_for_delivery{ background: #e8f5e9; color: #1b5e20; }
-    .badge-delivered       { background: #e8f5e9; color: #2e7d32; }
-    .badge-handover        { background: #ede9fe; color: #5b21b6; }
-    .time  { font-size: 0.8rem; color: #999; }
-    .notes { font-size: 0.85rem; color: #666; margin-top: 0.2rem; font-style: italic; }
-    .empty { color: #999; font-style: italic; }
+    /* ── Forms ── */
+    .form-hint { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
+    .form-hint a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .form-hint a:hover { text-decoration: underline; }
+
+    .section-label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 16px 0 8px; padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+    .form-field { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 5px; }
+    .form-field label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase; color: var(--muted);
+    }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%; padding: 8px 12px;
+      background: var(--surface2); border: 1px solid var(--border2);
+      border-radius: var(--radius); font-size: 13px;
+      font-family: var(--font-b); color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none; border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+    .form-field textarea { resize: vertical; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 20px; background: var(--accent); color: #fff;
+      border: none; border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+      letter-spacing: 0.01em; margin-top: 8px;
+    }
+    .btn-primary:hover {
+      background: #255A42;
+      box-shadow: 0 4px 12px rgba(45,106,79,0.3);
+      transform: translateY(-1px);
+    }
+    .btn-primary svg {
+      width: 14px; height: 14px; stroke: currentColor; fill: none;
+      stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    /* ── Timeline ── */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before {
+      content: ''; position: absolute; left: 7px; top: 6px; bottom: 0;
+      width: 2px; background: var(--border); border-radius: 1px;
+    }
+
+    .event { position: relative; margin-bottom: 28px; }
+    .event::before {
+      content: ''; position: absolute; left: -19px; top: 5px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent); border: 2px solid var(--surface);
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    .event.is-handover::before {
+      background: var(--info);
+      box-shadow: 0 0 0 2px var(--info);
+    }
+
+    .event-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+
+    .badge {
+      display: inline-block; padding: 3px 10px; border-radius: 20px;
+      font-size: 10px; font-weight: 600; font-family: var(--font-m);
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .badge-manufactured    { background: var(--info-lt);   color: var(--info); }
+    .badge-shipped         { background: var(--accent-lt); color: var(--accent); }
+    .badge-in_transit      { background: var(--warn-lt);   color: var(--warn); }
+    .badge-at_hub          { background: var(--accent2-lt);color: var(--accent2); }
+    .badge-out_for_delivery{ background: #EAF3DE; color: #3B6D11; }
+    .badge-delivered       { background: var(--accent-lt); color: var(--accent); }
+    .badge-handover        { background: var(--info-lt);   color: var(--info); }
+
+    .event-time { font-family: var(--font-m); font-size: 11px; color: var(--soft); }
+    .event-loc  { font-size: 13px; color: var(--muted); }
+    .event-dest { font-size: 12px; color: var(--soft); }
+    .event-notes { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+    /* Goods strip */
+    .goods-strip {
+      display: flex; flex-wrap: wrap; gap: 6px 18px;
+      margin-top: 10px; padding: 10px 14px;
+      background: var(--info-lt); border: 1px solid #C5D9F0;
+      border-radius: var(--radius); font-size: 12px; color: var(--text);
+    }
+    .goods-strip strong { color: var(--info); font-weight: 600; }
+
+    /* Handover qty */
+    .handover-qty {
+      display: flex; margin-top: 10px;
+      border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+    }
+    .qty-cell {
+      flex: 1; padding: 12px 16px; background: var(--surface);
+      text-align: center; border-right: 1px solid var(--border);
+    }
+    .qty-cell:last-child { border-right: none; }
+    .qty-label {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: var(--muted); margin-bottom: 5px;
+      font-family: var(--font-m);
+    }
+    .qty-value {
+      font-family: var(--font-d); font-size: 26px; font-weight: 300;
+      color: var(--text); line-height: 1; letter-spacing: -0.02em;
+    }
+    .qty-value.discrepancy { color: #A32D2D; }
+    .qty-unit  { font-family: var(--font-m); font-size: 10px; color: var(--soft); margin-top: 2px; }
+    .discrepancy-note {
+      font-size: 12px; color: #A32D2D;
+      background: #FBE8E8; border: 1px solid #F0BFBF;
+      border-radius: var(--radius); padding: 8px 12px; margin-top: 8px;
+    }
 
     /* Accountability */
-    .accountability { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+    .accountability { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     @media(max-width:600px) { .accountability { grid-template-columns: 1fr; } }
-    .party { border: 1px solid #e8e8e8; border-radius: 8px; padding: 0.8rem 1rem; background: #fafafa; }
-    .party-title { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-                   letter-spacing: 0.06em; color: #888; margin-bottom: 0.4rem; }
-    .party-name  { font-size: 0.92rem; font-weight: 600; color: #1a1a2e; }
-    .party-role  { font-size: 0.78rem; color: #777; margin: 2px 0 6px; }
-    .party-sig   { font-size: 0.78rem; color: #555; border-top: 1px dashed #ddd;
-                   padding-top: 0.35rem; font-style: italic; }
-    .party-date  { font-size: 0.72rem; color: #999; margin-top: 2px; }
+    .party {
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 12px 14px; background: var(--surface2);
+    }
+    .party-title {
+      font-size: 9px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.09em; color: var(--muted); margin-bottom: 6px;
+      font-family: var(--font-m);
+    }
+    .party-name  { font-size: 14px; font-weight: 600; color: var(--text); }
+    .party-role  { font-size: 12px; color: var(--muted); margin: 2px 0 8px; }
+    .party-sig {
+      font-size: 12px; color: var(--muted);
+      border-top: 1px dashed var(--border2); padding-top: 7px;
+      font-style: italic; font-family: var(--font-d);
+    }
+    .party-date  { font-family: var(--font-m); font-size: 10px; color: var(--soft); margin-top: 3px; }
 
-    /* Handover qty block */
-    .handover-qty { display: flex; gap: 0; margin-top: 0.75rem; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
-    .qty-cell { flex: 1; padding: 0.75rem 1rem; background: #fff; text-align: center; border-right: 1px solid #eee; }
-    .qty-cell:last-child { border-right: none; }
-    .qty-label { font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
-                 letter-spacing: 0.06em; color: #888; margin-bottom: 4px; }
-    .qty-value { font-size: 1.25rem; font-weight: 700; color: #1a1a2e; }
-    .qty-value.discrepancy { color: #c62828; }
-    .qty-unit  { font-size: 0.72rem; color: #999; }
-    .discrepancy-note { font-size: 0.8rem; color: #c62828; background: #fff5f5;
-                        border: 1px solid #fecaca; border-radius: 6px;
-                        padding: 0.5rem 0.75rem; margin-top: 0.5rem; }
+    /* Logistics strip */
+    .logistics-strip {
+      display: flex; flex-wrap: wrap; gap: 6px 18px;
+      margin-top: 8px; padding: 10px 14px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 12px; color: var(--muted);
+    }
+    .logistics-strip strong { color: var(--text); font-weight: 600; }
 
-    /* Goods / logistics strips */
-    .goods-strip { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.6rem;
-                   padding: 0.65rem 1rem; background: #f0f4ff;
-                   border-radius: 8px; border: 1px solid #dce4ff; font-size: 0.82rem; color: #444; }
-    .goods-strip strong { color: #1a1a2e; }
-    .logistics-strip { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 0.5rem;
-                       padding: 0.6rem 1rem; background: #f5f5f5;
-                       border-radius: 8px; border: 1px solid #e0e0e0; font-size: 0.8rem; color: #555; }
-    .logistics-strip strong { color: #333; }
-    .flag { display: inline-block; font-size: 0.68rem; font-weight: 600;
-            padding: 0.12rem 0.45rem; border-radius: 999px; margin: 2px 3px 0 0; }
-    .flag-cold    { background: #e0f7fa; color: #00695c; }
-    .flag-hazard  { background: #fff3e0; color: #e65100; }
-    .flag-insured { background: #e8f5e9; color: #2e7d32; }
-    .flag-customs { background: #ede7f6; color: #4527a0; }
+    /* Flags */
+    .flag {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; margin: 2px 3px 0 0;
+      font-family: var(--font-m);
+    }
+    .flag-cold    { background: #E0F7F4; color: #00695C; }
+    .flag-hazard  { background: var(--warn-lt); color: var(--warn); }
+    .flag-insured { background: var(--accent-lt); color: var(--accent); }
+    .flag-customs { background: var(--info-lt); color: var(--info); }
 
     /* TX row */
-    .tx-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;
-              font-size: 0.75rem; margin-top: 0.6rem; color: #888; }
-    .tx-row a { color: #1a1a2e; text-decoration: none; font-family: monospace; }
-    .tx-row a:hover { text-decoration: underline; }
-    .tx-pending  { color: #f57f17; }
-    .tx-confirmed{ color: #2e7d32; }
-    .tx-reverted { color: #c62828; }
-    .tx-error    { color: #c62828; }
-    .copy-btn { background: #f0f0f0; border: 1px solid #ddd; border-radius: 4px;
-                padding: 2px 8px; font-size: 0.7rem; cursor: pointer; color: #444;
-                transition: background 0.15s; }
-    .copy-btn:hover { background: #e0e0e0; }
-    .copy-btn.copied { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+    .tx-row {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      margin-top: 10px; padding: 8px 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 11px;
+    }
+    .tx-label { font-family: var(--font-m); font-size: 10px; color: var(--soft); letter-spacing: 0.05em; }
+    .tx-status-badge {
+      font-family: var(--font-m); font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 20px; letter-spacing: 0.05em;
+    }
+    .tx-pending   { background: var(--warn-lt);   color: var(--warn); }
+    .tx-confirmed { background: var(--accent-lt); color: var(--accent); }
+    .tx-reverted  { background: #FBE8E8; color: #A32D2D; }
+    .tx-error     { background: #FBE8E8; color: #A32D2D; }
+    .tx-hash-link {
+      font-family: var(--font-m); font-size: 11px; color: var(--info);
+      text-decoration: none; transition: color 0.15s;
+    }
+    .tx-hash-link:hover { color: var(--accent); text-decoration: underline; }
+    .copy-btn {
+      font-family: var(--font-m); font-size: 10px; padding: 3px 10px;
+      background: var(--surface); border: 1px solid var(--border2);
+      border-radius: 6px; cursor: pointer; color: var(--muted);
+      transition: all 0.15s; letter-spacing: 0.03em;
+    }
+    .copy-btn:hover { background: var(--accent-lt); color: var(--accent); border-color: #B5D9C8; }
+    .copy-btn.copied { background: var(--accent-lt); color: var(--accent); border-color: #B5D9C8; }
+    .tx-not-recorded { font-family: var(--font-m); font-size: 11px; color: #A32D2D; }
+
+    .empty-state {
+      font-family: var(--font-m); font-size: 12px; color: var(--soft);
+      padding: 32px; text-align: center;
+    }
+
+    @media(max-width:768px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-228px); }
+      .main-content { margin-left: 0; }
+      .inner { padding: 20px 18px 40px; }
+      .topbar { padding: 0 18px; }
+    }
   </style>
 </head>
 <body>
-<header>
-  <a href="{% url 'interface' %}">← All Products</a>
-  <h1>{{ product.name }}</h1>
-</header>
+<div style="display:flex;width:100%;">
 
-<div class="container">
-
-  {% if messages %}
-  <ul class="messages">
-    {% for m in messages %}
-    <li class="{{ m.tags }}">{{ m }}</li>
-    {% endfor %}
-  </ul>
-  {% endif %}
-
-  <!-- Product info -->
-  <div class="card">
-    <div class="meta">
-      <div><strong>SKU</strong>{{ product.sku }}</div>
-      <div><strong>Manufacturer</strong>{{ product.manufacturer|default:"—" }}</div>
-      <div><strong>Registered</strong>{{ product.created_at|date:"d M Y H:i" }}</div>
-      {% if product.description %}<div><strong>Description</strong>{{ product.description }}</div>{% endif %}
-    </div>
-  </div>
-
-  <!-- Log event card with tabs -->
-  <div class="card">
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('quick', this)">Quick Log</button>
-      <button class="tab-btn" onclick="switchTab('handover', this)">Record Handover</button>
-    </div>
-
-    <!-- Quick log tab -->
-    <div id="tab-quick" class="tab-pane active">
-      <p style="font-size:0.83rem;color:#888;margin-bottom:1rem">
-        Simple status update, or use the
-        <a href="{% url 'events' %}" style="color:#1a1a2e;font-weight:600">full event form</a>
-        for complete dispatcher/recipient details.
-      </p>
-      <form method="post" action="{% url 'add_event' product.sku %}">
-        {% csrf_token %}
-        <div class="form-row">
-          <select name="status" required>
-            <option value="">— Select status —</option>
-            {% for val, label in status_choices %}
-            <option value="{{ val }}">{{ label }}</option>
-            {% endfor %}
-          </select>
-          <input name="location" placeholder="Location (e.g. Nairobi Warehouse)" required>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-noise"></div>
+    <div class="sidebar-glow"></div>
+    <div class="sidebar-top">
+      <a href="{% url 'interface' %}" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
         </div>
-        <div class="form-row">
-          <textarea name="notes" placeholder="Notes (optional)" rows="2"></textarea>
-        </div>
-        <button type="submit">Record on VeChain</button>
-      </form>
-    </div>
-
-    <!-- Handover tab -->
-    <div id="tab-handover" class="tab-pane">
-      <p style="font-size:0.83rem;color:#888;margin-bottom:1rem">
-        Record when one transporter hands goods to the next. Both parties and quantities are logged on-chain.
-      </p>
-      <form method="post" action="{% url 'add_handover' product.sku %}">
-        {% csrf_token %}
-
-        <div class="section-label">Handover details</div>
-        <div class="form-row">
-          <label>Handover location<input name="handover_location" placeholder="e.g. Kisumu Hub Gate 3" required></label>
-          <label>Date &amp; time<input type="datetime-local" name="handover_datetime" required></label>
-        </div>
-
-        <div class="section-label">Quantities</div>
-        <div class="form-row">
-          <label>Qty dispatched<input name="qty_dispatched" type="number" min="0" step="any" placeholder="0" required></label>
-          <label>Qty received<input name="qty_received" type="number" min="0" step="any" placeholder="0" required></label>
-          <label>Unit
-            <select name="unit_of_measure" required>
-              <option value="">—</option>
-              <option value="kg">kg</option>
-              <option value="tonnes">Tonnes</option>
-              <option value="litres">Litres</option>
-              <option value="units">Units</option>
-              <option value="boxes">Boxes</option>
-              <option value="bags">Bags</option>
-              <option value="pallets">Pallets</option>
-            </select>
-          </label>
-        </div>
-        <div class="form-row">
-          <textarea name="qty_discrepancy_note" placeholder="Discrepancy note (if quantities differ)" rows="2"></textarea>
-        </div>
-
-        <div class="section-label">Outgoing transporter (handing over)</div>
-        <div class="form-row">
-          <label>Full name<input name="outgoing_transporter" placeholder="Name of person releasing goods" required></label>
-          <label>Role / title<input name="outgoing_role" placeholder="e.g. Driver, Warehouse Manager"></label>
-        </div>
-        <div class="form-row">
-          <label>Signature (type full name)<input name="outgoing_signature" placeholder="Type full name to sign"></label>
-        </div>
-
-        <div class="section-label">Incoming transporter (receiving)</div>
-        <div class="form-row">
-          <label>Full name<input name="incoming_transporter" placeholder="Name of person receiving goods" required></label>
-          <label>Role / title<input name="incoming_role" placeholder="e.g. Driver, Distributor"></label>
-        </div>
-        <div class="form-row">
-          <label>Signature (type full name)<input name="incoming_signature" placeholder="Type full name to sign"></label>
-        </div>
-
-        <div class="section-label">Transport (optional)</div>
-        <div class="form-row">
-          <label>Carrier<input name="carrier_name" placeholder="e.g. Siginon Logistics"></label>
-          <label>Vehicle plate<input name="vehicle_plate" placeholder="e.g. KDA 123B"></label>
-          <label>Mode
-            <select name="transport_mode">
-              <option value="">—</option>
-              <option value="road">Road</option>
-              <option value="rail">Rail</option>
-              <option value="air">Air</option>
-              <option value="sea">Sea / Lake</option>
-              <option value="motorcycle">Motorcycle</option>
-            </select>
-          </label>
-        </div>
-
-        <div style="margin-top:1rem">
-          <button type="submit">Record Handover on VeChain</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Timeline -->
-  <div class="card">
-    <h2>Tracking History</h2>
-    {% if events %}
-    <div class="timeline">
-      {% for e in events %}
-      <div class="event {% if e.status == 'handover' %}is-handover{% endif %}" id="event-{{ e.id }}">
-
-        <div class="event-header">
-          <span class="badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
-          <span class="time">{{ e.timestamp|date:"d M Y H:i" }}</span>
-          <span style="font-size:0.85rem">📍 {{ e.location }}</span>
-          {% if e.destination_location %}
-          <span style="font-size:0.82rem;color:#999">→ {{ e.destination_location }}</span>
-          {% endif %}
-        </div>
-
-        {% if e.notes %}<div class="notes">{{ e.notes }}</div>{% endif %}
-
-        {% if e.status == "handover" %}
-        <!-- Handover quantity block -->
-        <div class="handover-qty">
-          <div class="qty-cell">
-            <div class="qty-label">Dispatched</div>
-            <div class="qty-value">{{ e.qty_dispatched|default:"—" }}</div>
-            <div class="qty-unit">{{ e.unit_of_measure }}</div>
-          </div>
-          <div class="qty-cell">
-            <div class="qty-label">Received</div>
-            <div class="qty-value {% if e.qty_dispatched and e.qty_received and e.qty_dispatched != e.qty_received %}discrepancy{% endif %}">
-              {{ e.qty_received|default:"—" }}
-            </div>
-            <div class="qty-unit">{{ e.unit_of_measure }}</div>
-          </div>
-          {% if e.handover_location %}
-          <div class="qty-cell">
-            <div class="qty-label">Handover point</div>
-            <div style="font-size:0.85rem;font-weight:600;color:#1a1a2e">{{ e.handover_location }}</div>
-            {% if e.handover_datetime %}<div class="qty-unit">{{ e.handover_datetime }}</div>{% endif %}
-          </div>
-          {% endif %}
-        </div>
-        {% if e.qty_discrepancy_note %}
-        <div class="discrepancy-note">⚠ {{ e.qty_discrepancy_note }}</div>
-        {% endif %}
-        {% endif %}
-
-        <!-- Goods strip (non-handover) -->
-        {% if e.status != "handover" and e.goods_name or e.quantity %}
-        <div class="goods-strip">
-          {% if e.goods_name %}<span><strong>Goods:</strong> {{ e.goods_name }}</span>{% endif %}
-          {% if e.goods_category %}<span><strong>Category:</strong> {{ e.goods_category }}</span>{% endif %}
-          {% if e.quantity %}<span><strong>Qty:</strong> {{ e.quantity }} {{ e.unit_of_measure }}</span>{% endif %}
-          {% if e.batch_number %}<span><strong>Batch:</strong> {{ e.batch_number }}</span>{% endif %}
-          {% if e.goods_condition %}<span><strong>Condition:</strong> {{ e.goods_condition }}</span>{% endif %}
-          {% if e.cold_chain %}<span class="flag flag-cold">❄ Cold chain</span>{% endif %}
-          {% if e.hazardous  %}<span class="flag flag-hazard">⚠ Hazardous</span>{% endif %}
-        </div>
-        {% endif %}
-
-        <!-- Dispatcher / Recipient -->
-        {% if e.dispatcher_name or e.recipient_name %}
-        <div class="accountability">
-          {% if e.dispatcher_name %}
-          <div class="party">
-            <div class="party-title">{% if e.status == "handover" %}Outgoing transporter{% else %}Dispatched by{% endif %}</div>
-            <div class="party-name">{{ e.dispatcher_name }}</div>
-            {% if e.dispatcher_role %}<div class="party-role">{{ e.dispatcher_role }}</div>{% endif %}
-            {% if e.dispatcher_signature %}<div class="party-sig">Signed: {{ e.dispatcher_signature }}</div>{% endif %}
-            {% if e.dispatcher_date %}<div class="party-date">{{ e.dispatcher_date }}</div>{% endif %}
-          </div>
-          {% endif %}
-          {% if e.recipient_name %}
-          <div class="party">
-            <div class="party-title">{% if e.status == "handover" %}Incoming transporter{% else %}Received by{% endif %}</div>
-            <div class="party-name">{{ e.recipient_name }}</div>
-            {% if e.recipient_role %}<div class="party-role">{{ e.recipient_role }}</div>{% endif %}
-            {% if e.recipient_signature %}<div class="party-sig">Signed: {{ e.recipient_signature }}</div>{% endif %}
-            {% if e.recipient_date %}<div class="party-date">{{ e.recipient_date }}</div>{% endif %}
-          </div>
-          {% endif %}
-        </div>
-        {% endif %}
-
-        <!-- Logistics strip -->
-        {% if e.carrier_name or e.transport_mode or e.driver_name %}
-        <div class="logistics-strip">
-          {% if e.carrier_name %}<span><strong>Carrier:</strong> {{ e.carrier_name }}</span>{% endif %}
-          {% if e.transport_mode %}<span><strong>Mode:</strong> {{ e.transport_mode }}</span>{% endif %}
-          {% if e.tracking_number %}<span><strong>Waybill:</strong> {{ e.tracking_number }}</span>{% endif %}
-          {% if e.vehicle_plate %}<span><strong>Plate:</strong> {{ e.vehicle_plate }}</span>{% endif %}
-          {% if e.driver_name %}<span><strong>Driver:</strong> {{ e.driver_name }}</span>{% endif %}
-          {% if e.insurance_covered %}<span class="flag flag-insured">✓ Insured</span>{% endif %}
-          {% if e.customs_cleared   %}<span class="flag flag-customs">✓ Customs cleared</span>{% endif %}
-        </div>
-        {% endif %}
-
-        <!-- TX row with copy button and insight.vecha.in link -->
-        <div class="tx-row">
-          {% if e.tx_id %}
-            <span>Chain:</span>
-            <span class="tx-{{ e.tx_status }}" id="status-{{ e.id }}">{{ e.tx_status }}</span>
-            <span>·</span>
-            <a href="https://insight.vecha.in/#/test/txs/{{ e.tx_id }}" target="_blank" rel="noopener">
-              {{ e.tx_id|slice:":22" }}…
-            </a>
-            <button class="copy-btn" onclick="copyHash('{{ e.tx_id }}', this)">Copy hash</button>
-            {% if e.tx_status == "pending" %}
-            <button class="copy-btn" onclick="checkStatus({{ e.id }})">Refresh</button>
-            {% endif %}
-          {% else %}
-            <span class="tx-error">Not recorded on chain</span>
-          {% endif %}
-        </div>
-
+        <span class="logo-name">TraceBlocks</span>
+      </a>
+      <div class="nav-menu">
+        <div class="nav-section-label">Main</div>
+        <a href="{% url 'interface' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="{% url 'index' %}" class="nav-item active">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          All Products
+        </a>
+        <a href="{% url 'events' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Log Event
+        </a>
+        <div class="nav-section-label">Chain</div>
+        <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Explorer <span class="nav-ext">↗</span>
+        </a>
       </div>
-      {% endfor %}
     </div>
-    {% else %}
-    <p class="empty">No events yet.</p>
-    {% endif %}
-  </div>
+    <div class="sidebar-footer">
+      <a href="{% url 'index' %}" class="accounts-link">// Accounts &amp; Products →</a>
+      <div class="user-row">
+        <div class="user-avatar" id="avatar-initials">U</div>
+        <div class="user-info">
+          <span id="display-username">{{ request.user.username|default:"User" }}</span>
+          <form method="post" action="{% url 'logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Sign out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </aside>
 
+  <!-- ══ MAIN ══ -->
+  <main class="main-content">
+
+    <header class="topbar">
+      <div class="topbar-left">
+        <a href="{% url 'interface' %}" class="back-link">
+          <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          Dashboard
+        </a>
+        <span class="topbar-divider">/</span>
+        <h1 class="topbar-title">{{ product.name }}</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="network-badge">
+          <div class="net-dot"></div>
+          VeChain Testnet
+        </div>
+      </div>
+    </header>
+
+    <div class="inner">
+
+      {% if messages %}
+      <ul class="messages">
+        {% for m in messages %}
+        <li class="{{ m.tags }}">{{ m }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <!-- Product info -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-dot"></div>Product Details</div>
+          <span style="font-family:var(--font-m);font-size:11px;color:var(--soft);">{{ product.sku }}</span>
+        </div>
+        <div class="card-body">
+          <div class="meta-grid">
+            <div class="meta-item">
+              <div class="meta-label">SKU</div>
+              <div class="meta-value" style="font-family:var(--font-m)">{{ product.sku }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Manufacturer</div>
+              <div class="meta-value">{{ product.manufacturer|default:"—" }}</div>
+            </div>
+            <div class="meta-item">
+              <div class="meta-label">Registered</div>
+              <div class="meta-value" style="font-family:var(--font-m);font-size:12px">{{ product.created_at|date:"d M Y H:i" }}</div>
+            </div>
+            {% if product.description %}
+            <div class="meta-item">
+              <div class="meta-label">Description</div>
+              <div class="meta-value">{{ product.description }}</div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Log event / Handover -->
+      <div class="card">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('quick', this)">Quick Log</button>
+          <button class="tab-btn" onclick="switchTab('handover', this)">Record Handover</button>
+        </div>
+
+        <!-- Quick log -->
+        <div id="tab-quick" class="tab-pane active">
+          <p class="form-hint">
+            Simple status update — or use the
+            <a href="{% url 'events' %}">full event form</a>
+            for complete dispatcher, recipient &amp; logistics details.
+          </p>
+          <form method="post" action="{% url 'add_event' product.sku %}">
+            {% csrf_token %}
+            <div class="form-row">
+              <div class="form-field">
+                <label>Status</label>
+                <select name="status" required>
+                  <option value="">— Select —</option>
+                  {% for val, label in status_choices %}
+                  <option value="{{ val }}">{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="form-field">
+                <label>Location</label>
+                <input name="location" placeholder="e.g. Nairobi Warehouse" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Notes (optional)</label>
+                <textarea name="notes" rows="2" placeholder="Any relevant notes…"></textarea>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              Record on VeChain
+            </button>
+          </form>
+        </div>
+
+        <!-- Handover -->
+        <div id="tab-handover" class="tab-pane">
+          <p class="form-hint">
+            Record a custody transfer between transporters. Both parties, quantities, and signatures are logged immutably on-chain.
+          </p>
+          <form method="post" action="{% url 'add_handover' product.sku %}">
+            {% csrf_token %}
+
+            <div class="section-label">Handover details</div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Handover location</label>
+                <input name="handover_location" placeholder="e.g. Kisumu Hub Gate 3" required>
+              </div>
+              <div class="form-field">
+                <label>Date &amp; time</label>
+                <input type="datetime-local" name="handover_datetime" required>
+              </div>
+            </div>
+
+            <div class="section-label">Quantities</div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Qty dispatched</label>
+                <input name="qty_dispatched" type="number" min="0" step="any" placeholder="0" required>
+              </div>
+              <div class="form-field">
+                <label>Qty received</label>
+                <input name="qty_received" type="number" min="0" step="any" placeholder="0" required>
+              </div>
+              <div class="form-field">
+                <label>Unit</label>
+                <select name="unit_of_measure" required>
+                  <option value="">—</option>
+                  <option value="kg">kg</option>
+                  <option value="tonnes">Tonnes</option>
+                  <option value="litres">Litres</option>
+                  <option value="units">Units</option>
+                  <option value="boxes">Boxes</option>
+                  <option value="bags">Bags</option>
+                  <option value="pallets">Pallets</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Discrepancy note</label>
+                <textarea name="qty_discrepancy_note" rows="2" placeholder="Explain any difference in quantities…"></textarea>
+              </div>
+            </div>
+
+            <div class="section-label">Outgoing transporter (handing over)</div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Full name</label>
+                <input name="outgoing_transporter" placeholder="Name of person releasing goods" required>
+              </div>
+              <div class="form-field">
+                <label>Role / title</label>
+                <input name="outgoing_role" placeholder="e.g. Driver, Warehouse Manager">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Signature (type full name)</label>
+                <input name="outgoing_signature" placeholder="Type full name to sign">
+              </div>
+            </div>
+
+            <div class="section-label">Incoming transporter (receiving)</div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Full name</label>
+                <input name="incoming_transporter" placeholder="Name of person receiving goods" required>
+              </div>
+              <div class="form-field">
+                <label>Role / title</label>
+                <input name="incoming_role" placeholder="e.g. Driver, Distributor">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Signature (type full name)</label>
+                <input name="incoming_signature" placeholder="Type full name to sign">
+              </div>
+            </div>
+
+            <div class="section-label">Transport (optional)</div>
+            <div class="form-row">
+              <div class="form-field">
+                <label>Carrier</label>
+                <input name="carrier_name" placeholder="e.g. Siginon Logistics">
+              </div>
+              <div class="form-field">
+                <label>Vehicle plate</label>
+                <input name="vehicle_plate" placeholder="e.g. KDA 123B">
+              </div>
+              <div class="form-field">
+                <label>Mode</label>
+                <select name="transport_mode">
+                  <option value="">—</option>
+                  <option value="road">Road</option>
+                  <option value="rail">Rail</option>
+                  <option value="air">Air</option>
+                  <option value="sea">Sea / Lake</option>
+                  <option value="motorcycle">Motorcycle</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-primary">
+              <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              Record Handover on VeChain
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Tracking history -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-dot"></div>Tracking History</div>
+          {% if events %}<span style="font-family:var(--font-m);font-size:11px;color:var(--soft);">{{ events|length }} event{{ events|length|pluralize }}</span>{% endif %}
+        </div>
+        <div class="card-body">
+          {% if events %}
+          <div class="timeline">
+            {% for e in events %}
+            <div class="event {% if e.status == 'handover' %}is-handover{% endif %}" id="event-{{ e.id }}">
+
+              <div class="event-header">
+                <span class="badge badge-{{ e.status }}">{{ e.get_status_display }}</span>
+                <span class="event-time">{{ e.timestamp|date:"d M Y H:i" }}</span>
+                <span class="event-loc">📍 {{ e.location }}</span>
+                {% if e.destination_location %}
+                <span class="event-dest">→ {{ e.destination_location }}</span>
+                {% endif %}
+              </div>
+
+              {% if e.notes %}<div class="event-notes">{{ e.notes }}</div>{% endif %}
+
+              {% if e.status == "handover" %}
+              <div class="handover-qty">
+                <div class="qty-cell">
+                  <div class="qty-label">Dispatched</div>
+                  <div class="qty-value">{{ e.qty_dispatched|default:"—" }}</div>
+                  <div class="qty-unit">{{ e.unit_of_measure }}</div>
+                </div>
+                <div class="qty-cell">
+                  <div class="qty-label">Received</div>
+                  <div class="qty-value {% if e.qty_dispatched and e.qty_received and e.qty_dispatched != e.qty_received %}discrepancy{% endif %}">
+                    {{ e.qty_received|default:"—" }}
+                  </div>
+                  <div class="qty-unit">{{ e.unit_of_measure }}</div>
+                </div>
+                {% if e.handover_location %}
+                <div class="qty-cell">
+                  <div class="qty-label">Handover point</div>
+                  <div style="font-size:13px;font-weight:600;color:var(--text)">{{ e.handover_location }}</div>
+                  {% if e.handover_datetime %}<div class="qty-unit">{{ e.handover_datetime }}</div>{% endif %}
+                </div>
+                {% endif %}
+              </div>
+              {% if e.qty_discrepancy_note %}
+              <div class="discrepancy-note">⚠ {{ e.qty_discrepancy_note }}</div>
+              {% endif %}
+              {% endif %}
+
+              {% if e.status != "handover" and e.goods_name or e.quantity %}
+              <div class="goods-strip">
+                {% if e.goods_name %}<span><strong>Goods:</strong> {{ e.goods_name }}</span>{% endif %}
+                {% if e.goods_category %}<span><strong>Category:</strong> {{ e.goods_category }}</span>{% endif %}
+                {% if e.quantity %}<span><strong>Qty:</strong> {{ e.quantity }} {{ e.unit_of_measure }}</span>{% endif %}
+                {% if e.batch_number %}<span><strong>Batch:</strong> {{ e.batch_number }}</span>{% endif %}
+                {% if e.goods_condition %}<span><strong>Condition:</strong> {{ e.goods_condition }}</span>{% endif %}
+                {% if e.cold_chain %}<span class="flag flag-cold">❄ Cold chain</span>{% endif %}
+                {% if e.hazardous  %}<span class="flag flag-hazard">⚠ Hazardous</span>{% endif %}
+              </div>
+              {% endif %}
+
+              {% if e.dispatcher_name or e.recipient_name %}
+              <div class="accountability">
+                {% if e.dispatcher_name %}
+                <div class="party">
+                  <div class="party-title">{% if e.status == "handover" %}Outgoing transporter{% else %}Dispatched by{% endif %}</div>
+                  <div class="party-name">{{ e.dispatcher_name }}</div>
+                  {% if e.dispatcher_role %}<div class="party-role">{{ e.dispatcher_role }}</div>{% endif %}
+                  {% if e.dispatcher_signature %}<div class="party-sig">Signed: {{ e.dispatcher_signature }}</div>{% endif %}
+                  {% if e.dispatcher_date %}<div class="party-date">{{ e.dispatcher_date }}</div>{% endif %}
+                </div>
+                {% endif %}
+                {% if e.recipient_name %}
+                <div class="party">
+                  <div class="party-title">{% if e.status == "handover" %}Incoming transporter{% else %}Received by{% endif %}</div>
+                  <div class="party-name">{{ e.recipient_name }}</div>
+                  {% if e.recipient_role %}<div class="party-role">{{ e.recipient_role }}</div>{% endif %}
+                  {% if e.recipient_signature %}<div class="party-sig">Signed: {{ e.recipient_signature }}</div>{% endif %}
+                  {% if e.recipient_date %}<div class="party-date">{{ e.recipient_date }}</div>{% endif %}
+                </div>
+                {% endif %}
+              </div>
+              {% endif %}
+
+              {% if e.carrier_name or e.transport_mode or e.driver_name %}
+              <div class="logistics-strip">
+                {% if e.carrier_name %}<span><strong>Carrier:</strong> {{ e.carrier_name }}</span>{% endif %}
+                {% if e.transport_mode %}<span><strong>Mode:</strong> {{ e.transport_mode }}</span>{% endif %}
+                {% if e.tracking_number %}<span><strong>Waybill:</strong> {{ e.tracking_number }}</span>{% endif %}
+                {% if e.vehicle_plate %}<span><strong>Plate:</strong> {{ e.vehicle_plate }}</span>{% endif %}
+                {% if e.driver_name %}<span><strong>Driver:</strong> {{ e.driver_name }}</span>{% endif %}
+                {% if e.insurance_covered %}<span class="flag flag-insured">✓ Insured</span>{% endif %}
+                {% if e.customs_cleared   %}<span class="flag flag-customs">✓ Customs cleared</span>{% endif %}
+              </div>
+              {% endif %}
+
+              <div class="tx-row">
+                {% if e.tx_id %}
+                  <span class="tx-label">Chain</span>
+                  <span class="tx-status-badge tx-{{ e.tx_status }}" id="status-{{ e.id }}">{{ e.tx_status }}</span>
+                  <a href="https://insight.vecha.in/#/test/txs/{{ e.tx_id }}" target="_blank" rel="noopener" class="tx-hash-link">
+                    {{ e.tx_id|slice:":22" }}…
+                  </a>
+                  <button class="copy-btn" onclick="copyHash('{{ e.tx_id }}', this)">Copy hash</button>
+                  {% if e.tx_status == "pending" %}
+                  <button class="copy-btn" onclick="checkStatus({{ e.id }})">Refresh</button>
+                  {% endif %}
+                {% else %}
+                  <span class="tx-not-recorded">Not recorded on chain</span>
+                {% endif %}
+              </div>
+
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <p class="empty-state">// No events recorded yet.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </main>
 </div>
 
 <script>
+  const username = "{{ request.user.username|default:'User' }}";
+  document.getElementById('display-username').textContent = username;
+  document.getElementById('avatar-initials').textContent = username.charAt(0).toUpperCase();
+
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -398,7 +901,7 @@
     const el   = document.getElementById(`status-${eventId}`);
     if (el) {
       el.textContent = data.tx_status;
-      el.className   = `tx-${data.tx_status}`;
+      el.className   = `tx-status-badge tx-${data.tx_status}`;
     }
   }
 
