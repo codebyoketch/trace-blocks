@@ -1,4 +1,6 @@
-Django==6.0.5
-python-dotenv==1.2.2
-Requests==2.34.2
-thor_devkit==1.0.14
+dotenv
+requests
+thor_devkit
+django
+toolz
+setuptools<81.0.0
