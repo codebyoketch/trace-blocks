@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -49,16 +50,12 @@
 
     /* ══ SIDEBAR ══ */
     .sidebar {
-      position: fixed;
-      top: 0; left: 0; bottom: 0;
+      position: fixed; top: 0; left: 0; bottom: 0;
       width: var(--sidebar-w);
       background: var(--sidebar);
-      display: flex;
-      flex-direction: column;
-      z-index: 20;
-      overflow: hidden;
+      display: flex; flex-direction: column;
+      z-index: 20; overflow: hidden;
     }
-
     .sidebar-noise {
       position: absolute; inset: 0;
       background-image:
@@ -67,20 +64,14 @@
       background-size: 36px 36px;
       pointer-events: none;
     }
-
     .sidebar-glow {
-      position: absolute;
-      bottom: -80px; left: -80px;
-      width: 360px; height: 360px;
-      border-radius: 50%;
+      position: absolute; bottom: -80px; left: -80px;
+      width: 360px; height: 360px; border-radius: 50%;
       background: radial-gradient(circle, rgba(45,106,79,0.3) 0%, transparent 65%);
       pointer-events: none;
     }
-
     .sidebar > * { position: relative; z-index: 1; }
-
     .sidebar-top { padding: 28px 20px 0; }
-
     .logo {
       display: flex; align-items: center; gap: 9px;
       text-decoration: none; margin-bottom: 36px;
@@ -98,18 +89,15 @@
       font-family: var(--font-d); font-size: 16px; font-weight: 400;
       color: #E8F4EE; letter-spacing: -0.01em;
     }
-
     .nav-section-label {
       font-family: var(--font-m); font-size: 9px; font-weight: 500;
       letter-spacing: 0.12em; text-transform: uppercase;
       color: rgba(111,196,154,0.45); padding: 14px 8px 6px;
     }
-
     .nav-menu {
       display: flex; flex-direction: column; gap: 1px;
       flex: 1; padding: 0 8px; overflow-y: auto;
     }
-
     .nav-item {
       display: flex; align-items: center; gap: 10px;
       padding: 9px 12px; border-radius: 8px;
@@ -126,7 +114,6 @@
     .nav-item.active { background: rgba(45,106,79,0.35); color: #E8F4EE; font-weight: 600; }
     .nav-item.active svg { opacity: 1; }
     .nav-ext { font-size: 11px; opacity: 0.5; margin-left: auto; }
-
     .sidebar-footer {
       padding: 16px 16px 20px;
       border-top: 1px solid rgba(45,106,79,0.25);
@@ -190,7 +177,6 @@
       font-family: var(--font-d); font-size: 18px; font-weight: 300;
       color: var(--text); letter-spacing: -0.02em;
     }
-    .topbar-title em { font-style: italic; color: var(--accent); }
     .topbar-right { display: flex; align-items: center; gap: 10px; }
     .network-badge {
       display: flex; align-items: center; gap: 7px;
@@ -210,10 +196,7 @@
 
     /* ── Flash messages ── */
     .messages { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
-    .messages li {
-      padding: 10px 16px; border-radius: var(--radius);
-      font-size: 13px; font-weight: 500;
-    }
+    .messages li { padding: 10px 16px; border-radius: var(--radius); font-size: 13px; font-weight: 500; }
     .messages .success { background: var(--accent-lt); color: var(--accent); border: 1px solid #B5D9C8; }
     .messages .error   { background: #FBE8E8; color: #A32D2D; border: 1px solid #F0BFBF; }
     .messages .warning { background: var(--warn-lt); color: var(--warn); border: 1px solid #F0D89A; }
@@ -240,11 +223,7 @@
     .card-body { padding: 20px; }
 
     /* ── Product meta ── */
-    .meta-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 16px;
-    }
-    .meta-item {}
+    .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; }
     .meta-label {
       font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
       text-transform: uppercase; color: var(--muted); margin-bottom: 4px;
@@ -255,15 +234,13 @@
     .tabs {
       display: flex; gap: 0;
       border-bottom: 1px solid var(--border);
-      background: var(--surface2);
-      padding: 0 20px;
+      background: var(--surface2); padding: 0 20px;
     }
     .tab-btn {
       background: none; border: none; border-bottom: 2px solid transparent;
       padding: 12px 16px; font-size: 13px; font-weight: 500;
       font-family: var(--font-b); color: var(--muted);
       cursor: pointer; margin-bottom: -1px; transition: all 0.15s;
-      letter-spacing: 0;
     }
     .tab-btn:hover { color: var(--text); }
     .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
@@ -274,7 +251,6 @@
     .form-hint { font-size: 12px; color: var(--muted); margin-bottom: 16px; line-height: 1.5; }
     .form-hint a { color: var(--accent); font-weight: 600; text-decoration: none; }
     .form-hint a:hover { text-decoration: underline; }
-
     .section-label {
       font-size: 10px; font-weight: 600; letter-spacing: 0.09em;
       text-transform: uppercase; color: var(--muted);
@@ -282,7 +258,6 @@
       border-bottom: 1px solid var(--border);
     }
     .section-label:first-child { margin-top: 0; }
-
     .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
     .form-field { flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 5px; }
     .form-field label {
@@ -305,6 +280,23 @@
       box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
     }
     .form-field textarea { resize: vertical; }
+
+    /* ── GPS status strip ── */
+    .gps-status {
+      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-m); font-size: 11px; color: var(--muted);
+      padding: 8px 12px; margin-bottom: 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .gps-status .gps-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--soft); flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .gps-status.acquiring .gps-dot { background: var(--warn); animation: blink 1s ease-in-out infinite; }
+    .gps-status.ok .gps-dot         { background: var(--accent); }
+    .gps-status.failed .gps-dot     { background: #A32D2D; }
 
     .btn-primary {
       display: inline-flex; align-items: center; gap: 7px;
@@ -330,7 +322,6 @@
       content: ''; position: absolute; left: 7px; top: 6px; bottom: 0;
       width: 2px; background: var(--border); border-radius: 1px;
     }
-
     .event { position: relative; margin-bottom: 28px; }
     .event::before {
       content: ''; position: absolute; left: -19px; top: 5px;
@@ -338,30 +329,37 @@
       background: var(--accent); border: 2px solid var(--surface);
       box-shadow: 0 0 0 2px var(--accent);
     }
-    .event.is-handover::before {
-      background: var(--info);
-      box-shadow: 0 0 0 2px var(--info);
-    }
+    .event.is-handover::before { background: var(--info); box-shadow: 0 0 0 2px var(--info); }
 
     .event-header { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-
     .badge {
       display: inline-block; padding: 3px 10px; border-radius: 20px;
       font-size: 10px; font-weight: 600; font-family: var(--font-m);
       letter-spacing: 0.06em; text-transform: uppercase;
     }
-    .badge-manufactured    { background: var(--info-lt);   color: var(--info); }
-    .badge-shipped         { background: var(--accent-lt); color: var(--accent); }
-    .badge-in_transit      { background: var(--warn-lt);   color: var(--warn); }
-    .badge-at_hub          { background: var(--accent2-lt);color: var(--accent2); }
-    .badge-out_for_delivery{ background: #EAF3DE; color: #3B6D11; }
-    .badge-delivered       { background: var(--accent-lt); color: var(--accent); }
-    .badge-handover        { background: var(--info-lt);   color: var(--info); }
+    .badge-manufactured     { background: var(--info-lt);   color: var(--info); }
+    .badge-shipped          { background: var(--accent-lt); color: var(--accent); }
+    .badge-in_transit       { background: var(--warn-lt);   color: var(--warn); }
+    .badge-at_hub           { background: var(--accent2-lt);color: var(--accent2); }
+    .badge-out_for_delivery { background: #EAF3DE; color: #3B6D11; }
+    .badge-delivered        { background: var(--accent-lt); color: var(--accent); }
+    .badge-handover         { background: var(--info-lt);   color: var(--info); }
 
     .event-time { font-family: var(--font-m); font-size: 11px; color: var(--soft); }
     .event-loc  { font-size: 13px; color: var(--muted); }
     .event-dest { font-size: 12px; color: var(--soft); }
     .event-notes { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+    /* GPS coordinate pill on event */
+    .event-gps {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-family: var(--font-m); font-size: 10px;
+      color: var(--accent); background: var(--accent-lt);
+      border: 1px solid #B5D9C8; border-radius: 20px;
+      padding: 2px 9px; cursor: pointer; transition: background 0.15s;
+      text-decoration: none;
+    }
+    .event-gps:hover { background: #D4EDDF; }
 
     /* Goods strip */
     .goods-strip {
@@ -402,10 +400,7 @@
     /* Accountability */
     .accountability { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
     @media(max-width:600px) { .accountability { grid-template-columns: 1fr; } }
-    .party {
-      border: 1px solid var(--border); border-radius: var(--radius);
-      padding: 12px 14px; background: var(--surface2);
-    }
+    .party { border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; background: var(--surface2); }
     .party-title {
       font-size: 9px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.09em; color: var(--muted); margin-bottom: 6px;
@@ -418,7 +413,7 @@
       border-top: 1px dashed var(--border2); padding-top: 7px;
       font-style: italic; font-family: var(--font-d);
     }
-    .party-date  { font-family: var(--font-m); font-size: 10px; color: var(--soft); margin-top: 3px; }
+    .party-date { font-family: var(--font-m); font-size: 10px; color: var(--soft); margin-top: 3px; }
 
     /* Logistics strip */
     .logistics-strip {
@@ -430,11 +425,7 @@
     .logistics-strip strong { color: var(--text); font-weight: 600; }
 
     /* Flags */
-    .flag {
-      display: inline-block; font-size: 10px; font-weight: 600;
-      padding: 2px 8px; border-radius: 20px; margin: 2px 3px 0 0;
-      font-family: var(--font-m);
-    }
+    .flag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; margin: 2px 3px 0 0; font-family: var(--font-m); }
     .flag-cold    { background: #E0F7F4; color: #00695C; }
     .flag-hazard  { background: var(--warn-lt); color: var(--warn); }
     .flag-insured { background: var(--accent-lt); color: var(--accent); }
@@ -456,24 +447,52 @@
     .tx-confirmed { background: var(--accent-lt); color: var(--accent); }
     .tx-reverted  { background: #FBE8E8; color: #A32D2D; }
     .tx-error     { background: #FBE8E8; color: #A32D2D; }
-    .tx-hash-link {
-      font-family: var(--font-m); font-size: 11px; color: var(--info);
-      text-decoration: none; transition: color 0.15s;
-    }
+    .tx-hash-link { font-family: var(--font-m); font-size: 11px; color: var(--info); text-decoration: none; transition: color 0.15s; }
     .tx-hash-link:hover { color: var(--accent); text-decoration: underline; }
     .copy-btn {
       font-family: var(--font-m); font-size: 10px; padding: 3px 10px;
       background: var(--surface); border: 1px solid var(--border2);
-      border-radius: 6px; cursor: pointer; color: var(--muted);
-      transition: all 0.15s; letter-spacing: 0.03em;
+      border-radius: 6px; cursor: pointer; color: var(--muted); transition: all 0.15s; letter-spacing: 0.03em;
     }
     .copy-btn:hover { background: var(--accent-lt); color: var(--accent); border-color: #B5D9C8; }
     .copy-btn.copied { background: var(--accent-lt); color: var(--accent); border-color: #B5D9C8; }
     .tx-not-recorded { font-family: var(--font-m); font-size: 11px; color: #A32D2D; }
 
-    .empty-state {
+    .empty-state { font-family: var(--font-m); font-size: 12px; color: var(--soft); padding: 32px; text-align: center; }
+
+    /* ── Route map ── */
+    #route-map {
+      height: 400px;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    }
+    /* Override Leaflet popup font */
+    .leaflet-popup-content {
+      font-family: var(--font-b);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .leaflet-popup-content strong { color: var(--accent); }
+    .map-empty {
+      display: flex; align-items: center; justify-content: center;
+      height: 160px;
       font-family: var(--font-m); font-size: 12px; color: var(--soft);
-      padding: 32px; text-align: center;
+    }
+    /* Map legend */
+    .map-legend {
+      display: flex; gap: 16px; align-items: center;
+      padding: 10px 20px; border-top: 1px solid var(--border);
+      font-size: 11px; font-family: var(--font-m); color: var(--muted);
+      background: var(--surface2);
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px var(--border2);
+    }
+    .legend-line {
+      width: 24px; height: 2px;
+      background: repeating-linear-gradient(90deg, var(--accent) 0 6px, transparent 6px 10px);
     }
 
     @media(max-width:768px) {
@@ -565,7 +584,7 @@
       </ul>
       {% endif %}
 
-      <!-- Product info -->
+      <!-- ── Product info ── -->
       <div class="card">
         <div class="card-header">
           <div class="card-title"><div class="card-title-dot"></div>Product Details</div>
@@ -595,22 +614,33 @@
         </div>
       </div>
 
-      <!-- Log event / Handover -->
+      <!-- ── Log event / Handover ── -->
       <div class="card">
         <div class="tabs">
           <button class="tab-btn active" onclick="switchTab('quick', this)">Quick Log</button>
           <button class="tab-btn" onclick="switchTab('handover', this)">Record Handover</button>
         </div>
 
-        <!-- Quick log -->
+        <!-- Quick log tab -->
         <div id="tab-quick" class="tab-pane active">
           <p class="form-hint">
             Simple status update — or use the
             <a href="{% url 'events' %}">full event form</a>
             for complete dispatcher, recipient &amp; logistics details.
           </p>
+
+          <!-- GPS status indicator -->
+          <div class="gps-status acquiring" id="quick-gps-strip">
+            <div class="gps-dot"></div>
+            <span id="quick-gps-text">Acquiring GPS location…</span>
+          </div>
+
           <form method="post" action="{% url 'add_event' product.sku %}">
             {% csrf_token %}
+            <!-- Hidden GPS fields — populated by JS before submit -->
+            <input type="hidden" name="latitude"  id="quick-lat">
+            <input type="hidden" name="longitude" id="quick-lng">
+
             <div class="form-row">
               <div class="form-field">
                 <label>Status</label>
@@ -639,13 +669,23 @@
           </form>
         </div>
 
-        <!-- Handover -->
+        <!-- Handover tab -->
         <div id="tab-handover" class="tab-pane">
           <p class="form-hint">
             Record a custody transfer between transporters. Both parties, quantities, and signatures are logged immutably on-chain.
           </p>
+
+          <!-- GPS status indicator -->
+          <div class="gps-status" id="handover-gps-strip">
+            <div class="gps-dot"></div>
+            <span id="handover-gps-text">GPS will be captured when this tab is opened.</span>
+          </div>
+
           <form method="post" action="{% url 'add_handover' product.sku %}">
             {% csrf_token %}
+            <!-- Hidden GPS fields — populated by JS before submit -->
+            <input type="hidden" name="latitude"  id="handover-lat">
+            <input type="hidden" name="longitude" id="handover-lng">
 
             <div class="section-label">Handover details</div>
             <div class="form-row">
@@ -757,7 +797,7 @@
         </div>
       </div>
 
-      <!-- Tracking history -->
+      <!-- ── Tracking history ── -->
       <div class="card">
         <div class="card-header">
           <div class="card-title"><div class="card-title-dot"></div>Tracking History</div>
@@ -775,6 +815,14 @@
                 <span class="event-loc">📍 {{ e.location }}</span>
                 {% if e.destination_location %}
                 <span class="event-dest">→ {{ e.destination_location }}</span>
+                {% endif %}
+                {% if e.latitude and e.longitude %}
+                <a class="event-gps"
+                   href="https://www.openstreetmap.org/?mlat={{ e.latitude }}&mlon={{ e.longitude }}&zoom=15"
+                   target="_blank" rel="noopener"
+                   title="Open in OpenStreetMap">
+                  ⊕ {{ e.latitude|floatformat:4 }}, {{ e.longitude|floatformat:4 }}
+                </a>
                 {% endif %}
               </div>
 
@@ -879,22 +927,96 @@
         </div>
       </div>
 
-    </div>
+      <!-- ── Route Map ── -->
+      {% if events %}
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title"><div class="card-title-dot"></div>Product Route Map</div>
+          <span style="font-family:var(--font-m);font-size:11px;color:var(--soft);">GPS-tracked movement</span>
+        </div>
+
+        {# Collect events that have GPS coordinates #}
+        {% with gps_count=0 %}
+        <div id="route-map"></div>
+        {% endwith %}
+
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#2D6A4F;"></div>
+            Latest position
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:#7A7669;"></div>
+            Previous stop
+          </div>
+          <div class="legend-item">
+            <div class="legend-line"></div>
+            Route
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+    </div><!-- /.inner -->
   </main>
 </div>
 
+<!-- ── Leaflet ── -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
+  /* ── User display ──────────────────────────────────────────────────────── */
   const username = "{{ request.user.username|default:'User' }}";
   document.getElementById('display-username').textContent = username;
-  document.getElementById('avatar-initials').textContent = username.charAt(0).toUpperCase();
+  document.getElementById('avatar-initials').textContent  = username.charAt(0).toUpperCase();
 
+  /* ── Tab switching ─────────────────────────────────────────────────────── */
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + name).classList.add('active');
     btn.classList.add('active');
+    // Capture GPS when a tab becomes visible
+    if (name === 'quick')    captureGPS('quick-lat',    'quick-lng',    'quick-gps-strip',    'quick-gps-text');
+    if (name === 'handover') captureGPS('handover-lat', 'handover-lng', 'handover-gps-strip', 'handover-gps-text');
   }
 
+  /* ── GPS capture ───────────────────────────────────────────────────────── */
+  function captureGPS(latId, lngId, stripId, textId) {
+    const strip  = document.getElementById(stripId);
+    const textEl = document.getElementById(textId);
+
+    if (!navigator.geolocation) {
+      strip.className  = 'gps-status failed';
+      textEl.textContent = 'GPS not supported by this browser.';
+      return;
+    }
+
+    strip.className  = 'gps-status acquiring';
+    textEl.textContent = 'Acquiring GPS location…';
+
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const lat = pos.coords.latitude;
+        const lng = pos.coords.longitude;
+        const acc = Math.round(pos.coords.accuracy);
+        document.getElementById(latId).value = lat;
+        document.getElementById(lngId).value = lng;
+        strip.className  = 'gps-status ok';
+        textEl.textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}  (±${acc} m)`;
+      },
+      err => {
+        strip.className  = 'gps-status failed';
+        textEl.textContent = 'Location unavailable — event will be logged without GPS coordinates.';
+      },
+      { timeout: 8000, enableHighAccuracy: true }
+    );
+  }
+
+  // Capture GPS for the default (Quick Log) tab on page load
+  captureGPS('quick-lat', 'quick-lng', 'quick-gps-strip', 'quick-gps-text');
+
+  /* ── TX helpers ────────────────────────────────────────────────────────── */
   async function checkStatus(eventId) {
     const res  = await fetch(`/events/${eventId}/status/`);
     const data = await res.json();
@@ -914,6 +1036,80 @@
         btn.classList.remove('copied');
       }, 2000);
     });
+  }
+
+  /* ── Route map ─────────────────────────────────────────────────────────── */
+  // Build GPS event array from Django template context (oldest → newest for route order)
+  const gpsEvents = [
+    {% for e in events reversed %}
+      {% if e.latitude and e.longitude %}
+      {
+        lat:      {{ e.latitude }},
+        lng:      {{ e.longitude }},
+        status:   "{{ e.get_status_display }}",
+        location: "{{ e.location|escapejs }}",
+        time:     "{{ e.timestamp|date:'d M Y H:i' }}",
+        isLatest: {% if forloop.last %}true{% else %}false{% endif %}
+      },
+      {% endif %}
+    {% endfor %}
+  ];
+
+  const mapEl = document.getElementById('route-map');
+
+  if (mapEl) {
+    if (gpsEvents.length === 0) {
+      mapEl.innerHTML = '<div class="map-empty">// No GPS coordinates recorded yet — they will appear here as events are logged.</div>';
+      mapEl.style.height = 'auto';
+    } else {
+      mapEl.style.height = '400px';
+
+      const map = L.map('route-map', { zoomControl: true });
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      }).addTo(map);
+
+      const coords = gpsEvents.map(e => [e.lat, e.lng]);
+
+      // Dashed route polyline
+      if (coords.length > 1) {
+        L.polyline(coords, {
+          color:     '#2D6A4F',
+          weight:    3,
+          opacity:   0.75,
+          dashArray: '8 5',
+        }).addTo(map);
+      }
+
+      // Markers — latest is larger and green, older ones are gray
+      gpsEvents.forEach((e, i) => {
+        const isLatest = e.isLatest;
+        const marker   = L.circleMarker([e.lat, e.lng], {
+          radius:      isLatest ? 10 : 7,
+          fillColor:   isLatest ? '#2D6A4F' : '#888780',
+          color:       '#ffffff',
+          weight:      2,
+          opacity:     1,
+          fillOpacity: isLatest ? 1 : 0.8,
+        }).addTo(map);
+
+        marker.bindPopup(
+          `<strong>${e.status}</strong><br>` +
+          `${e.location}<br>` +
+          `<span style="font-size:11px;font-family:monospace;color:#7A7669">${e.time}</span>`
+        );
+
+        // Auto-open popup on the latest marker
+        if (isLatest) {
+          marker.openPopup();
+        }
+      });
+
+      // Fit map to all points with some padding
+      map.fitBounds(coords, { padding: [48, 48] });
+    }
   }
 </script>
 </body>
