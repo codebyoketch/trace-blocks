@@ -12,7 +12,6 @@ TraceBlocks enables vendors, manufacturers, and logistics handlers to record eve
 - [Overview](#overview)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
 - [Setup & Installation](#setup--installation)
 - [Blockchain Integration](#blockchain-integration)
 - [Smart Contract](#smart-contract)
@@ -62,40 +61,6 @@ The Django backend handles all business logic, authentication, fast database que
 
 ---
 
-## Project Structure
-
-```
-trace-blocks/
-├── traceblocks/                  ← Django project config
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-│
-├── tracker/                      ← Main Django app
-│   ├── models.py                 ← Product, TrackingEvent models
-│   ├── views.py                  ← All view logic + blockchain calls
-│   ├── urls.py                   ← URL routing
-│   ├── admin.py                  ← Django admin registration
-│   ├── tests.py                  ← Full test suite
-│   ├── blockchain.py             ← VeChainService class
-│   |
-│   |
-│   |
-│   │
-│   └── templates/
-│       ├── index.html            ← Product list + registration
-│       ├── product_detail.html   ← Product journey + add event
-│       ├── interface.html        ← User dashboard
-│       └── login.html            ← Authentication
-│
-├── deploy.py                     ← One-time contract deployment script
-├── manage.py
-├── requirements.txt
-└── .env                          ← Environment variables (never commit)
-```
-
----
-
 ## Setup & Installation
 
 ### 1. Clone the repository
@@ -108,14 +73,24 @@ cd trace-blocks/traceblocks
 ### 2. Create and activate a virtual environment
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3.12 -m venv tracer
+source tracer/bin/activate --> for linux
 ```
+
+```cmd
+python3.12 -m venv tracer
+tracer\Scripts\activate --> for Windows
+```
+
 
 ### 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
+```
+
+```cmd
+tracer\Scripts\pip install -r requirements.txt
 ```
 
 ### 4. Set up environment variables
@@ -130,19 +105,8 @@ DEPLOYER_PRIVATE_KEY=your_veworld_private_key_here
 
 See [Environment Variables](#environment-variables) for details.
 
-### 5. Run migrations
 
-```bash
-python manage.py migrate
-```
-
-### 6. Create a superuser (optional, for admin panel)
-
-```bash
-python manage.py createsuperuser
-```
-
-### 7. Run the development server
+### 5. Run the development server
 
 ```bash
 python manage.py runserver
