@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — TraceBlocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #F9F8F5;
+      --border: #E2DED6; --border2: #CCC9BF;
+      --text: #1C1A17; --muted: #7A7669; --soft: #A8A49A;
+      --accent: #2D6A4F; --accent-lt: #E8F4EE;
+      --accent2: #B5653A; --accent2-lt: #FBF0EA;
+      --info: #1E5FA6; --info-lt: #E8F1FB;
+      --warn: #8A5E0A; --warn-lt: #FEF6E4;
+      --font-d: 'Fraunces', serif; --font-b: 'DM Sans', sans-serif; --font-m: 'DM Mono', monospace;
+      --radius: 10px; --radius-lg: 14px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+    }
+    html, body { font-family: var(--font-b); -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .topnav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; position: sticky; top: 0; z-index: 10;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .brand-name { font-family: var(--font-d); font-size: 15px; color: var(--text); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-links a.active { color: var(--accent); }
+
+    .hero {
+      background: #1A2E22; padding: 56px 40px 48px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.18) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #6FC49A;
+      background: rgba(45,106,79,0.3); border: 1px solid rgba(45,106,79,0.5);
+      border-radius: 20px; padding: 4px 12px; margin-bottom: 18px;
+    }
+    .hero-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #6FC49A; }
+    .hero-title { font-family: var(--font-d); font-size: 40px; font-weight: 300; color: #F5F3EE; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 10px; }
+    .hero-title em { font-style: italic; color: #6FC49A; }
+    .hero-meta { font-family: var(--font-m); font-size: 11px; color: rgba(111,196,154,0.55); letter-spacing: 0.04em; }
+
+    .page-wrap { max-width: 1060px; margin: 0 auto; padding: 48px 40px 80px; display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+
+    .toc {
+      position: sticky; top: 72px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow);
+    }
+    .toc-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .toc-list a {
+      display: block; padding: 6px 10px; border-radius: 7px;
+      font-size: 12px; font-weight: 500; color: var(--muted); text-decoration: none; transition: all 0.15s;
+    }
+    .toc-list a:hover { background: var(--accent-lt); color: var(--accent); }
+    .toc-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* Summary cards */
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      margin-bottom: 6px;
+    }
+    .summary-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow);
+      padding: 18px; text-align: center;
+    }
+    .summary-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px;
+    }
+    .summary-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .summary-icon.green { background: var(--accent-lt); color: var(--accent); }
+    .summary-icon.amber { background: var(--accent2-lt); color: var(--accent2); }
+    .summary-icon.blue  { background: var(--info-lt); color: var(--info); }
+    .summary-card-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .summary-card-sub   { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+    .content { display: flex; flex-direction: column; gap: 6px; }
+    .section-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; }
+    .section-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px; border-bottom: 1px solid var(--border); background: var(--surface2);
+    }
+    .section-icon-sm {
+      width: 28px; height: 28px; border-radius: 7px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .section-icon-sm svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .section-icon-sm.green { background: var(--accent-lt); color: var(--accent); }
+    .section-icon-sm.amber { background: var(--accent2-lt); color: var(--accent2); }
+    .section-icon-sm.blue  { background: var(--info-lt); color: var(--info); }
+    .section-icon-sm.warn  { background: var(--warn-lt); color: var(--warn); }
+    .section-heading { font-size: 15px; font-weight: 600; color: var(--text); }
+    .section-body { padding: 22px; }
+
+    .prose { font-size: 14px; line-height: 1.8; color: var(--muted); }
+    .prose + .prose { margin-top: 14px; }
+    .prose strong { color: var(--text); font-weight: 600; }
+    .prose-list { list-style: none; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
+    .prose-list li { display: flex; gap: 10px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+    .prose-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 8px; }
+
+    .two-col-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 14px 0; }
+    .two-col-item {
+      display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 13px; color: var(--muted); line-height: 1.5;
+    }
+    .two-col-item::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 5px; }
+
+    .highlight-box {
+      background: var(--accent-lt); border: 1px solid #B5D9C8;
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--accent); line-height: 1.6; margin-top: 14px;
+    }
+    .warn-box {
+      background: var(--warn-lt); border: 1px solid #DDD0B0;
+      border-left: 3px solid #D4A017;
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--warn); line-height: 1.6; margin-top: 14px;
+    }
+
+    .rights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+    .right-item {
+      padding: 14px; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .right-item-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .right-item-desc  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    .site-footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 28px 40px; text-align: center;
+      font-size: 12px; color: var(--soft);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: var(--muted); }
+    .chain-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-right: 5px; vertical-align: middle; }
+
+    @media (max-width: 800px) {
+      .page-wrap { grid-template-columns: 1fr; padding: 32px 20px 60px; }
+      .toc { position: static; }
+      .hero { padding: 40px 20px; }
+      .topnav { padding: 0 20px; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .two-col-list { grid-template-columns: 1fr; }
+      .rights-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a href="/" class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+      </div>
+      <span class="brand-name">TraceBlocks</span>
+    </a>
+    <div class="nav-links">
+      <a href="/terms/">Terms</a>
+      <a href="/privacy/" class="active">Privacy</a>
+      <a href="/login/">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag"><div class="hero-tag-dot"></div>Legal</div>
+      <h1 class="hero-title">Privacy <em>Policy</em></h1>
+      <p class="hero-meta">Last updated: June 2025 &nbsp;·&nbsp; We keep this simple and honest</p>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <aside class="toc">
+      <div class="toc-title">On this page</div>
+      <ul class="toc-list">
+        <li><a href="#s1">1. Overview</a></li>
+        <li><a href="#s2">2. Data We Collect</a></li>
+        <li><a href="#s3">3. How We Use Data</a></li>
+        <li><a href="#s4">4. Blockchain & Public Data</a></li>
+        <li><a href="#s5">5. Data Sharing</a></li>
+        <li><a href="#s6">6. Data Security</a></li>
+        <li><a href="#s7">7. Your Rights</a></li>
+        <li><a href="#s8">8. Cookies</a></li>
+        <li><a href="#s9">9. Children</a></li>
+        <li><a href="#s10">10. Changes</a></li>
+        <li><a href="#s11">11. Contact</a></li>
+      </ul>
+      <div class="toc-divider"></div>
+      <a href="/terms/" style="font-size:12px;color:var(--muted);display:block;padding:6px 10px;border-radius:7px;transition:all 0.15s;" onmouseover="this.style.background='var(--accent-lt)';this.style.color='var(--accent)'" onmouseout="this.style.background='';this.style.color='var(--muted)'">→ Terms of Service</a>
+    </aside>
+
+    <div class="content">
+
+      <!-- Summary cards -->
+      <div class="summary-grid">
+        <div class="summary-card">
+          <div class="summary-icon green">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="summary-card-title">We protect your data</div>
+          <div class="summary-card-sub">Account info stays private and is never sold to third parties</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon blue">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div class="summary-card-title">Chain data is public</div>
+          <div class="summary-card-sub">Supply chain events on VeChain are permanently visible to everyone</div>
+        </div>
+        <div class="summary-card">
+          <div class="summary-icon amber">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+          <div class="summary-card-title">You're in control</div>
+          <div class="summary-card-sub">You can delete your account and off-chain data at any time</div>
+        </div>
+      </div>
+
+      <div class="section-card" id="s1">
+        <div class="section-head">
+          <div class="section-icon-sm green"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <span class="section-heading">Overview</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">TraceBlocks is committed to protecting your privacy. This Policy explains what data we collect, why we collect it, and how it is used when you access our supply chain transparency platform.</p>
+          <p class="prose">We operate under the laws of Kenya and aim to handle your personal information with care, transparency, and respect.</p>
+          <div class="highlight-box">TraceBlocks does not sell your personal data. We never have and we never will.</div>
+        </div>
+      </div>
+
+      <div class="section-card" id="s2">
+        <div class="section-head">
+          <div class="section-icon-sm blue"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+          <span class="section-heading">Data We Collect</span>
+        </div>
+        <div class="section-body">
+          <p class="prose"><strong>Account information</strong> — when you register, we collect:</p>
+          <div class="two-col-list">
+            <div class="two-col-item">Name (first, middle, last)</div>
+            <div class="two-col-item">Username</div>
+            <div class="two-col-item">Email address</div>
+            <div class="two-col-item">Phone number</div>
+            <div class="two-col-item">Account type (individual / organisation)</div>
+            <div class="two-col-item">Organisation name & registration number</div>
+            <div class="two-col-item">Password (stored as a secure hash)</div>
+            <div class="two-col-item">Date of account creation</div>
+          </div>
+          <p class="prose"><strong>Supply chain event data</strong> — when you log events, we record the information you provide including goods details, locations, parties, logistics, and transaction metadata.</p>
+          <p class="prose"><strong>Technical data</strong> — we may automatically collect IP addresses, browser type, and page interaction data for security and performance purposes.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s3">
+        <div class="section-head">
+          <div class="section-icon-sm green"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+          <span class="section-heading">How We Use Your Data</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">We use the data we collect to:</p>
+          <ul class="prose-list">
+            <li>Create and manage your TraceBlocks account</li>
+            <li>Record and display supply chain events on-platform and on the VeChainThor blockchain</li>
+            <li>Authenticate your identity and protect your account</li>
+            <li>Send important service-related communications (not marketing)</li>
+            <li>Maintain platform security and prevent fraud</li>
+            <li>Improve platform performance and user experience</li>
+          </ul>
+          <p class="prose">We do not use your data for profiling, behavioural advertising, or automated decision-making.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s4">
+        <div class="section-head">
+          <div class="section-icon-sm warn"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <span class="section-heading">Blockchain & Public Data</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">This is the most important section of this policy. Please read it carefully.</p>
+          <div class="warn-box">
+            <strong>Supply chain events you submit are written to the VeChainThor public blockchain.</strong> This data is permanent, immutable, and publicly accessible to anyone via a blockchain explorer. TraceBlocks cannot remove or alter blockchain records under any circumstances.
+          </div>
+          <p class="prose" style="margin-top:14px;">The on-chain data includes goods details, location information, dispatcher and recipient names (as entered), dates, and transaction IDs. Do not submit sensitive personal information that you do not want to be permanently public.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s5">
+        <div class="section-head">
+          <div class="section-icon-sm blue"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <span class="section-heading">Data Sharing</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">We do not sell, rent, or share your personal data with third parties for commercial purposes. We may share data only in the following limited circumstances:</p>
+          <ul class="prose-list">
+            <li><strong>VeChain blockchain</strong> — supply chain events are written to the public VeChainThor network as part of the core service</li>
+            <li><strong>Legal requirements</strong> — if required by Kenyan law, court order, or lawful authority</li>
+            <li><strong>Safety</strong> — if we believe disclosure is necessary to protect the rights or safety of any person</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-card" id="s6">
+        <div class="section-head">
+          <div class="section-icon-sm green"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <span class="section-heading">Data Security</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">We take reasonable technical and organisational measures to protect your personal data, including:</p>
+          <ul class="prose-list">
+            <li>Passwords stored using secure one-way hashing</li>
+            <li>HTTPS encryption for all data in transit</li>
+            <li>Access controls limiting who can view account data</li>
+            <li>Regular review of security practices</li>
+          </ul>
+          <p class="prose">No system is 100% secure. In the event of a data breach affecting your personal information, we will notify you in accordance with applicable law.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s7">
+        <div class="section-head">
+          <div class="section-icon-sm amber"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+          <span class="section-heading">Your Rights</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">You have the following rights regarding your personal data held by TraceBlocks:</p>
+          <div class="rights-grid">
+            <div class="right-item">
+              <div class="right-item-title">Access</div>
+              <div class="right-item-desc">Request a copy of the personal data we hold about you</div>
+            </div>
+            <div class="right-item">
+              <div class="right-item-title">Correction</div>
+              <div class="right-item-desc">Ask us to correct inaccurate off-chain personal data</div>
+            </div>
+            <div class="right-item">
+              <div class="right-item-title">Deletion</div>
+              <div class="right-item-desc">Delete your account and off-chain data at any time via Profile settings</div>
+            </div>
+            <div class="right-item">
+              <div class="right-item-title">Objection</div>
+              <div class="right-item-desc">Object to processing of your personal data in certain circumstances</div>
+            </div>
+          </div>
+          <p class="prose" style="margin-top:14px;">Note: these rights apply to off-chain data only. Blockchain data cannot be deleted or altered by anyone — including TraceBlocks.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s8">
+        <div class="section-head">
+          <div class="section-icon-sm blue"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg></div>
+          <span class="section-heading">Cookies</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">TraceBlocks uses essential session cookies to keep you logged in and maintain form state. We do not use tracking cookies, advertising cookies, or third-party analytics cookies.</p>
+          <p class="prose">You can disable cookies in your browser settings, but doing so will prevent you from staying logged in to the platform.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s9">
+        <div class="section-head">
+          <div class="section-icon-sm green"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <span class="section-heading">Children</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">TraceBlocks is not intended for use by persons under the age of 18. We do not knowingly collect personal data from children. If we become aware that a child has registered, we will delete the account promptly.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s10">
+        <div class="section-head">
+          <div class="section-icon-sm warn"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <span class="section-heading">Changes to This Policy</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page. Continued use of TraceBlocks after changes are posted constitutes your acceptance of the updated policy.</p>
+          <p class="prose">For significant changes, we will notify registered users by email where possible.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s11">
+        <div class="section-head">
+          <div class="section-icon-sm green"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <span class="section-heading">Contact</span>
+        </div>
+        <div class="section-body">
+          <p class="prose">For any questions, concerns, or requests regarding this Privacy Policy or your personal data, please contact us:</p>
+          <ul class="prose-list">
+            <li>TraceBlocks — Zone01 Kisumu, Kenya</li>
+            <li>Email: <a href="mailto:privacy@traceblocks.io">privacy@traceblocks.io</a></li>
+          </ul>
+          <p class="prose" style="margin-top:14px;">We aim to respond to all data requests within 14 business days.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/terms/">Terms of Service</a>
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="/login/">Sign In</a>
+    </div>
+    <p><span class="chain-dot"></span>TraceBlocks &nbsp;·&nbsp; VeChainThor</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Page Not Found | TraceBlocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #F9F8F5;
+      --border: #E2DED6; --border2: #CCC9BF;
+      --text: #1C1A17; --muted: #7A7669; --soft: #A8A49A;
+      --accent: #2D6A4F; --accent-lt: #E8F4EE;
+      --accent2: #B5653A; --accent2-lt: #FBF0EA;
+      --font-d: 'Fraunces', serif; --font-b: 'DM Sans', sans-serif; --font-m: 'DM Mono', monospace;
+      --radius: 10px; --radius-lg: 16px;
+    }
+    html, body { height: 100%; font-family: var(--font-b); -webkit-font-smoothing: antialiased; }
+    body {
+      min-height: 100vh; background: var(--bg);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 32px 24px; position: relative; overflow: hidden;
+    }
+
+    /* background texture */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    /* glows */
+    .glow-1 {
+      position: fixed; top: -160px; right: -120px;
+      width: 500px; height: 500px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,106,79,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .glow-2 {
+      position: fixed; bottom: -140px; left: -100px;
+      width: 440px; height: 440px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(181,101,58,0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* nav */
+    .topnav {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 54px; background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; z-index: 10;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .brand-mark {
+      width: 28px; height: 28px; border-radius: 7px; background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .brand-name { font-family: var(--font-d); font-size: 15px; font-weight: 400; color: var(--text); letter-spacing: -0.01em; }
+
+    /* card */
+    .card {
+      position: relative; z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 8px 32px rgba(0,0,0,0.06);
+      width: 100%; max-width: 520px;
+      overflow: hidden;
+      margin-top: 54px;
+    }
+
+    /* dark stripe top */
+    .card-top {
+      background: #1A2E22;
+      padding: 32px 36px 28px;
+      position: relative; overflow: hidden;
+    }
+    .card-top::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.2) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .card-top > * { position: relative; z-index: 1; }
+
+    .error-code {
+      font-family: var(--font-d);
+      font-size: 96px;
+      font-weight: 300;
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(111,196,154,0.4);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      margin-bottom: 4px;
+      user-select: none;
+    }
+
+    .error-label {
+      font-family: var(--font-m);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(111,196,154,0.6);
+    }
+
+    /* body */
+    .card-body { padding: 28px 36px 32px; }
+
+    .error-title {
+      font-family: var(--font-d);
+      font-size: 26px; font-weight: 300;
+      color: var(--text); letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .error-title em { font-style: italic; color: var(--accent); }
+
+    .error-desc {
+      font-size: 14px; color: var(--muted); line-height: 1.65;
+      margin-bottom: 28px;
+    }
+
+    .tx-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .tx-block-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent2); flex-shrink: 0; }
+    .tx-block-text { font-family: var(--font-m); font-size: 11px; color: var(--muted); letter-spacing: 0.03em; }
+    .tx-block-text span { color: var(--accent2); }
+
+    .actions { display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 13px 20px; background: var(--accent); color: #fff;
+      border: none; border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    }
+    .btn-primary svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-primary:hover { background: #255A42; box-shadow: 0 4px 14px rgba(45,106,79,0.3); transform: translateY(-1px); }
+
+    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    .btn-ghost {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 12px 16px; background: var(--surface2);
+      border: 1px solid var(--border2); border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 13px; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      transition: all 0.15s;
+    }
+    .btn-ghost svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--bg); }
+
+    .card-foot {
+      padding: 14px 36px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+      text-align: center;
+      font-family: var(--font-m);
+      font-size: 10px; color: var(--soft);
+      letter-spacing: 0.04em;
+    }
+    .chain-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-right: 5px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <div class="glow-1"></div>
+  <div class="glow-2"></div>
+
+  <nav class="topnav">
+    <a href="/" class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+      </div>
+      <span class="brand-name">TraceBlocks</span>
+    </a>
+  </nav>
+
+  <div class="card">
+    <div class="card-top">
+      <div class="error-code">404</div>
+      <div class="error-label">Route not found</div>
+    </div>
+    <div class="card-body">
+      <h1 class="error-title">This page<br/><em>doesn't exist</em></h1>
+      <p class="error-desc">The supply chain record you're looking for may have been moved, deleted, or never existed on this network. Double-check the URL and try again.</p>
+
+      <div class="tx-block">
+        <div class="tx-block-dot"></div>
+        <div class="tx-block-text">
+          Requested path: <span id="req-path">/unknown</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="/" class="btn-primary">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Return to Dashboard
+        </a>
+        <div class="btn-row">
+          <a href="javascript:history.back()" class="btn-ghost">
+            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            Go Back
+          </a>
+          <a href="/products/" class="btn-ghost">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            All Products
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-foot">
+      <span class="chain-dot"></span>VeChainThor Mainnet &nbsp;·&nbsp; TraceBlocks
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('req-path').textContent = window.location.pathname || '/unknown';
+  </script>
+</body>
+</html>

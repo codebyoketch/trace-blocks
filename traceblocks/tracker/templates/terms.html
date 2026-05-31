@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — TraceBlocks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F5F3EE; --surface: #FFFFFF; --surface2: #F9F8F5;
+      --border: #E2DED6; --border2: #CCC9BF;
+      --text: #1C1A17; --muted: #7A7669; --soft: #A8A49A;
+      --accent: #2D6A4F; --accent-lt: #E8F4EE;
+      --accent2: #B5653A; --accent2-lt: #FBF0EA;
+      --info: #1E5FA6; --info-lt: #E8F1FB;
+      --font-d: 'Fraunces', serif; --font-b: 'DM Sans', sans-serif; --font-m: 'DM Mono', monospace;
+      --radius: 10px; --radius-lg: 14px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+    }
+    html, body { font-family: var(--font-b); -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── NAV ── */
+    .topnav {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; position: sticky; top: 0; z-index: 10;
+    }
+    .brand { display: flex; align-items: center; gap: 9px; text-decoration: none; }
+    .brand-mark { width: 28px; height: 28px; border-radius: 7px; background: var(--accent); display: flex; align-items: center; justify-content: center; }
+    .brand-mark svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .brand-name { font-family: var(--font-d); font-size: 15px; color: var(--text); }
+    .nav-links { display: flex; gap: 20px; align-items: center; }
+    .nav-links a { font-size: 13px; font-weight: 500; color: var(--muted); }
+    .nav-links a:hover { color: var(--text); text-decoration: none; }
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero {
+      background: #1A2E22; padding: 56px 40px 48px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.18) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.18) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+    .hero-inner { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--font-m); font-size: 10px; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #6FC49A;
+      background: rgba(45,106,79,0.3); border: 1px solid rgba(45,106,79,0.5);
+      border-radius: 20px; padding: 4px 12px; margin-bottom: 18px;
+    }
+    .hero-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #6FC49A; }
+    .hero-title { font-family: var(--font-d); font-size: 40px; font-weight: 300; color: #F5F3EE; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 10px; }
+    .hero-title em { font-style: italic; color: #6FC49A; }
+    .hero-meta { font-family: var(--font-m); font-size: 11px; color: rgba(111,196,154,0.55); letter-spacing: 0.04em; }
+
+    /* ── LAYOUT ── */
+    .page-wrap { max-width: 1060px; margin: 0 auto; padding: 48px 40px 80px; display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: start; }
+
+    /* ── TOC SIDEBAR ── */
+    .toc {
+      position: sticky; top: 72px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 20px;
+      box-shadow: var(--shadow);
+    }
+    .toc-title { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .toc-list { list-style: none; display: flex; flex-direction: column; gap: 2px; }
+    .toc-list a {
+      display: block; padding: 6px 10px; border-radius: 7px;
+      font-size: 12px; font-weight: 500; color: var(--muted);
+      text-decoration: none; transition: all 0.15s;
+    }
+    .toc-list a:hover { background: var(--accent-lt); color: var(--accent); }
+    .toc-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+    /* ── CONTENT ── */
+    .content { display: flex; flex-direction: column; gap: 6px; }
+
+    .section-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden;
+    }
+
+    .section-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px; border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .section-num {
+      font-family: var(--font-m); font-size: 10px; font-weight: 500;
+      color: var(--accent); background: var(--accent-lt);
+      border: 1px solid #B5D9C8; border-radius: 6px; padding: 3px 8px;
+      flex-shrink: 0;
+    }
+
+    .section-heading { font-size: 15px; font-weight: 600; color: var(--text); }
+
+    .section-body { padding: 22px; }
+
+    .prose { font-size: 14px; line-height: 1.8; color: var(--muted); }
+    .prose + .prose { margin-top: 14px; }
+    .prose strong { color: var(--text); font-weight: 600; }
+
+    .prose-list { list-style: none; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
+    .prose-list li {
+      display: flex; gap: 10px; font-size: 14px; color: var(--muted); line-height: 1.6;
+    }
+    .prose-list li::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); flex-shrink: 0; margin-top: 8px;
+    }
+
+    .highlight-box {
+      background: var(--accent-lt); border: 1px solid #B5D9C8;
+      border-left: 3px solid var(--accent);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--accent); line-height: 1.6; margin-top: 14px;
+    }
+
+    .info-box {
+      background: var(--info-lt); border: 1px solid #C0D7F0;
+      border-left: 3px solid var(--info);
+      border-radius: var(--radius); padding: 14px 16px;
+      font-size: 13px; color: var(--info); line-height: 1.6; margin-top: 14px;
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      background: var(--surface); border-top: 1px solid var(--border);
+      padding: 28px 40px; text-align: center;
+      font-size: 12px; color: var(--soft);
+    }
+    .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
+    .footer-links a { font-size: 12px; color: var(--muted); }
+    .chain-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-right: 5px; vertical-align: middle; }
+
+    @media (max-width: 800px) {
+      .page-wrap { grid-template-columns: 1fr; padding: 32px 20px 60px; }
+      .toc { position: static; }
+      .hero { padding: 40px 20px; }
+      .topnav { padding: 0 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="topnav">
+    <a href="/" class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+      </div>
+      <span class="brand-name">TraceBlocks</span>
+    </a>
+    <div class="nav-links">
+      <a href="/terms/" class="active">Terms</a>
+      <a href="/privacy/">Privacy</a>
+      <a href="/login/">Sign In</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-tag"><div class="hero-tag-dot"></div>Legal</div>
+      <h1 class="hero-title">Terms of <em>Service</em></h1>
+      <p class="hero-meta">Last updated: June 2025 &nbsp;·&nbsp; Effective immediately upon account creation</p>
+    </div>
+  </div>
+
+  <div class="page-wrap">
+    <!-- TOC -->
+    <aside class="toc">
+      <div class="toc-title">On this page</div>
+      <ul class="toc-list">
+        <li><a href="#s1">1. Acceptance</a></li>
+        <li><a href="#s2">2. Description of Service</a></li>
+        <li><a href="#s3">3. Eligibility</a></li>
+        <li><a href="#s4">4. User Accounts</a></li>
+        <li><a href="#s5">5. Blockchain Data</a></li>
+        <li><a href="#s6">6. Acceptable Use</a></li>
+        <li><a href="#s7">7. Intellectual Property</a></li>
+        <li><a href="#s8">8. Disclaimers</a></li>
+        <li><a href="#s9">9. Limitation of Liability</a></li>
+        <li><a href="#s10">10. Termination</a></li>
+        <li><a href="#s11">11. Governing Law</a></li>
+        <li><a href="#s12">12. Contact</a></li>
+      </ul>
+      <div class="toc-divider"></div>
+      <a href="/privacy/" style="font-size:12px;color:var(--muted);display:block;padding:6px 10px;border-radius:7px;transition:all 0.15s;" onmouseover="this.style.background='var(--accent-lt)';this.style.color='var(--accent)'" onmouseout="this.style.background='';this.style.color='var(--muted)'">→ Privacy Policy</a>
+    </aside>
+
+    <!-- Content -->
+    <div class="content">
+
+      <div class="section-card" id="s1">
+        <div class="section-head"><span class="section-num">01</span><span class="section-heading">Acceptance of Terms</span></div>
+        <div class="section-body">
+          <p class="prose">By accessing or using TraceBlocks — a supply chain transparency platform built on the VeChainThor blockchain — you agree to be bound by these Terms of Service. If you do not agree, you must not use the platform.</p>
+          <p class="prose">These terms apply to all users including individuals, organisations, and developers accessing the service via the web interface or API.</p>
+          <div class="highlight-box">By creating an account or submitting a supply chain event, you confirm that you have read, understood, and agree to these Terms of Service in full.</div>
+        </div>
+      </div>
+
+      <div class="section-card" id="s2">
+        <div class="section-head"><span class="section-num">02</span><span class="section-heading">Description of Service</span></div>
+        <div class="section-body">
+          <p class="prose">TraceBlocks provides a platform for recording, tracking, and verifying supply chain events on the VeChainThor blockchain. The service enables users to:</p>
+          <ul class="prose-list">
+            <li>Register products and goods within a traceable supply chain</li>
+            <li>Log supply chain events including dispatch, transit, and delivery</li>
+            <li>View immutable, on-chain records of supply chain history</li>
+            <li>Share transparent traceability data with stakeholders</li>
+          </ul>
+          <p class="prose">TraceBlocks was developed as part of the Zone01 Kisumu Hackathon 2025. The service is provided as-is for transparency and traceability purposes.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s3">
+        <div class="section-head"><span class="section-num">03</span><span class="section-heading">Eligibility</span></div>
+        <div class="section-body">
+          <p class="prose">You must be at least 18 years of age to use TraceBlocks. By registering, you represent and warrant that you meet this requirement and that all information you provide is accurate and truthful.</p>
+          <p class="prose">Organisations registering on the platform must be duly incorporated or otherwise legally recognised entities, and the individual completing registration must have authority to bind the organisation.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s4">
+        <div class="section-head"><span class="section-num">04</span><span class="section-heading">User Accounts</span></div>
+        <div class="section-body">
+          <p class="prose">You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You agree to:</p>
+          <ul class="prose-list">
+            <li>Provide accurate and complete registration information</li>
+            <li>Keep your password secure and not share it with third parties</li>
+            <li>Notify us immediately of any unauthorised use of your account</li>
+            <li>Not create multiple accounts to circumvent restrictions</li>
+          </ul>
+          <p class="prose">TraceBlocks is not liable for any loss or damage arising from your failure to maintain account security.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s5">
+        <div class="section-head"><span class="section-num">05</span><span class="section-heading">Blockchain Data & Immutability</span></div>
+        <div class="section-body">
+          <p class="prose">All supply chain events submitted through TraceBlocks are recorded on the VeChainThor blockchain. You understand and agree that:</p>
+          <ul class="prose-list">
+            <li>Once submitted, blockchain records are permanent and cannot be altered or deleted</li>
+            <li>You are solely responsible for the accuracy of all data you submit</li>
+            <li>Submitting false or misleading supply chain data may constitute fraud under applicable law</li>
+            <li>On-chain data is publicly accessible via the VeChain blockchain explorer</li>
+          </ul>
+          <div class="info-box"><strong>Important:</strong> Because blockchain records are immutable, TraceBlocks cannot correct, remove, or modify any data once it has been written to the chain. Please review all information carefully before submitting.</div>
+        </div>
+      </div>
+
+      <div class="section-card" id="s6">
+        <div class="section-head"><span class="section-num">06</span><span class="section-heading">Acceptable Use</span></div>
+        <div class="section-body">
+          <p class="prose">You agree not to use TraceBlocks to:</p>
+          <ul class="prose-list">
+            <li>Submit false, misleading, or fraudulent supply chain records</li>
+            <li>Record events relating to illegal goods, contraband, or prohibited substances</li>
+            <li>Interfere with or disrupt the platform or VeChainThor network</li>
+            <li>Attempt to gain unauthorised access to any part of the service</li>
+            <li>Use the platform in any way that violates applicable Kenyan or international law</li>
+            <li>Impersonate another person, organisation, or entity</li>
+          </ul>
+          <p class="prose">We reserve the right to suspend or terminate accounts found to be in violation of these provisions without notice.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s7">
+        <div class="section-head"><span class="section-num">07</span><span class="section-heading">Intellectual Property</span></div>
+        <div class="section-body">
+          <p class="prose">The TraceBlocks platform, including its design, code, branding, and documentation, is the intellectual property of the TraceBlocks team. You may not reproduce, distribute, or create derivative works without express written permission.</p>
+          <p class="prose">You retain ownership of the supply chain data you submit. By submitting data, you grant TraceBlocks a non-exclusive licence to process and display that data as part of delivering the service.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s8">
+        <div class="section-head"><span class="section-num">08</span><span class="section-heading">Disclaimers</span></div>
+        <div class="section-body">
+          <p class="prose">TraceBlocks is provided <strong>"as is"</strong> without warranties of any kind, express or implied. We do not warrant that the service will be uninterrupted, error-free, or secure at all times.</p>
+          <p class="prose">We do not verify the accuracy of supply chain data submitted by users. TraceBlocks is a transparency tool — the integrity of the data depends entirely on the honesty of the parties recording it.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s9">
+        <div class="section-head"><span class="section-num">09</span><span class="section-heading">Limitation of Liability</span></div>
+        <div class="section-body">
+          <p class="prose">To the fullest extent permitted by law, TraceBlocks and its team members shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of or inability to use the platform, including but not limited to loss of profits, data, or business opportunity.</p>
+          <p class="prose">Our total liability to you for any claim shall not exceed the amount you have paid to use the service in the preceding 12 months, or KES 1,000 if no payment has been made.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s10">
+        <div class="section-head"><span class="section-num">10</span><span class="section-heading">Termination</span></div>
+        <div class="section-body">
+          <p class="prose">You may close your account at any time from your Profile settings. We reserve the right to suspend or terminate your account at any time if we believe you have violated these Terms, without prior notice or liability.</p>
+          <p class="prose">Upon termination, your access to the platform will cease. However, any data already recorded on the blockchain will remain permanently and cannot be removed.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s11">
+        <div class="section-head"><span class="section-num">11</span><span class="section-heading">Governing Law</span></div>
+        <div class="section-body">
+          <p class="prose">These Terms are governed by the laws of Kenya. Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the courts of Nairobi, Kenya.</p>
+        </div>
+      </div>
+
+      <div class="section-card" id="s12">
+        <div class="section-head"><span class="section-num">12</span><span class="section-heading">Contact</span></div>
+        <div class="section-body">
+          <p class="prose">If you have any questions about these Terms of Service, please contact the TraceBlocks team:</p>
+          <ul class="prose-list">
+            <li>Zone01 Kisumu, Kenya</li>
+            <li>Email: <a href="mailto:hello@traceblocks.io">hello@traceblocks.io</a></li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="/">Home</a>
+      <a href="/terms/">Terms of Service</a>
+      <a href="/privacy/">Privacy Policy</a>
+      <a href="/login/">Sign In</a>
+    </div>
+    <p><span class="chain-dot"></span>TraceBlocks &nbsp;·&nbsp; VeChainThor</p>
+  </footer>
+
+</body>
+</html>
