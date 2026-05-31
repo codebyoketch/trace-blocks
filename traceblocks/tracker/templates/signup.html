@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up — TraceBlocks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:        #F5F3EE;
+  --surface:   #FFFFFF;
+  --surface2:  #F9F8F5;
+  --border:    #E2DED6;
+  --border2:   #CCC9BF;
+  --text:      #1C1A17;
+  --muted:     #7A7669;
+  --soft:      #A8A49A;
+  --accent:    #2D6A4F;
+  --accent-lt: #E8F4EE;
+  --accent2:   #B5653A;
+  --info:      #1E5FA6;
+  --info-lt:   #E8F1FB;
+  --font-d:    'Fraunces', serif;
+  --font-b:    'DM Sans', sans-serif;
+  --font-m:    'DM Mono', monospace;
+  --radius:    10px;
+  --radius-lg: 16px;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-b);
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: #255A42; text-decoration: underline; }
+
+/* ── LEFT PANEL ── */
+.left {
+  flex: 1;
+  position: relative;
+  background: #1A2E22;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 56px;
+  overflow: hidden;
+  min-height: 100vh;
+}
+
+.left-noise {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(45,106,79,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(45,106,79,0.18) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.left-glow {
+  position: absolute;
+  bottom: -120px;
+  left: -80px;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,106,79,0.35) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.left-glow2 {
+  position: absolute;
+  top: -60px;
+  right: -100px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(181,101,58,0.2) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.left > * { position: relative; z-index: 1; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: auto;
+  text-decoration: none;
+}
+
+.logo-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-mark svg {
+  width: 16px; height: 16px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.logo-name {
+  font-family: var(--font-d);
+  font-size: 18px;
+  font-weight: 400;
+  color: #E8F4EE;
+  letter-spacing: -0.01em;
+}
+
+.hero-content { margin-top: 60px; flex: 1; }
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 500;
+  color: #6FC49A;
+  background: rgba(45,106,79,0.3);
+  border: 1px solid rgba(45,106,79,0.5);
+  border-radius: 20px;
+  padding: 5px 12px;
+  margin-bottom: 24px;
+  letter-spacing: 0.04em;
+}
+
+.hero-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #6FC49A;
+  animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero-title {
+  font-family: var(--font-d);
+  font-size: 42px;
+  font-weight: 300;
+  color: #F5F3EE;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+  max-width: 380px;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: #6FC49A;
+}
+
+.hero-desc {
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: rgba(108,188,148,0.7);
+  line-height: 2.1;
+  margin-bottom: 48px;
+}
+
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(45,106,79,0.25);
+  border: 1px solid rgba(45,106,79,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.feature-icon svg {
+  width: 14px; height: 14px;
+  stroke: #6FC49A;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.feature-text {}
+.feature-title { font-size: 13px; font-weight: 600; color: #D0EBE0; margin-bottom: 2px; }
+.feature-sub   { font-size: 12px; color: rgba(208,235,224,0.55); line-height: 1.4; }
+
+/* ── RIGHT PANEL ── */
+.right {
+  width: 460px;
+  min-width: 460px;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 44px;
+  overflow-y: auto;
+  border-left: 1px solid rgba(0,0,0,0.08);
+}
+
+.form-top { margin-bottom: 32px; }
+
+.form-eyebrow {
+  font-family: var(--font-m);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.form-title {
+  font-family: var(--font-d);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.form-title em { font-style: italic; color: var(--accent); }
+
+.form-sub {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+/* ── ACCOUNT TYPE TOGGLE ── */
+.type-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 5px;
+}
+
+.type-toggle label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.18s ease;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.type-toggle input[type="radio"] { display: none; }
+
+.type-toggle input[type="radio"]:checked + span {
+  /* handled via JS class */
+}
+
+.type-toggle label.active {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(45,106,79,0.25);
+}
+
+.type-toggle label svg {
+  width: 15px; height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+/* ── FORM FIELDS ── */
+.form-section { display: flex; flex-direction: column; gap: 0; }
+
+.field-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+}
+
+.field-row-2 .form-group { margin-bottom: 0; }
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.req { color: var(--accent2); margin-left: 1px; font-style: normal; }
+
+.form-group input {
+  width: 100%;
+  padding: 10px 13px;
+  font-family: var(--font-b);
+  font-size: 14px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-appearance: none;
+}
+
+.form-group input::placeholder { color: var(--soft); font-size: 13px; }
+
+.form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+}
+
+.form-group input.err { border-color: #A32D2D; }
+
+/* ── DIVIDER ── */
+.form-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 20px;
+  font-size: 11px;
+  color: var(--soft);
+  letter-spacing: 0.04em;
+}
+.form-divider::before,
+.form-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── SUBMIT ── */
+.btn-submit {
+  width: 100%;
+  padding: 13px 20px;
+  margin-top: 8px;
+  font-family: var(--font-b);
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+  letter-spacing: 0.01em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-submit svg {
+  width: 15px; height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.btn-submit:hover { background: #255A42; box-shadow: 0 4px 14px rgba(45,106,79,0.3); transform: translateY(-1px); }
+.btn-submit:active { transform: scale(0.99); }
+
+.btn-login-link {
+  display: block;
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 10px;
+  font-family: var(--font-b);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.btn-login-link:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); text-decoration: none; }
+
+.form-footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--soft);
+  line-height: 1.7;
+  text-align: center;
+}
+
+.form-footer a { color: var(--accent); font-weight: 500; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  body { flex-direction: column; }
+  .left { min-height: auto; padding: 36px 32px; }
+  .hero-title { font-size: 32px; }
+  .right { width: 100%; min-width: 0; padding: 36px 32px; border-left: none; border-top: 1px solid var(--border); justify-content: flex-start; }
+}
+
+@media (max-width: 520px) {
+  .left { padding: 28px 20px; }
+  .right { padding: 28px 20px; }
+  .field-row-2 { grid-template-columns: 1fr; }
+  .hero-title { font-size: 26px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left">
+  <div class="left-noise"></div>
+  <div class="left-glow"></div>
+  <div class="left-glow2"></div>
+
+  <a href="/" class="logo">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+    </div>
+    <span class="logo-name">TraceBlocks</span>
+  </a>
+
+  <div class="hero-content">
+    <div class="hero-tag">
+      <div class="hero-dot"></div>
+      VeChainThor Network
+    </div>
+    <h1 class="hero-title">Track every step of the <em>supply chain</em></h1>
+    <p class="hero-desc">// On-chain transparency &amp; accountability<br>// From origin to end consumer<br>// Immutable. Trustless. Open.</p>
+
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Immutable Records</div>
+          <div class="feature-sub">Every event is permanently recorded on VeChainThor</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Full Traceability</div>
+          <div class="feature-sub">Trace goods from origin through every checkpoint</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="feature-text">
+          <div class="feature-title">Multi-Party Trust</div>
+          <div class="feature-sub">Dispatchers, recipients and auditors in one system</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right">
+  <div class="form-top">
+    <div class="form-eyebrow">New account</div>
+    <h2 class="form-title">Join <em>TraceBlocks</em></h2>
+    <p class="form-sub">Create your account to start recording and tracing supply chain events.</p>
+  </div>
+
+  <!-- ACCOUNT TYPE TOGGLE -->
+  <div class="type-toggle" id="type-toggle">
+    <label id="lbl-individual" class="active" onclick="toggleType('NORMAL')">
+      <input type="radio" name="user_type" value="NORMAL" checked />
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Individual
+    </label>
+    <label id="lbl-org" onclick="toggleType('ORGANISATION')">
+      <input type="radio" name="user_type" value="ORGANISATION" />
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+      Organisation
+    </label>
+  </div>
+
+  <form method="POST" action="">
+    {% csrf_token %}
+    <input type="hidden" id="user-type-input" name="user_type" value="NORMAL">
+
+
+    <div class="form-section">
+
+      <!-- INDIVIDUAL FIELDS -->
+      <div id="individual-fields">
+        <div class="field-row-2">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" name="firstname" placeholder="First name" />
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name <abbr class="req" title="Required">*</abbr></label>
+            <input type="text" id="lname" name="lastname" placeholder="Last name" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="mname">Middle Name</label>
+          <input type="text" id="mname" name="middlename" placeholder="Middle name (optional)" />
+        </div>
+        <div class="form-group">
+          <label for="username">Username <abbr class="req" title="Required">*</abbr></label>
+          <input type="text" id="username" name="username" placeholder="Choose a username" required />
+        </div>
+      </div>
+
+      <!-- ORGANISATION FIELDS -->
+      <div id="organization-fields" style="display:none;">
+        <div class="form-group">
+          <label for="org-name">Organisation Name <abbr class="req" title="Required">*</abbr></label>
+          <input type="text" id="org-name" name="organisation_name" placeholder="Legal organisation name" />
+        </div>
+        <div class="form-group">
+          <label for="reg-number">Registration Number</label>
+          <input type="text" id="reg-number" name="registration_number" placeholder="Business registration ID" />
+        </div>
+      </div>
+
+      <div class="form-divider">Account details</div>
+
+      <!-- SHARED FIELDS -->
+      <div class="form-group">
+        <label for="phonenumber">Phone Number</label>
+        <input type="tel" id="phonenumber" name="phonenumber" placeholder="+254 7XX XXX XXX" />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address <abbr class="req" title="Required">*</abbr></label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password <abbr class="req" title="Required">*</abbr></label>
+        <input type="password" id="password" name="password" placeholder="Create a strong password" required />
+      </div>
+
+      <button type="submit" class="btn-submit">
+        <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Create Account
+      </button>
+
+      <a href="/login/" class="btn-login-link">Already have an account? Sign in</a>
+
+    </div>
+  </form>
+
+  <p class="form-footer">
+    By creating an account you agree to our
+    <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+  </p>
+</div>
+
+<script>
+function toggleType(type) {
+  const indiv = document.getElementById('individual-fields');
+  const org   = document.getElementById('organization-fields');
+  const lblI  = document.getElementById('lbl-individual');
+  const lblO  = document.getElementById('lbl-org');
+  
+  // 1. Get our hidden input field
+  const hiddenInput = document.getElementById('user-type-input');
+
+  // 2. Get form elements to fix HTML 'required' fields dynamically
+  const lastNameInput = document.getElementById('lname');
+  const usernameInput = document.getElementById('username');
+  const orgNameInput = document.getElementById('org-name');
+
+  if (type === 'NORMAL') {
+    // Run your existing slider visual styles
+    if (indiv) indiv.style.display = 'block';
+    if (org) org.style.display   = 'none';
+    if (lblI) lblI.classList.add('active');
+    if (lblO) lblO.classList.remove('active');
+    
+    // Tell Django the user chose "NORMAL"
+    if (hiddenInput) hiddenInput.value = 'NORMAL'; 
+    
+    // Change HTML validation requirements
+    if (lastNameInput) lastNameInput.required = true;
+    if (usernameInput) usernameInput.required = true;
+    if (orgNameInput) orgNameInput.required = false;
+
+  } else {
+    // Run your existing slider visual styles
+    if (indiv) indiv.style.display = 'none';
+    if (org) org.style.display   = 'block';
+    if (lblO) lblO.classList.add('active');
+    if (lblI) lblI.classList.remove('active');
+    
+    // Tell Django the user chose "ORGANISATION"
+    if (hiddenInput) hiddenInput.value = 'ORGANISATION'; 
+    
+    // Change HTML validation requirements
+    if (lastNameInput) lastNameInput.required = false;
+    if (usernameInput) usernameInput.required = false; 
+    if (orgNameInput) orgNameInput.required = true;
+  }
+}
+</script>
+
+</body>
+</html>

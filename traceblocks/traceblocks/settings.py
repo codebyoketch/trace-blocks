@@ -36,6 +36,9 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  
 ]
 
+ALLOWED_HOSTS = ['trace-blocks-5zdg.onrender.com', 'localhost', '127.0.0.1']
+
+
 
 LOGIN_REDIRECT_URL = 'interface'
 LOGOUT_REDIRECT_URL = 'login'

@@ -4,3 +4,12 @@ thor_devkit
 django
 toolz
 setuptools<81.0.0
+asgiref==3.11.1
+Django==6.0.3
+git-filter-repo==2.47.0
+pillow==12.1.1
+python-dotenv==1.2.2
+sqlparse==0.5.5
+tzdata==2025.3
+gunicorn==23.0.0
+whitenoise==6.9.0
