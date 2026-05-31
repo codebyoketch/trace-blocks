@@ -1,6 +1,5 @@
 import time
 import json
-import hashlib
 import logging
 import requests
 from django.conf import settings
@@ -11,14 +10,15 @@ logger = logging.getLogger(__name__)
 
 class VeChainService:
     def __init__(self):
-        self.node_url = getattr(settings, "VECHAIN_NODE_URL", "https://node-testnet.vechain.energy")
+        self.node_url        = getattr(settings, "VECHAIN_NODE_URL",   "https://node-testnet.vechain.energy")
         self.private_key_hex = getattr(settings, "VECHAIN_PRIVATE_KEY", None)
-        self.chain_tag = int(getattr(settings, "VECHAIN_CHAIN_TAG", "0x27"), 16)
+        self.chain_tag       = int(getattr(settings, "VECHAIN_CHAIN_TAG", "0x27"), 16)
+
+    # ──────────────────────────────────────────────────────────────────────────
 
     def _get_block_ref(self):
         try:
             res = requests.get(f"{self.node_url}/blocks/best", timeout=5)
-            print("Response body:", res.text)
             res.raise_for_status()
             block_id = res.json()["id"]
             return "0x" + block_id[2:18]
@@ -26,47 +26,22 @@ class VeChainService:
             logger.error("Failed to fetch block reference: %s", e)
             raise RuntimeError("Cannot reach VeChain node.")
 
+    # ──────────────────────────────────────────────────────────────────────────
+
     def record_tracking_event(self, event_data: dict) -> str:
         """
-        Record a full supply chain event on VeChain.
+        Record a supply-chain event on VeChain testnet.
 
-        Expected keys in event_data (all from the TraceBlocks form):
-
-        Identity:
-            user_id, full_name
-
-        Event:
-            event_id, event_name, short_description, detailed_explanation,
-            exceptions_noted, regulatory_flag, quality_check_passed, needs_detail
-
-        Goods:
-            goods_name, goods_category, quantity, unit_of_measure,
-            batch_number, goods_condition, cold_chain, hazardous
-
-        Dispatcher:
-            dispatcher_name, dispatcher_role, dispatcher_signature,
-            dispatcher_date, dispatcher_confirmed
-
-        Recipient:
-            recipient_name, recipient_role, recipient_signature,
-            recipient_date, recipient_confirmed
-
-        Logistics:
-            carrier_name, tracking_number, transport_mode,
-            origin_location, destination_location, dispatch_datetime,
-            estimated_delivery, vehicle_plate, driver_name,
-            logistics_notes, insurance_covered, customs_cleared
+        Returns the transaction ID string.
+        Falls back to a mock hash when no private key is configured.
         """
         if not self.private_key_hex:
             logger.warning("No private key — running in mock mode.")
             return f"mock_tx_hash_{int(time.time())}"
 
-        # Build a compact but complete payload.
-        # Only non-empty / non-False values are included to keep the on-chain
-        # footprint small (every byte costs gas).
-        payload = self._build_payload(event_data)
+        payload      = self._build_payload(event_data)
         payload_json = json.dumps(payload, separators=(",", ":"), ensure_ascii=True)
-        data_hex = "0x" + payload_json.encode("utf-8").hex()
+        data_hex     = "0x" + payload_json.encode("utf-8").hex()
 
         clause = {
             "to":    "0x0000000000000000000000000000000000000000",
@@ -74,12 +49,10 @@ class VeChainService:
             "data":  data_hex,
         }
 
-        block_ref = self._get_block_ref()
-        nonce = int(time.time() * 1000) & 0xFFFFFFFF
-
-        # Estimate gas: base 21 000 + 68 bytes per data byte (rough upper bound)
+        block_ref     = self._get_block_ref()
+        nonce         = int(time.time() * 1000) & 0xFFFFFFFF
         estimated_gas = 21_000 + len(payload_json) * 68
-        gas = max(estimated_gas, 80_000)   # floor of 80k to be safe
+        gas           = max(estimated_gas, 80_000)
 
         tx_body = {
             "chainTag":     self.chain_tag,
@@ -92,18 +65,18 @@ class VeChainService:
             "nonce":        nonce,
         }
 
-        # Sign
-        tx = transaction.Transaction(tx_body)
+        # ── Sign using the SDK's own signing-hash method ───────────────────
+        # IMPORTANT: call get_signing_hash() BEFORE encoding, then call
+        # set_signature(). Encoding before signing produces the wrong
+        # hash and the node rejects the transaction.
+        tx_obj           = transaction.Transaction(tx_body)
         private_key_bytes = bytes.fromhex(self.private_key_hex)
-        encoded = tx.encode()
-        h = hashlib.new("blake2b", digest_size=32)
-        h.update(encoded)
-        signing_hash = h.digest()
-        signature = cry.secp256k1.sign(signing_hash, private_key_bytes)
-        tx.set_signature(signature)
+        signing_hash = tx_obj.get_signing_hash()                     # ← correct for thor_devkit 1.0.x
+        signature    = cry.secp256k1.sign(signing_hash, private_key_bytes)
+        tx_obj.set_signature(signature)                              # ← correct for thor_devkit 1.0.x
 
-        # Broadcast
-        raw_tx_hex = "0x" + tx.encode().hex()
+        raw_tx_hex = "0x" + tx_obj.encode().hex()
+
         try:
             res = requests.post(
                 f"{self.node_url}/transactions",
@@ -111,7 +84,6 @@ class VeChainService:
                 headers={"Content-Type": "application/json"},
                 timeout=10,
             )
-            print("Response body:", res.text)
             res.raise_for_status()
             tx_id = res.json()["id"]
             logger.info("Transaction broadcast: %s", tx_id)
@@ -121,43 +93,30 @@ class VeChainService:
             raise
 
     # ──────────────────────────────────────────────────────────────────────────
-    # INTERNAL HELPERS
-    # ──────────────────────────────────────────────────────────────────────────
 
     def _build_payload(self, d: dict) -> dict:
         """
-        Convert the raw form dict into a lean, structured payload.
-        Omits blank strings and False-y boolean fields so we don't waste gas.
+        Build a compact on-chain payload from the raw event dict.
+        Only non-empty / truthy values are included to keep gas costs low.
         """
         def _bool(val) -> bool:
-            """Checkbox fields arrive as 'yes' (checked) or absent (unchecked)."""
             return val == "yes" or val is True
 
-        def _keep(val):
-            """Return True if the value is worth recording on-chain."""
-            if val is None:
-                return False
-            if isinstance(val, str) and not val.strip():
-                return False
-            if isinstance(val, bool):
-                return val          # only keep True booleans
-            return True
-
         raw = {
-            # ── Identity ────────────────────────────────────────────────────
-            "uid":   d.get("user_id"),
-            "name":  d.get("full_name"),
+            # Identity
+            "uid":  d.get("user_id"),
+            "name": d.get("full_name"),
 
-            # ── Event ───────────────────────────────────────────────────────
-            "eid":   d.get("event_id"),
-            "evt":   d.get("event_name"),
-            "desc":  d.get("short_description"),
+            # Event
+            "eid":    d.get("event_id"),
+            "evt":    d.get("event_name"),
+            "desc":   d.get("short_description"),
             "detail": d.get("detailed_explanation"),
-            "exc":   _bool(d.get("exceptions_noted")),
-            "reg":   _bool(d.get("regulatory_flag")),
-            "qc":    _bool(d.get("quality_check_passed")),
+            "exc":    _bool(d.get("exceptions_noted")),
+            "reg":    _bool(d.get("regulatory_flag")),
+            "qc":     _bool(d.get("quality_check_passed")),
 
-            # ── Goods ───────────────────────────────────────────────────────
+            # Goods
             "goods": d.get("goods_name"),
             "cat":   d.get("goods_category"),
             "qty":   d.get("quantity"),
@@ -167,7 +126,7 @@ class VeChainService:
             "cold":  _bool(d.get("cold_chain")),
             "haz":   _bool(d.get("hazardous")),
 
-            # ── Dispatcher ──────────────────────────────────────────────────
+            # Dispatcher
             "disp": {
                 "n":    d.get("dispatcher_name"),
                 "role": d.get("dispatcher_role"),
@@ -175,7 +134,7 @@ class VeChainService:
                 "date": d.get("dispatcher_date"),
             },
 
-            # ── Recipient ───────────────────────────────────────────────────
+            # Recipient
             "recv": {
                 "n":    d.get("recipient_name"),
                 "role": d.get("recipient_role"),
@@ -183,7 +142,7 @@ class VeChainService:
                 "date": d.get("recipient_date"),
             },
 
-            # ── Logistics ───────────────────────────────────────────────────
+            # Logistics — includes GPS coordinates
             "lgx": {
                 "carrier":  d.get("carrier_name"),
                 "waybill":  d.get("tracking_number"),
@@ -197,10 +156,11 @@ class VeChainService:
                 "notes":    d.get("logistics_notes"),
                 "ins":      _bool(d.get("insurance_covered")),
                 "cust":     _bool(d.get("customs_cleared")),
+                "lat":      d.get("latitude"),
+                "lng":      d.get("longitude"),
             },
         }
 
-        # Strip empty / False values recursively so the JSON is as compact as possible
         return self._strip_empty(raw)
 
     def _strip_empty(self, obj):
@@ -209,9 +169,9 @@ class VeChainService:
             for k, v in obj.items():
                 v2 = self._strip_empty(v)
                 if isinstance(v2, dict) and not v2:
-                    continue        # drop empty sub-dicts
+                    continue
                 if v2 is None or v2 == "" or v2 is False:
-                    continue        # drop blank / false values
+                    continue
                 cleaned[k] = v2
             return cleaned
         return obj
@@ -222,7 +182,10 @@ class VeChainService:
         if tx_id.startswith("mock_tx_hash_"):
             return "confirmed"
         try:
-            res = requests.get(f"{self.node_url}/transactions/{tx_id}/receipt", timeout=5)
+            res = requests.get(
+                f"{self.node_url}/transactions/{tx_id}/receipt",
+                timeout=5,
+            )
             if res.status_code == 404:
                 return "pending"
             receipt = res.json()
