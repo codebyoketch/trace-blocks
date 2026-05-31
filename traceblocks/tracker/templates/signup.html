@@ -535,7 +535,9 @@ a:hover { color: #255A42; text-decoration: underline; }
   </div>
 
   <form method="POST" action="">
-    <!-- {% csrf_token %} -->
+    {% csrf_token %}
+    <input type="hidden" id="user-type-input" name="user_type" value="NORMAL">
+
 
     <div class="form-section">
 
@@ -613,19 +615,47 @@ function toggleType(type) {
   const org   = document.getElementById('organization-fields');
   const lblI  = document.getElementById('lbl-individual');
   const lblO  = document.getElementById('lbl-org');
+  
+  // 1. Get our hidden input field
+  const hiddenInput = document.getElementById('user-type-input');
+
+  // 2. Get form elements to fix HTML 'required' fields dynamically
+  const lastNameInput = document.getElementById('lname');
+  const usernameInput = document.getElementById('username');
+  const orgNameInput = document.getElementById('org-name');
 
   if (type === 'NORMAL') {
-    indiv.style.display = 'block';
-    org.style.display   = 'none';
-    lblI.classList.add('active');
-    lblO.classList.remove('active');
+    // Run your existing slider visual styles
+    if (indiv) indiv.style.display = 'block';
+    if (org) org.style.display   = 'none';
+    if (lblI) lblI.classList.add('active');
+    if (lblO) lblO.classList.remove('active');
+    
+    // Tell Django the user chose "NORMAL"
+    if (hiddenInput) hiddenInput.value = 'NORMAL'; 
+    
+    // Change HTML validation requirements
+    if (lastNameInput) lastNameInput.required = true;
+    if (usernameInput) usernameInput.required = true;
+    if (orgNameInput) orgNameInput.required = false;
+
   } else {
-    indiv.style.display = 'none';
-    org.style.display   = 'block';
-    lblO.classList.add('active');
-    lblI.classList.remove('active');
+    // Run your existing slider visual styles
+    if (indiv) indiv.style.display = 'none';
+    if (org) org.style.display   = 'block';
+    if (lblO) lblO.classList.add('active');
+    if (lblI) lblI.classList.remove('active');
+    
+    // Tell Django the user chose "ORGANISATION"
+    if (hiddenInput) hiddenInput.value = 'ORGANISATION'; 
+    
+    // Change HTML validation requirements
+    if (lastNameInput) lastNameInput.required = false;
+    if (usernameInput) usernameInput.required = false; 
+    if (orgNameInput) orgNameInput.required = true;
   }
 }
 </script>
+
 </body>
 </html>
