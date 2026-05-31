@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import Product, TrackingEvent
 from .blockchain import VeChainService
 from .models import User 
+from django.contrib.auth.decorators import login_required
 
 
 logger = logging.getLogger(__name__)
@@ -269,16 +270,17 @@ def interface_view(request):
 
 def events_view(request):
     return render(request, "events.html")
-from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
+
+
 
 @login_required
 def profile_view(request):
     return render(request, 'interface.html')
 
+#remove the reddunta code
 def CreateUser_view(request):
     if request.method != "POST":
-        return render(request, 'index.html')
+        return render(request, 'signup.html')
 
     u_n = request.POST.get('username', '').strip()
     e   = request.POST.get('email', '').strip()
@@ -292,16 +294,15 @@ def CreateUser_view(request):
     # ── Validate account type ──────────────────────────────────────
     if u_type not in ('NORMAL', 'ORGANISATION'):
         messages.error(request, "Invalid account type selected.")
-        return render(request, 'index.html')
+        return render(request, 'signup.html')
 
- 
+    if not e:
         messages.error(request, "An email address is required.")
-        return render(request, 'index.html')
+        return render(request, 'signup.html')
 
     if User.objects.filter(email__iexact=e).exists():
         messages.error(request, "A user with this email address already exists.")
-        return render(request, 'index.html')
-
+        return render(request, 'signup.html')
 
     if u_type == 'NORMAL':
         f_n = request.POST.get('firstname', '').strip()
@@ -310,33 +311,34 @@ def CreateUser_view(request):
 
         if not s_n:
             messages.error(request, "Last name is required.")
-            return render(request, 'index.html')
+            return render(request, 'signup.html')
 
         if not u_n:
             messages.error(request, "Username is required.")
-            return render(request, 'index.html')
+            return render(request, 'signup.html')
 
     elif u_type == 'ORGANISATION':
         org_name = request.POST.get('organisation_name', '').strip()
 
         if not org_name:
             messages.error(request, "Organisation name is required.")
-            return render(request, 'index.html')
+            return render(request, 'signup.html')
 
         # Auto-generate username from org name if not provided
         if not u_n:
             u_n = org_name.replace(" ", "").lower()
-
-    
+            
+        # FIX: Removed the floating unindented s_n variable block
         s_n = "N/A"
 
     if not u_n:
         messages.error(request, "Username is required.")
-        return render(request, 'index.html')
+        return render(request, 'signup.html')
 
     if User.objects.filter(username__iexact=u_n).exists():
         messages.error(request, f"The username '{u_n}' is already taken. Please choose another.")
-        return render(request, 'index.html')
+        return render(request, 'signup.html')
+        
     try:
         User.objects.create_user(
             username=u_n,
@@ -354,7 +356,8 @@ def CreateUser_view(request):
 
     except Exception as error:
         messages.error(request, f"Registration failed: {error}")
-        return render(request, 'index.html')
+        return render(request, 'signup.html') # Changed from index to keep user on signup upon database failures
+
 
 def Login_view(request):
     if request.method == "POST":
