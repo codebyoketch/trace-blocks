@@ -331,10 +331,6 @@ def interface_view(request):
 def events_view(request):
     return render(request, "events.html")
 
-
-def profile_view(request):
-    return render(request, "profile.html", {"User": User})
-
 def terms_view(request):
     return render(request, "terms.html")
 
@@ -435,6 +431,51 @@ def Login_view(request):
 
     return render(request, "login.html")
 
+@login_required
+def profile_view(request):
+    user = request.user
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "update_email":
+            new_email = request.POST.get("email", "").strip()
+            if not new_email:
+                messages.error(request, "Email cannot be empty.")
+            elif User.objects.filter(email__iexact=new_email).exclude(pk=user.pk).exists():
+                messages.error(request, "That email is already in use.")
+            else:
+                user.email = new_email
+                user.save(update_fields=["email"])
+                messages.success(request, "Email updated successfully.")
+
+        elif action == "change_password":
+            current  = request.POST.get("current_password")
+            new_pw   = request.POST.get("new_password")
+            confirm  = request.POST.get("confirm_password")
+
+            if not user.check_password(current):
+                messages.error(request, "Current password is incorrect.")
+            elif not new_pw:
+                messages.error(request, "New password cannot be empty.")
+            elif new_pw != confirm:
+                messages.error(request, "New passwords do not match.")
+            else:
+                user.set_password(new_pw)
+                user.save()
+                # Re-authenticate so the session isn't invalidated
+                from django.contrib.auth import update_session_auth_hash
+                update_session_auth_hash(request, user)
+                messages.success(request, "Password updated successfully.")
+
+        elif action == "delete_account":
+            user.delete()
+            messages.success(request, "Your account has been deleted.")
+            return redirect("login")
+
+        return redirect("profile")
+
+    return render(request, "profile.html", {"user": user})
 
 # ── API endpoint ──────────────────────────────────────────────────────────────
 
