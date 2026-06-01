@@ -1,11 +1,8 @@
 import axios from 'axios';
 import { getToken } from './auth';
 
-// ── Change this to your Cloudflare tunnel URL when testing on a real device ──
-// localhost only works when the app runs in the same machine (Expo web).
-// For Android/iOS device or emulator use your tunnel URL e.g.:
-// export const BASE_URL = 'https://trace-blocks-5zdg.onrender.com';
-export const BASE_URL = 'http://10.157.13.31:8000'; // ← replace with your machine's LAN IP
+// ── Change to your LAN IP for local testing, or your Render URL for production
+export const BASE_URL = 'http://192.168.89.162:8081';
 
 const client = axios.create({
   baseURL: BASE_URL,
@@ -16,38 +13,43 @@ const client = axios.create({
 // Attach Bearer token to every request automatically
 client.interceptors.request.use(async (config) => {
   const token = await getToken();
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
-
-export const apiLogin = (email, password) =>
+export const apiLogin          = (email, password) =>
   client.post('/api/mobile/login/', { email, password });
 
-// ── Products ──────────────────────────────────────────────────────────────────
+export const apiGetProfile     = () =>
+  client.get('/api/mobile/auth/profile/');
 
-export const apiGetProducts = () =>
+export const apiUpdateProfile  = (data) =>
+  client.patch('/api/mobile/auth/update-profile/', data);
+
+export const apiChangePassword = (current_password, new_password) =>
+  client.post('/api/mobile/auth/change-password/', { current_password, new_password });
+
+export const apiLogoutAll      = () =>
+  client.delete('/api/mobile/auth/sessions/');
+
+// ── Products ──────────────────────────────────────────────────────────────────
+export const apiGetProducts    = () =>
   client.get('/api/mobile/products/');
 
-// ── Events ────────────────────────────────────────────────────────────────────
+export const apiCreateProduct  = (data) =>
+  client.post('/api/mobile/products/create/', data);
 
-export const apiGetEvents = (sku) =>
+// ── Events ────────────────────────────────────────────────────────────────────
+export const apiGetEvents      = (sku) =>
   client.get(`/api/mobile/events/${sku}/`);
 
-export const apiLogEvent = (sku, status, location, latitude, longitude, notes = '') =>
-  client.post('/api/mobile/log/', {
-    sku,
-    status,
-    location,
-    latitude,
-    longitude,
-    notes,
-  });
+export const apiLogEvent       = (sku, status, location, latitude, longitude, notes = '') =>
+  client.post('/api/mobile/log/', { sku, status, location, latitude, longitude, notes });
 
-// ── QR ───────────────────────────────────────────────────────────────────────
+export const apiLogHandover    = (data) =>
+  client.post('/api/mobile/handover/', data);
 
-export const apiResolveQR = (qrToken) =>
+// ── QR ────────────────────────────────────────────────────────────────────────
+export const apiResolveQR      = (qrToken) =>
   client.get(`/api/mobile/qr/${qrToken}/`);

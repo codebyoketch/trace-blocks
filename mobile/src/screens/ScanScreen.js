@@ -89,17 +89,17 @@ export default function ScanScreen({ navigation, route }) {
   }
 
   return (
-    <View style={styles.container}>
-      <CameraView
-      style={{ flex: 1 }}   // ← add this
+  <View style={{ flex: 1 }}>
+    <CameraView
+      style={{ flex: 1 }}
       facing="back"
       onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
       barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
-      />
+    />
 
-      {/* Overlay */}
-      <View style={styles.overlay}>
-        {/* Top bar */}
+    {/* Overlay sits on top of camera using absolute positioning */}
+    <View style={[StyleSheet.absoluteFillObject, styles.overlay]}>
+      {/* Top bar */}
         <View style={styles.topBar}>
           <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
             <Text style={styles.backBtnText}>✕</Text>

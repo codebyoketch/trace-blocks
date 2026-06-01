@@ -18,10 +18,10 @@ const STATUS_COLORS = {
 };
 
 export default function HomeScreen({ navigation }) {
-  const [products,  setProducts]  = useState([]);
-  const [loading,   setLoading]   = useState(true);
+  const [products,   setProducts]   = useState([]);
+  const [loading,    setLoading]    = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [user,      setUser]      = useState(null);
+  const [user,       setUser]       = useState(null);
 
   const load = async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -45,11 +45,6 @@ export default function HomeScreen({ navigation }) {
 
   useFocusEffect(useCallback(() => { load(); }, []));
 
-  const handleLogout = async () => {
-    await clearSession();
-    navigation.replace('Login');
-  };
-
   const renderProduct = ({ item }) => {
     const colors = STATUS_COLORS[item.current_status] || { bg: '#F5F3EE', text: '#7A7669' };
     return (
@@ -70,7 +65,9 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <View style={styles.cardBottom}>
-          <Text style={styles.eventCount}>{item.event_count} event{item.event_count !== 1 ? 's' : ''}</Text>
+          <Text style={styles.eventCount}>
+            {item.event_count} event{item.event_count !== 1 ? 's' : ''}
+          </Text>
           <View style={styles.cardActions}>
             <TouchableOpacity
               style={styles.historyBtn}
@@ -100,24 +97,29 @@ export default function HomeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
+      {/* Header — no logout here, that lives in Account tab */}
       <View style={styles.header}>
         <View>
           <Text style={styles.headerTitle}>TraceBlocks</Text>
           {user && <Text style={styles.headerSub}>Hello, {user.username}</Text>}
         </View>
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
-          <Text style={styles.logoutText}>Sign out</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Stats bar */}
-      <View style={styles.statsBar}>
-        <Text style={styles.statsText}>{products.length} product{products.length !== 1 ? 's' : ''}</Text>
         <View style={styles.netBadge}>
           <View style={styles.netDot} />
           <Text style={styles.netText}>VeChain Testnet</Text>
         </View>
+      </View>
+
+      {/* Stats bar + New Product button */}
+      <View style={styles.statsBar}>
+        <Text style={styles.statsText}>
+          {products.length} product{products.length !== 1 ? 's' : ''}
+        </Text>
+        <TouchableOpacity
+          style={styles.newProductBtn}
+          onPress={() => navigation.navigate('CreateProduct')}
+        >
+          <Text style={styles.newProductText}>+ New Product</Text>
+        </TouchableOpacity>
       </View>
 
       <FlatList
@@ -126,11 +128,21 @@ export default function HomeScreen({ navigation }) {
         renderItem={renderProduct}
         contentContainerStyle={styles.list}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => load(true)} colors={['#2D6A4F']} />
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => load(true)}
+            colors={['#2D6A4F']}
+          />
         }
         ListEmptyComponent={
           <View style={styles.empty}>
-            <Text style={styles.emptyText}>// No products found.</Text>
+            <Text style={styles.emptyText}>// No products yet.</Text>
+            <TouchableOpacity
+              style={[styles.newProductBtn, { marginTop: 16 }]}
+              onPress={() => navigation.navigate('CreateProduct')}
+            >
+              <Text style={styles.newProductText}>+ Create First Product</Text>
+            </TouchableOpacity>
           </View>
         }
       />
@@ -139,8 +151,8 @@ export default function HomeScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container:  { flex: 1, backgroundColor: '#F5F3EE' },
-  centered:   { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5F3EE' },
+  container: { flex: 1, backgroundColor: '#F5F3EE' },
+  centered:  { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5F3EE' },
 
   header: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
@@ -149,30 +161,37 @@ const styles = StyleSheet.create({
   },
   headerTitle: { color: '#E8F4EE', fontSize: 20, fontWeight: '300', letterSpacing: -0.5 },
   headerSub:   { color: 'rgba(111,196,154,0.6)', fontSize: 12, marginTop: 2 },
-  logoutBtn:   { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, backgroundColor: 'rgba(45,106,79,0.3)' },
-  logoutText:  { color: 'rgba(208,235,224,0.7)', fontSize: 12 },
+  netBadge: {
+    flexDirection: 'row', alignItems: 'center', gap: 6,
+    backgroundColor: 'rgba(45,106,79,0.25)',
+    borderRadius: 20, paddingHorizontal: 10, paddingVertical: 5,
+  },
+  netDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#6FC49A' },
+  netText: { fontSize: 11, color: 'rgba(208,235,224,0.6)' },
 
   statsBar: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingHorizontal: 20, paddingVertical: 10,
+    paddingHorizontal: 16, paddingVertical: 10,
     backgroundColor: '#FFFFFF', borderBottomWidth: 1, borderBottomColor: '#E2DED6',
   },
   statsText: { fontSize: 12, color: '#7A7669', fontWeight: '500' },
-  netBadge:  { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: '#F9F8F5', borderWidth: 1, borderColor: '#CCC9BF', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 4 },
-  netDot:    { width: 6, height: 6, borderRadius: 3, backgroundColor: '#2D6A4F' },
-  netText:   { fontSize: 11, color: '#7A7669' },
+
+  newProductBtn: {
+    backgroundColor: '#2D6A4F', borderRadius: 8,
+    paddingHorizontal: 14, paddingVertical: 7,
+  },
+  newProductText: { color: '#fff', fontSize: 12, fontWeight: '600' },
 
   list: { padding: 16, gap: 12 },
 
   card: {
     backgroundColor: '#FFFFFF', borderRadius: 14,
-    borderWidth: 1, borderColor: '#E2DED6',
-    padding: 16,
+    borderWidth: 1, borderColor: '#E2DED6', padding: 16,
     shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04, shadowRadius: 4, elevation: 2,
   },
-  cardTop:     { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
-  cardInfo:    { flex: 1, marginRight: 10 },
+  cardTop:  { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 },
+  cardInfo: { flex: 1, marginRight: 10 },
   productName: { fontSize: 15, fontWeight: '600', color: '#1C1A17', marginBottom: 3 },
   productSku:  { fontSize: 11, color: '#7A7669', fontFamily: 'monospace' },
   productMfr:  { fontSize: 12, color: '#A8A49A', marginTop: 2 },
