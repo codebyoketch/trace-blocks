@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -122,3 +123,19 @@ class TrackingEvent(models.Model):
         if self.tx_id:
             return f"https://insight.vecha.in/#/test/txs/{self.tx_id}"
         return ""
+
+    # QR code token — unique per event, used by the mobile app
+    # to identify which product/event context a scanned QR belongs to
+    qr_token = models.CharField(max_length=64, unique=True, blank=True, db_index=True)
+
+    def save(self, *args, **kwargs):
+        if not self.qr_token:
+            self.qr_token = uuid.uuid4().hex
+        super().save(*args, **kwargs)
+
+    @property
+    def qr_url(self):
+        """URL encoded into the QR code. App intercepts it; browser falls back to web UI."""
+        from django.conf import settings
+        base = getattr(settings, "APP_BASE_URL", "https://trace-blocks-5zdg.onrender.com")
+        return f"{base}/api/mobile/qr/{self.qr_token}/"
