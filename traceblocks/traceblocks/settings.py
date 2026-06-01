@@ -29,7 +29,11 @@ SECRET_KEY = 's5u*@tfg31$$ry@j6!s-)&oo*2buwdg30f(9_b429a7ef(u^yb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Sessions expire after 10 minutes of inactivity
+SESSION_COOKIE_AGE = 60 * 10  # seconds
+
+# Reset the timer on every request (inactivity-based, not fixed expiry)
+SESSION_SAVE_EVERY_REQUEST = True
 
 AUTHENTICATION_BACKENDS = [
     'tracker.backends.EmailBackend',  
