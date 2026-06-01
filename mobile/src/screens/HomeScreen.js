@@ -28,7 +28,11 @@ export default function HomeScreen({ navigation }) {
     else setLoading(true);
     try {
       const [prodRes, u] = await Promise.all([apiGetProducts(), getUser()]);
-      setProducts(prodRes.data.products);
+
+      console.log('STATUS:', prodRes.status);
+      console.log('DATA:', JSON.stringify(prodRes.data));
+
+      setProducts(prodRes.data?.products ?? []);
       setUser(u);
     } catch (err) {
       if (err.response?.status === 401) {

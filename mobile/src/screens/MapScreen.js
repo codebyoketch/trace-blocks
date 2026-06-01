@@ -45,7 +45,7 @@ export default function MapScreen({ navigation }) {
       const pinPromises = prods.map(async (p) => {
         try {
           const evRes = await apiGetEvents(p.sku);
-          const events = evRes.data.events;
+          const events = evRes.data?.events ?? [];
           const latest = events.find((e) => e.latitude && e.longitude);
           if (latest) {
             return {
@@ -76,7 +76,7 @@ export default function MapScreen({ navigation }) {
     setShowRouteModal(true);
     try {
       const res    = await apiGetEvents(sku);
-      const events = res.data.events
+      const events = res.data?.events ?? []
         .filter((e) => e.latitude && e.longitude)
         .reverse(); // oldest first for route order
       setRouteEvents(events);

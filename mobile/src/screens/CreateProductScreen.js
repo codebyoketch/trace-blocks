@@ -67,7 +67,7 @@ export default function CreateProductScreen({ navigation }) {
       Alert.alert(
         'Product Created ✓',
         `${name}\nSKU: ${sku}\n\nTX: ${res.data.tx_id?.slice(0, 24)}…`,
-        [{ text: 'Done', onPress: () => navigation.navigate('Home') }],
+        [{ text: 'Done', onPress: () => navigation.navigate('Main') }],
       );
     } catch (err) {
       const msg = err.response?.data?.error || 'Failed to create product.';

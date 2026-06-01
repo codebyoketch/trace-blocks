@@ -68,7 +68,7 @@ export default function LogEventScreen({ navigation, route }) {
       Alert.alert(
         'Event Recorded ✓',
         `Status: ${status.replace('_', ' ')}\n\nTX: ${txId.startsWith('mock') ? txId : txId.slice(0, 24) + '…'}`,
-        [{ text: 'Done', onPress: () => navigation.navigate('Home') }],
+        [{ text: 'Done', onPress: () => navigation.navigate('Main') }],
       );
     } catch (err) {
       const msg = err.response?.data?.error || 'Failed to record event. Try again.';

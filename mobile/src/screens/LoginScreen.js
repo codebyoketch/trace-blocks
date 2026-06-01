@@ -1,3 +1,4 @@
+import { BASE_URL } from '../services/api';
 import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
@@ -19,11 +20,16 @@ export default function LoginScreen({ navigation }) {
     }
     setLoading(true);
     try {
+      console.log('Attempting login to:', BASE_URL);
       const res = await apiLogin(email.trim(), password);
+      console.log('Login response:', JSON.stringify(res.data));
       await saveToken(res.data.token);
       await saveUser({ username: res.data.username, email: res.data.email });
-      navigation.replace('Home');
+      navigation.replace('Main');
     } catch (err) {
+      console.log('Login error:', JSON.stringify(err.response?.data));
+      console.log('Login error status:', err.response?.status);
+      console.log('Login error message:', err.message);
       const msg = err.response?.data?.error || 'Login failed. Check your credentials.';
       Alert.alert('Login Failed', msg);
     } finally {

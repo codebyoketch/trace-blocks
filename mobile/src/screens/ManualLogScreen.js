@@ -48,7 +48,7 @@ export default function ManualLogScreen({ navigation }) {
   useEffect(() => {
     // Load products
     apiGetProducts()
-      .then((res) => setProducts(res.data.products))
+      .then((res) => setProducts(res.data?.products ?? []))
       .catch(() => Alert.alert('Error', 'Could not load products.'))
       .finally(() => setLoading(false));
 
@@ -83,7 +83,7 @@ export default function ManualLogScreen({ navigation }) {
         Alert.alert(
           'Event Recorded ✓',
           `TX: ${res.data.tx_id?.slice(0, 24)}…`,
-          [{ text: 'Done', onPress: () => navigation.navigate('Home') }],
+          [{ text: 'Done', onPress: () => navigation.navigate('Main') }],
         );
       } else {
         // Handover
@@ -114,7 +114,7 @@ export default function ManualLogScreen({ navigation }) {
         Alert.alert(
           'Handover Recorded ✓',
           `TX: ${res.data.tx_id?.slice(0, 24)}…`,
-          [{ text: 'Done', onPress: () => navigation.navigate('Home') }],
+          [{ text: 'Done', onPress: () => navigation.navigate('Main') }],
         );
       }
     } catch (err) {
