@@ -1,19 +1,33 @@
 from django.urls import path
 from . import views
+from . import api_views
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path("index",views.index,name="index"),
-     path("login/",views.Login_view, name="login"),
-    path("logout/",auth_views.LogoutView.as_view(next_page="login"), name="logout"),
-    path("products/new/",views.create_product,name="create_product"),
-    path("products/<str:sku>/",views.product_detail,name="product_detail"),
-    path("products/<str:sku>/events/",views.add_event,name="add_event"),
-    path("events/<int:event_id>/status/", views.refresh_tx_status,name="refresh_tx_status"),
-    path("interface/",views.interface_view,   name="interface"),
-    path("new/event/", views.events_view, name="events"),
-    path("", views.CreateUser_view, name="createuser"),
-    path("api/events/",views.add_event_api,name="add_event_api"),
-    path("products/<str:sku>/handover/",views.add_handover,name="add_handover"),
-    path('profile/', views.profile_view, name="profile")
+
+    # ── Web UI ────────────────────────────────────────────────────────────────
+    path("",                              views.CreateUser_view,   name="createuser"),
+    path("index",                         views.index,             name="index"),
+    path("login/",                        views.Login_view,        name="login"),
+    path("logout/",                       auth_views.LogoutView.as_view(next_page="login"), name="logout"),
+    path("interface/",                    views.interface_view,    name="interface"),
+    path("new/event/",                    views.events_view,       name="events"),
+    path("profile/",                      views.profile_view,      name="profile"),
+
+    # ── Products & events (web) ───────────────────────────────────────────────
+    path("products/new/",                 views.create_product,    name="create_product"),
+    path("products/<str:sku>/",           views.product_detail,    name="product_detail"),
+    path("products/<str:sku>/events/",    views.add_event,         name="add_event"),
+    path("products/<str:sku>/handover/",  views.add_handover,      name="add_handover"),
+    path("events/<int:event_id>/status/", views.refresh_tx_status, name="refresh_tx_status"),
+
+    # ── Legacy API ────────────────────────────────────────────────────────────
+    path("api/events/",                   views.add_event_api,     name="add_event_api"),
+
+    # ── Mobile companion API ──────────────────────────────────────────────────
+    path("api/mobile/login/",             api_views.mobile_login,         name="mobile_login"),
+    path("api/mobile/products/",          api_views.mobile_products,      name="mobile_products"),
+    path("api/mobile/qr/<str:qr_token>/", api_views.mobile_qr_resolve,    name="mobile_qr_resolve"),
+    path("api/mobile/log/",               api_views.mobile_log_event,     name="mobile_log_event"),
+    path("api/mobile/events/<str:sku>/",  api_views.mobile_event_history, name="mobile_event_history"),
 ]
