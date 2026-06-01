@@ -21,4 +21,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("",       include("tracker.urls")),
 ]
+
+handler404 = "tracker.views.handler404"
  
