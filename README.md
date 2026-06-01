@@ -14,12 +14,10 @@ TraceBlocks enables vendors, manufacturers, and logistics handlers to record eve
 - [Tech Stack](#tech-stack)
 - [Setup & Installation](#setup--installation)
 - [Blockchain Integration](#blockchain-integration)
-- [Smart Contract](#smart-contract)
 - [Running the App](#running-the-app)
 - [Running Tests](#running-tests)
 - [Environment Variables](#environment-variables)
 - [How It Works](#how-it-works)
-- [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 
 ---
@@ -55,7 +53,6 @@ The Django backend handles all business logic, authentication, fast database que
 | Database | SQLite (development) |
 | Blockchain | VeChain (Thor protocol) |
 | Blockchain SDK | thor-requests (Python) |
-| Contract Compiler | Remix Ethereum IDE |
 | Wallet | VeWorld browser extension |
 | Version Control | Git / GitHub |
 
@@ -133,19 +130,6 @@ When a tracking event is added:
 
 This means the app is always functional even without a blockchain connection, while still providing full on-chain verification when available.
 
----
-
-**Source:** `tracker/contracts/TraceBlocks.sol`
-
-
-### Compiling and Deploying
-
-1. Open [remix.ethereum.org](https://remix.ethereum.org)
-2. Create `TraceBlocks.sol` and paste the contract code
-3. Compile with Solidity compiler version `0.8.x`
-4. Copy the generated **ABI** and **Bytecode** into `tracker/contracts/TraceBlocks.json`
-5. Run the deployment script:
-
 ```bash
 python deploy.py
 ```
@@ -170,16 +154,6 @@ source venv/bin/activate
 # Start the server
 python manage.py runserver
 ```
-
-| URL | Description |
-|---|---|
-| `/` | Product list and registration |
-| `/products/<sku>/` | Product detail and event history |
-| `/products/new/` | Register a new product |
-| `/products/<sku>/events/` | Add a tracking event |
-| `/events/<id>/status/` | Poll transaction status (JSON) |
-| `/admin/` | Django admin panel |
-
 ---
 
 ## Running Tests
@@ -212,7 +186,6 @@ Blockchain tests use `unittest.mock` so the full suite runs offline without any 
 ```bash
 echo ".env" >> .gitignore
 ```
-
 ---
 
 ## How It Works
@@ -250,16 +223,6 @@ The `/events/<id>/status/` endpoint can be polled via AJAX to update the UI when
 
 ---
 
-## API Endpoints
-
-| Method | URL | Description |
-|---|---|---|
-| GET | `/` | List all products |
-| POST | `/products/new/` | Register a new product |
-| GET | `/products/<sku>/` | Product detail and event timeline |
-| POST | `/products/<sku>/events/` | Add a tracking event |
-| GET | `/events/<id>/status/` | Get TX status as JSON |
-
 ---
 
 ## Contributing
@@ -284,3 +247,10 @@ This project is developed for educational and demonstration purposes.
 ---
 
 *Built with Django + VeChain | TraceBlocks — making supply chains transparent and trustworthy.*
+
+## Contributors
+1. Robert Rowairi
+2. Luiz Were
+3. Dishon Oketch
+4. Clinton Amayo
+5. Rouwel Ngacha
