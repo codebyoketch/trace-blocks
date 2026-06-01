@@ -1,659 +1,810 @@
 {% load static %}
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Profile & Settings — TraceBlocks</title>
-
-  <!-- TRACEBLOCKS THEME -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&display=swap" rel="stylesheet" />
   <style>
-
-    ```css
-/* ════════════════════════════════════════
-   TRACEBLOCKS — PROFILE & SETTINGS THEME
-════════════════════════════════════════ */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* ════════════════════════════════════════
-   ROOT COLORS
-════════════════════════════════════════ */
-
-:root {
-  --bg: #080412;
-  --sidebar: #100a21;
-
-  --card: rgba(255,255,255,0.03);
-
-  --border: rgba(168,85,247,0.15);
-
-  --accent: #A855F7;
-  --accent2: #D8B4FE;
-  --accent3: #00F0FF;
-
-  --text: #F3E8FF;
-  --muted: #7C6E95;
-
-  --danger: #ff5a6e;
-
-  --font-d: 'Syne', sans-serif;
-  --font-m: 'Space Mono', monospace;
-}
-
-/* ════════════════════════════════════════
-   BODY
-════════════════════════════════════════ */
-
-html,
-body {
-  min-height: 100%;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-m);
-  line-height: 1.7;
-  padding: 40px 24px;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* GRID BACKGROUND */
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-
-  background-image:
-    linear-gradient(rgba(168,85,247,0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(168,85,247,0.04) 1px, transparent 1px);
-
-  background-size: 36px 36px;
-}
-
-/* ════════════════════════════════════════
-   CONTAINER
-════════════════════════════════════════ */
-
-main {
-  max-width: 1100px;
-  margin: 0 auto;
-}
-
-/* ════════════════════════════════════════
-   HEADER
-════════════════════════════════════════ */
-
-header {
-  background: rgba(16,10,33,0.7);
-  backdrop-filter: blur(10px);
-
-  border: 1px solid var(--border);
-
-  border-radius: 18px;
-
-  padding: 22px 28px;
-
-  margin-bottom: 32px;
-}
-
-header p {
-  color: var(--accent2);
-  font-family: var(--font-d);
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  margin-bottom: 12px;
-}
-
-nav {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-}
-
-nav a {
-  text-decoration: none;
-  color: var(--muted);
-
-  padding: 8px 14px;
-
-  border-radius: 8px;
-
-  transition: 0.2s ease;
-  font-size: 13px;
-}
-
-nav a:hover {
-  background: rgba(168,85,247,0.08);
-  color: var(--text);
-}
-
-/* ════════════════════════════════════════
-   TYPOGRAPHY
-════════════════════════════════════════ */
-
-h2 {
-  font-family: var(--font-d);
-  font-size: 2rem;
-  margin-bottom: 10px;
-  color: var(--text);
-}
-
-h3 {
-  font-family: var(--font-d);
-  font-size: 1.3rem;
-  margin-bottom: 8px;
-  color: var(--accent2);
-}
-
-p {
-  color: var(--muted);
-}
-
-strong {
-  color: var(--text);
-}
-
-small {
-  color: var(--muted);
-}
-
-/* ════════════════════════════════════════
-   SECTION CARDS
-════════════════════════════════════════ */
-
-section {
-  background: var(--card);
-
-  border: 1px solid var(--border);
-
-  border-radius: 18px;
-
-  padding: 32px;
-
-  margin-bottom: 28px;
-
-  backdrop-filter: blur(10px);
-
-  transition: 0.25s ease;
-}
-
-section:hover {
-  border-color: rgba(168,85,247,0.35);
-
-  box-shadow:
-    0 0 24px rgba(168,85,247,0.12);
-}
-
-/* ════════════════════════════════════════
-   HR
-════════════════════════════════════════ */
-
-hr {
-  border: none;
-  height: 1px;
-
-  background: var(--border);
-
-  margin: 22px 0;
-}
-
-/* ════════════════════════════════════════
-   PROFILE CARD
-════════════════════════════════════════ */
-
-#display-initials {
-  background:
-    linear-gradient(
-      135deg,
-      var(--accent),
-      var(--accent2)
-    ) !important;
-
-  border: none !important;
-
-  color: var(--bg);
-
-  font-family: var(--font-d);
-
-  box-shadow:
-    0 0 24px rgba(168,85,247,0.4);
-}
-
-#display-name-val {
-  font-family: var(--font-d);
-  color: var(--text);
-}
-
-#display-account-type-badge {
-  color: var(--accent3);
-  font-size: 13px;
-}
-
-/* ════════════════════════════════════════
-   TABLES
-════════════════════════════════════════ */
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-td {
-  padding: 12px 8px;
-  vertical-align: middle;
-  color: var(--muted);
-}
-
-td strong {
-  color: var(--text);
-}
-
-/* ════════════════════════════════════════
-   RADIO BUTTONS
-════════════════════════════════════════ */
-
-input[type="radio"] {
-  accent-color: var(--accent);
-  transform: scale(1.1);
-}
-
-/* ════════════════════════════════════════
-   FIELDSETS
-════════════════════════════════════════ */
-
-fieldset {
-  border: 1px solid var(--border);
-
-  border-radius: 16px;
-
-  padding: 24px;
-
-  background: rgba(255,255,255,0.02);
-}
-
-legend {
-  padding: 0 10px;
-
-  color: var(--accent2);
-
-  font-family: var(--font-d);
-}
-
-/* ════════════════════════════════════════
-   INPUTS
-════════════════════════════════════════ */
-
-input[type="email"],
-input[type="password"] {
-  width: 100%;
-
-  max-width: 460px;
-
-  background: rgba(255,255,255,0.03);
-
-  border: 1px solid var(--border);
-
-  border-radius: 10px;
-
-  padding: 14px 16px;
-
-  margin-top: 8px;
-
-  color: var(--text);
-
-  font-family: var(--font-m);
-
-  transition: 0.2s ease;
-}
-
-input[type="email"]:focus,
-input[type="password"]:focus {
-  outline: none;
-
-  border-color: var(--accent);
-
-  box-shadow:
-    0 0 16px rgba(168,85,247,0.25);
-}
-
-/* ════════════════════════════════════════
-   BUTTONS
-════════════════════════════════════════ */
-
-input[type="submit"],
-input[type="reset"] {
-  border: none;
-
-  padding: 12px 22px;
-
-  border-radius: 10px;
-
-  cursor: pointer;
-
-  font-family: var(--font-d);
-  font-weight: 700;
-
-  letter-spacing: 0.04em;
-
-  transition: 0.2s ease;
-}
-
-input[type="submit"] {
-  background: var(--accent);
-  color: white;
-}
-
-input[type="submit"]:hover {
-  background: var(--accent2);
-
-  color: var(--bg);
-
-  box-shadow:
-    0 0 22px rgba(168,85,247,0.35);
-
-  transform: translateY(-2px);
-}
-
-input[type="reset"] {
-  background: transparent;
-
-  border: 1px solid var(--border);
-
-  color: var(--muted);
-}
-
-input[type="reset"]:hover {
-  border-color: var(--danger);
-
-  color: var(--danger);
-}
-
-/* ════════════════════════════════════════
-   LINKS
-════════════════════════════════════════ */
-
-a {
-  color: var(--accent2);
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--accent3);
-}
-
-/* ════════════════════════════════════════
-   FOOTER
-════════════════════════════════════════ */
-
-footer {
-  max-width: 1100px;
-
-  margin: 40px auto 0;
-
-  text-align: center;
-
-  padding: 22px;
-
-  border-top: 1px solid var(--border);
-
-  color: var(--muted);
-}
-
-/* ════════════════════════════════════════
-   RESPONSIVE
-════════════════════════════════════════ */
-
-@media (max-width: 768px) {
-
-  body {
-    padding: 22px 14px;
-  }
-
-  section {
-    padding: 24px 18px;
-  }
-
-  table,
-  tbody,
-  tr,
-  td {
-    display: block;
-    width: 100%;
-  }
-
-  td {
-    padding: 8px 0;
-  }
-
-  nav {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  input[type="email"],
-  input[type="password"] {
-    max-width: 100%;
-  }
-}
-```
-
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #F5F3EE;
+      --surface:   #FFFFFF;
+      --surface2:  #F9F8F5;
+      --sidebar:   #1A2E22;
+      --border:    #E2DED6;
+      --border2:   #CCC9BF;
+      --text:      #1C1A17;
+      --muted:     #7A7669;
+      --soft:      #A8A49A;
+      --accent:    #2D6A4F;
+      --accent-lt: #E8F4EE;
+      --accent2:   #B5653A;
+      --accent2-lt:#FBF0EA;
+      --info:      #1E5FA6;
+      --info-lt:   #E8F1FB;
+      --err:       #A32D2D;
+      --err-lt:    #FDEAEA;
+      --font-d:    'Fraunces', serif;
+      --font-b:    'DM Sans', sans-serif;
+      --font-m:    'DM Mono', monospace;
+      --radius:    10px;
+      --radius-lg: 14px;
+      --shadow:    0 1px 3px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+      --sidebar-w: 228px;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ══ SIDEBAR ══ */
+    .sidebar {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--sidebar);
+      display: flex;
+      flex-direction: column;
+      z-index: 20;
+      overflow: hidden;
+    }
+
+    .sidebar-noise {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.15) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+
+    .sidebar-glow {
+      position: absolute;
+      bottom: -80px; left: -80px;
+      width: 360px; height: 360px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(45,106,79,0.3) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .sidebar > * { position: relative; z-index: 1; }
+
+    .sidebar-top { padding: 28px 20px 0; flex: 1; display: flex; flex-direction: column; }
+
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      text-decoration: none; margin-bottom: 36px;
+    }
+
+    .logo-mark {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .logo-mark svg {
+      width: 15px; height: 15px; stroke: #fff; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .logo-name {
+      font-family: var(--font-d);
+      font-size: 16px; font-weight: 400;
+      color: #E8F4EE; letter-spacing: -0.01em;
+    }
+
+    .nav-section-label {
+      font-family: var(--font-m); font-size: 9px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(111,196,154,0.45); padding: 14px 8px 6px;
+    }
+
+    .nav-menu {
+      display: flex; flex-direction: column;
+      gap: 1px; flex: 1; overflow-y: auto;
+    }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 8px;
+      font-size: 13px; font-weight: 500;
+      color: rgba(208,235,224,0.55);
+      text-decoration: none; transition: all 0.18s;
+    }
+
+    .nav-item svg {
+      width: 15px; height: 15px; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0; opacity: 0.7;
+    }
+
+    .nav-item:hover { background: rgba(45,106,79,0.25); color: #D0EBE0; }
+    .nav-item.active { background: rgba(45,106,79,0.35); color: #E8F4EE; font-weight: 600; }
+    .nav-item.active svg { opacity: 1; }
+    .nav-ext { font-size: 11px; opacity: 0.5; margin-left: auto; }
+
+    .sidebar-footer {
+      padding: 16px 16px 20px;
+      border-top: 1px solid rgba(45,106,79,0.25);
+    }
+
+    .accounts-link {
+      display: block; font-family: var(--font-m); font-size: 11px;
+      color: rgba(111,196,154,0.5); text-decoration: none;
+      letter-spacing: 0.04em; margin-bottom: 14px; transition: color 0.15s;
+    }
+
+    .accounts-link:hover { color: #6FC49A; }
+
+    .user-row { display: flex; align-items: center; gap: 10px; }
+
+    .user-avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 14px; font-weight: 400;
+      color: #fff; flex-shrink: 0;
+      border: 2px solid rgba(111,196,154,0.3);
+    }
+
+    .user-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; flex: 1; }
+
+    #display-username {
+      font-size: 13px; font-weight: 600; color: #D0EBE0;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+
+    .logout-btn {
+      font-family: var(--font-m); font-size: 10px;
+      color: rgba(111,196,154,0.45); background: none; border: none;
+      cursor: pointer; padding: 0; letter-spacing: 0.04em; transition: color 0.15s;
+    }
+
+    .logout-btn:hover { color: #F09595; }
+
+    /* ══ MAIN ══ */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 36px; height: 62px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 10; gap: 16px;
+    }
+
+    .topbar-title {
+      font-family: var(--font-d); font-size: 18px; font-weight: 300;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+
+    .topbar-title em { font-style: italic; color: var(--accent); }
+
+    /* ── Inner ── */
+    .inner { padding: 32px 36px 60px; max-width: 860px; }
+
+    /* ── Page intro ── */
+    .page-intro { margin-bottom: 28px; }
+    .page-intro h2 {
+      font-family: var(--font-d); font-size: 28px; font-weight: 300;
+      letter-spacing: -0.02em; color: var(--text); margin-bottom: 6px;
+    }
+    .page-intro h2 em { font-style: italic; color: var(--accent); }
+    .page-intro p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+    /* ── Tab nav ── */
+    .tab-nav {
+      display: flex; gap: 4px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 5px;
+      margin-bottom: 28px;
+      width: fit-content;
+    }
+
+    .tab-btn {
+      display: flex; align-items: center; gap: 7px;
+      padding: 9px 20px;
+      border-radius: 7px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted);
+      background: transparent;
+      border: none; cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .tab-btn svg {
+      width: 14px; height: 14px; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0;
+    }
+
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(45,106,79,0.25);
+    }
+
+    .tab-btn:not(.active):hover { background: var(--surface2); color: var(--text); }
+
+    /* ── Section card ── */
+    .section-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .section-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface2);
+    }
+
+    .section-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .section-icon svg {
+      width: 15px; height: 15px; stroke: currentColor; fill: none;
+      stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .section-icon.green { background: var(--accent-lt); color: var(--accent); }
+    .section-icon.amber { background: var(--accent2-lt); color: var(--accent2); }
+    .section-icon.blue  { background: var(--info-lt); color: var(--info); }
+    .section-icon.red   { background: var(--err-lt); color: var(--err); }
+
+    .section-title-wrap {}
+    .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: var(--soft); margin-bottom: 1px; }
+    .section-name  { font-size: 14px; font-weight: 600; color: var(--text); }
+
+    .section-body { padding: 24px 22px; }
+
+    /* ── Profile avatar card ── */
+    .profile-hero {
+      display: flex; align-items: center; gap: 18px;
+      padding: 20px 22px;
+      background: linear-gradient(135deg, #1A2E22, #2D4A35);
+      border-bottom: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+
+    .profile-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(45,106,79,0.2) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(45,106,79,0.2) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    .profile-hero > * { position: relative; z-index: 1; }
+
+    .profile-avatar {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: var(--accent);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-d); font-size: 22px; font-weight: 400;
+      color: #fff; flex-shrink: 0;
+      border: 3px solid rgba(111,196,154,0.4);
+      box-shadow: 0 0 0 6px rgba(45,106,79,0.2);
+    }
+
+    .profile-hero-info {}
+    .profile-hero-name {
+      font-family: var(--font-d); font-size: 20px; font-weight: 400;
+      color: #F5F3EE; letter-spacing: -0.01em; margin-bottom: 4px;
+    }
+
+    .profile-type-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-m); font-size: 10px; font-weight: 500;
+      color: #6FC49A; background: rgba(45,106,79,0.3);
+      border: 1px solid rgba(45,106,79,0.5);
+      border-radius: 20px; padding: 3px 10px; letter-spacing: 0.04em;
+    }
+
+    /* ── Account type toggle ── */
+    .type-toggle {
+      display: flex; gap: 4px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 4px;
+      width: fit-content;
+      margin-bottom: 22px;
+    }
+
+    .type-toggle label {
+      display: flex; align-items: center; gap: 6px;
+      padding: 7px 16px; border-radius: 7px;
+      font-size: 13px; font-weight: 500;
+      color: var(--muted); cursor: pointer;
+      transition: all 0.18s; text-transform: none; letter-spacing: 0;
+    }
+
+    .type-toggle input[type="radio"] { display: none; }
+    .type-toggle label.active { background: var(--accent); color: #fff; }
+    .type-toggle label:not(.active):hover { background: var(--bg); color: var(--text); }
+
+    /* ── Info table ── */
+    .info-table { width: 100%; border-collapse: collapse; }
+
+    .info-table tr { border-bottom: 1px solid var(--border); }
+    .info-table tr:last-child { border-bottom: none; }
+
+    .info-table td {
+      padding: 12px 8px;
+      vertical-align: middle;
+      font-size: 14px;
+    }
+
+    .info-table td:first-child {
+      width: 40%;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .info-table td:last-child { color: var(--text); font-family: var(--font-b); }
+
+    .info-table td .mono { font-family: var(--font-m); font-size: 13px; }
+
+    /* ── Notice ── */
+    .notice {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--border2);
+      border-radius: var(--radius);
+      font-size: 13px; color: var(--muted); line-height: 1.5;
+      margin-top: 20px;
+    }
+
+    .notice svg {
+      width: 14px; height: 14px; stroke: var(--soft); fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    /* ── Form fields ── */
+    .field-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 18px; }
+
+    .field-group label {
+      font-size: 11px; font-weight: 600; letter-spacing: 0.07em;
+      text-transform: uppercase; color: var(--muted);
+    }
+
+    .field-group input[type="email"],
+    .field-group input[type="password"] {
+      width: 100%; max-width: 440px;
+      padding: 11px 14px;
+      font-family: var(--font-b); font-size: 14px; color: var(--text);
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      -webkit-appearance: none;
+    }
+
+    .field-group input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 11px 22px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s; letter-spacing: 0.01em;
+    }
+
+    .btn-primary svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-primary:hover { background: #255A42; box-shadow: 0 4px 12px rgba(45,106,79,0.28); transform: translateY(-1px); }
+
+    .btn-ghost {
+      display: inline-flex; align-items: center; padding: 11px 18px;
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border2); border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s;
+    }
+
+    .btn-ghost:hover { color: var(--text); border-color: var(--text); background: var(--surface2); }
+
+    .btn-danger {
+      display: inline-flex; align-items: center; gap: 7px; padding: 11px 18px;
+      background: var(--err-lt); color: var(--err);
+      border: 1px solid #EFC0C0; border-radius: var(--radius);
+      font-family: var(--font-b); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+
+    .btn-danger svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .btn-danger:hover { background: #F9D5D5; border-color: var(--err); }
+
+    .btn-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+    /* ── Tab panels ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Footer ── */
+    .site-footer {
+      text-align: center; padding: 24px 36px;
+      border-top: 1px solid var(--border);
+      font-size: 12px; color: var(--soft);
+      margin-top: 8px;
+    }
+
+    .chain-dot {
+      display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); margin-right: 5px; vertical-align: middle;
+    }
+
+    @media (max-width: 768px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { transform: translateX(-228px); }
+      .main-content { margin-left: 0; }
+      .inner { padding: 20px 16px 40px; }
+      .topbar { padding: 0 16px; }
+      .info-table td:first-child { width: 46%; }
+    }
   </style>
-
 </head>
 <body>
 
-  <!-- ════════════════════════════════════════
-       HEADER
-  ═════════════════════════════════════════ -->
-  <header>
-    <p>&#9632; <strong>TRACEBLOCKS</strong> &nbsp;&mdash;&nbsp; Supply Chain Transparency on VeChain</p>
-    <nav>
-      <a href="#profile">&#9654; Profile</a>
-      &nbsp;&nbsp;
-      <a href="#settings">&#9654; Settings</a>
-    </nav>
-    <hr />
-  </header>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar">
+    <div class="sidebar-noise"></div>
+    <div class="sidebar-glow"></div>
 
-  <main>
+    <div class="sidebar-top">
+      <a href="/" class="logo">
+        <div class="logo-mark">
+          <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
+        </div>
+        <span class="logo-name">TraceBlocks</span>
+      </a>
 
-    <h2>Account</h2>
-    <p>Your identity and security settings on the TraceBlocks network.</p>
-    <hr />
+      <div class="nav-menu">
+        <div class="nav-section-label">Main</div>
+        <a href="{% url 'interface' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="{% url 'index' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          All Products
+        </a>
+        <a href="{% url 'events' %}" class="nav-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+          Log Event
+        </a>
+        <a href="#" class="nav-item active">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
 
+        <div class="nav-section-label">Chain</div>
+        <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Explorer
+          <span class="nav-ext">↗</span>
+        </a>
+      </div>
+    </div>
 
-    <!-- ════════════════════════════════════════
-         TAB 1 — PROFILE
-         Fully read-only — details set at
-         signup, cannot be edited here.
-    ═════════════════════════════════════════ -->
-    <section id="profile">
+    <div class="sidebar-footer">
+      <a href="{% url 'index' %}" class="accounts-link">// Accounts &amp; Products →</a>
+      <div class="user-row">
+        <div class="user-avatar" id="sidebar-avatar">U</div>
+        <div class="user-info">
+          <span id="display-username">{{ user.username|default:"User" }}</span>
+          <form method="post" action="{% url 'logout' %}" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">Sign out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </aside>
 
-      <h3>Profile</h3>
-      <p><em>Your public identity on the TraceBlocks supply chain network.</em></p>
+  <!-- ══ MAIN ══ -->
+  <main class="main-content">
 
-      <br />
+    <!-- Topbar -->
+    <header class="topbar">
+      <h1 class="topbar-title">Account &amp; <em>Settings</em></h1>
+    </header>
 
-      <!-- ── READ-ONLY DISPLAY CARD ── -->
-      <table border="0" cellpadding="8">
+    <div class="inner">
 
-        <tr>
-          <td valign="top">
-            <!-- Avatar circle -->
-            <output id="display-initials"
-              style="display:inline-block;
-                     width:56px;height:56px;
-                     border:2px solid #333;
-                     border-radius:50%;
-                     text-align:center;
-                     line-height:56px;
-                     font-size:20px;
-                     font-weight:bold;">
-              TB
-            </output>
-          </td>
-          <td valign="middle">
-            <strong id="display-name-val" style="font-size:1.1em;">TraceBlocks User</strong><br />
-            <span id="display-account-type-badge">&#128100; Individual User</span>
-          </td>
-        </tr>
-
-      </table>
-
-      <br />
-
-      <!-- ── ACCOUNT TYPE RADIO TOGGLE ── -->
-      <p>
-        <strong>Account type:</strong>
-        &nbsp;&nbsp;
-        <label>
-          <input
-            type="radio"
-            name="view_account_type"
-            value="individual"
-            checked
-            onchange="switchProfileView('individual')"
-          />
-          &nbsp;Individual User
-        </label>
-        &nbsp;&nbsp;&nbsp;
-        <label>
-          <input
-            type="radio"
-            name="view_account_type"
-            value="organisation"
-            onchange="switchProfileView('organisation')"
-          />
-          &nbsp;Organisation / Business
-        </label>
-      </p>
-
-      <hr />
-
-      <!-- Individual user details (shown by default) -->
-      <div id="display-individual">
-        <table border="0" cellpadding="6">
-          <tr>
-            <td><strong>First name</strong></td>
-            <td id="display-firstname">{{ user.first_name|default:"--" }}</td>
-          </tr>
-          <tr>
-            <td><strong>Last name</strong></td>
-            <td id="display-lastname">{{ user.last_name|default:"-" }}</td>
-          </tr>
-          <tr>
-            <td><strong>Username</strong></td>
-            <td id="display-username">{{ user.username }}</td>
-          </tr>
-          <tr>
-            <td><strong>Email</strong></td>
-            <td id="display-email">{{ user.email|default:"—" }}</td>
-          </tr>
-          <tr>
-            <td><strong>Account type</strong></td>
-            <td>Individual User</td>
-          </tr>
-          <tr>
-            <td><strong>Member since</strong></td>
-            <td id="display-joined">{{ user.date_joined }}</td>
-          </tr>
-        </table>
+      <!-- Page intro -->
+      <div class="page-intro">
+        <h2>Your <em>Profile</em></h2>
+        <p>Your identity and security settings on the TraceBlocks network.</p>
       </div>
 
-      <!-- Organisation details (hidden by default) -->
-      <div id="display-organisation" style="display:none;">
-        <table border="0" cellpadding="6">
-          <tr>
-            <td><strong>Organisation name</strong></td>
-            <td id="display-orgname">—</td>
-          </tr>
-          <tr>
-            <td><strong>Registration no.</strong></td>
-            <td id="display-regnumber">—</td>
-          </tr>
-          <tr>
-            <td><strong>Organisation type</strong></td>
-            <td id="display-orgtype">—</td>
-          </tr>
-          <tr>
-            <td><strong>Organisation handle</strong></td>
-            <td id="display-orghandle">—</td>
-          </tr>
-          <tr>
-            <td><strong>Contact email</strong></td>
-            <td id="display-orgemail">—</td>
-          </tr>
-          <tr>
-            <td><strong>Phone</strong></td>
-            <td id="display-orgphone">—</td>
-          </tr>
-          <tr>
-            <td><strong>Account type</strong></td>
-            <td>Organisation / Business</td>
-          </tr>
-          <tr>
-            <td><strong>Member since</strong></td>
-            <td id="display-org-joined">—</td>
-          </tr>
-        </table>
+      <!-- Tab nav -->
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="switchTab('profile', this)">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button>
+        <button class="tab-btn" onclick="switchTab('settings', this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          Settings
+        </button>
       </div>
 
-      <br />
-      <p>
-        <small>
-          &#128274; &nbsp;Account details are set at registration and cannot be changed here.
-          To update your security credentials go to <a href="#settings">Settings &darr;</a>.
-        </small>
-      </p>
+      <!-- ── PROFILE TAB ── -->
+      <div id="tab-profile" class="tab-panel active">
 
-    </section>
+        <!-- Profile hero -->
+        <div class="section-card">
+          <div class="profile-hero">
+            <div class="profile-avatar" id="display-initials">TB</div>
+            <div class="profile-hero-info">
+              <div class="profile-hero-name" id="display-name-val">TraceBlocks User</div>
+              <div class="profile-type-badge" id="display-account-type-badge">
+                Individual User
+              </div>
+            </div>
+          </div>
 
+          <div class="section-body">
+            <!-- Account type toggle -->
+            <div class="type-toggle" id="type-toggle">
+              <label id="lbl-individual" class="active" onclick="switchProfileView('individual')">
+                <input type="radio" name="view_account_type" value="individual" checked />
+                Individual
+              </label>
+              <label id="lbl-org" onclick="switchProfileView('organisation')">
+                <input type="radio" name="view_account_type" value="organisation" />
+                Organisation
+              </label>
+            </div>
 
-    <hr />
-    <br />
-    
+            <!-- Individual details -->
+            <div id="display-individual">
+              <table class="info-table">
+                <tr>
+                  <td>First Name</td>
+                  <td id="display-firstname">{{ user.first_name|default:"—" }}</td>
+                </tr>
+                <tr>
+                  <td>Last Name</td>
+                  <td id="display-lastname">{{ user.last_name|default:"—" }}</td>
+                </tr>
+                <tr>
+                  <td>Username</td>
+                  <td><span class="mono" id="display-uname">{{ user.username }}</span></td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td id="display-email">{{ user.email|default:"—" }}</td>
+                </tr>
+                <tr>
+                  <td>Account Type</td>
+                  <td>Individual User</td>
+                </tr>
+                <tr>
+                  <td>Member Since</td>
+                  <td id="display-joined">{{ user.date_joined }}</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Organisation details -->
+            <div id="display-organisation" style="display:none;">
+              <table class="info-table">
+                <tr>
+                  <td>Organisation Name</td>
+                  <td id="display-orgname">—</td>
+                </tr>
+                <tr>
+                  <td>Registration No.</td>
+                  <td><span class="mono" id="display-regnumber">—</span></td>
+                </tr>
+                <tr>
+                  <td>Organisation Type</td>
+                  <td id="display-orgtype">—</td>
+                </tr>
+                <tr>
+                  <td>Contact Email</td>
+                  <td id="display-orgemail">—</td>
+                </tr>
+                <tr>
+                  <td>Phone</td>
+                  <td id="display-orgphone">—</td>
+                </tr>
+                <tr>
+                  <td>Account Type</td>
+                  <td>Organisation / Business</td>
+                </tr>
+                <tr>
+                  <td>Member Since</td>
+                  <td id="display-org-joined">—</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="notice">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Account details are set at registration and cannot be changed here. To update security credentials, go to the <a href="#" onclick="switchTab('settings', document.querySelectorAll('.tab-btn')[1]);return false;">Settings tab</a>.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── SETTINGS TAB ── -->
+      <div id="tab-settings" class="tab-panel">
+
+        <!-- Email -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-icon blue">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="section-title-wrap">
+              <div class="section-label">Account</div>
+              <div class="section-name">Email Address</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="field-group">
+                <label for="new-email">New Email Address</label>
+                <input type="email" id="new-email" name="email" placeholder="you@example.com" autocomplete="email" />
+              </div>
+              <div class="btn-row">
+                <button type="submit" class="btn-primary">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  Update Email
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-icon green">
+              <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="section-title-wrap">
+              <div class="section-label">Security</div>
+              <div class="section-name">Change Password</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="field-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" name="current_password" placeholder="Enter current password" autocomplete="current-password" />
+              </div>
+              <div class="field-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" name="new_password" placeholder="Create new password" autocomplete="new-password" />
+              </div>
+              <div class="field-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" name="confirm_password" placeholder="Repeat new password" autocomplete="new-password" />
+              </div>
+              <div class="btn-row">
+                <button type="submit" class="btn-primary">
+                  <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+                  Update Password
+                </button>
+                <button type="reset" class="btn-ghost">Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Danger zone -->
+        <div class="section-card">
+          <div class="section-header">
+            <div class="section-icon red">
+              <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <div class="section-title-wrap">
+              <div class="section-label">Danger Zone</div>
+              <div class="section-name">Delete Account</div>
+            </div>
+          </div>
+          <div class="section-body">
+            <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px;">Permanently delete your TraceBlocks account and all associated data. This action cannot be undone and will remove all your recorded supply chain events.</p>
+            <button class="btn-danger" onclick="return confirm('Are you sure? This cannot be undone.')">
+              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+              Delete My Account
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span class="chain-dot"></span>VeChainThor Mainnet &nbsp;·&nbsp; TraceBlocks Supply Chain Transparency
+    </footer>
+
+  </main>
+
   <script>
-   
-   document.addEventListener('DOMContentLoaded', function () {
-  populateProfile({
-    account_type : '{{ user.profile.account_type|default:"individual" }}',
-    initials     : '{{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}',
-    display_name : '{{ user.get_full_name|default:user.username }}',
-    joined       : '{{ user.date_joined|date:"M Y" }}',
-    first_name   : '{{ user.first_name }}',
-    last_name    : '{{ user.last_name }}',
-    username     : '{{ user.username }}',
-    email        : '{{ user.email }}'
-  });
-});
+    // ── Populate from Django ──
+    document.addEventListener('DOMContentLoaded', function () {
+      const username = "{{ user.username|default:'User' }}";
+      const firstName = "{{ user.first_name|default:'' }}";
+      const lastName  = "{{ user.last_name|default:'' }}";
+      const fullName  = (firstName + ' ' + lastName).trim() || username;
+      const initials  = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || username.charAt(0).toUpperCase();
 
-    
-    function switchProfileView(type) {
-      var ind = document.getElementById('display-individual');
-      var org = document.getElementById('display-organisation');
-      if (type === 'individual') {
-        ind.style.display = '';
-        org.style.display = 'none';
-      } else {
-        ind.style.display = 'none';
-        org.style.display = '';
-      }
+      document.getElementById('display-initials').textContent    = initials;
+      document.getElementById('sidebar-avatar').textContent      = username.charAt(0).toUpperCase();
+      document.getElementById('display-username').textContent    = username;
+      document.getElementById('display-name-val').textContent    = fullName;
+    });
+
+    // ── Tab switching ──
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
     }
 
-    
+    // ── Profile type toggle ──
+    function switchProfileView(type) {
+      const lblI = document.getElementById('lbl-individual');
+      const lblO = document.getElementById('lbl-org');
+      const ind  = document.getElementById('display-individual');
+      const org  = document.getElementById('display-organisation');
+      if (type === 'individual') {
+        ind.style.display = ''; org.style.display = 'none';
+        lblI.classList.add('active'); lblO.classList.remove('active');
+        document.getElementById('display-account-type-badge').textContent = 'Individual User';
+      } else {
+        ind.style.display = 'none'; org.style.display = '';
+        lblO.classList.add('active'); lblI.classList.remove('active');
+        document.getElementById('display-account-type-badge').textContent = 'Organisation / Business';
+      }
+    }
   </script>
-
 </body>
 </html>
