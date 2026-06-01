@@ -677,7 +677,7 @@ body {
     <div class="sidebar-glow"></div>
 
     <div class="sidebar-top">
-      <a href="/" class="logo">
+      <a class="logo">
         <div class="logo-mark">
           <svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/><circle cx="19" cy="17" r="2"/></svg>
         </div>
@@ -686,14 +686,19 @@ body {
 
       <div class="nav-menu">
         <div class="nav-section-label">Main</div>
-        <a href="{% url 'interface' %}" class="nav-item active">
+        <a href="{% url 'interface' %}" class="nav-item {% if request.resolver_match.url_name == 'interface' %}active{% endif %}">
           <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
           Dashboard
         </a>
-        <a href="{% url 'events' %}" class="nav-item">
+        <a href="{% url 'events' %}" class="nav-item {% if request.resolver_match.url_name == 'events' %}active{% endif %}">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
           Log Event
         </a>
+        <a href="{% url 'profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </a>
+
 
         <div class="nav-section-label">Chain</div>
         <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">
@@ -705,7 +710,6 @@ body {
     </div>
 
     <div class="sidebar-footer">
-      <a href="{% url 'profile' %}" class="accounts-link">// Profile Settings →</a>
       <div class="user-row">
         <div class="user-avatar" id="avatar-initials">U</div>
         <div class="user-info">
