@@ -335,6 +335,11 @@ def events_view(request):
 def profile_view(request):
     return render(request, "profile.html", {"User": User})
 
+def terms_view(request):
+    return render(request, "terms.html")
+
+def privacy_view(request):
+    return render(request, "privacy.html")
 
 # ── Auth views ────────────────────────────────────────────────────────────────
 
