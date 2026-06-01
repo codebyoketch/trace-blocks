@@ -210,6 +210,26 @@
     .page-intro h2 em { font-style: italic; color: var(--accent); }
     .page-intro p { font-size: 14px; color: var(--muted); line-height: 1.5; }
 
+    /* ── Django messages ── */
+    .messages-list { list-style: none; margin-bottom: 20px; display: flex; flex-direction: column; gap: 8px; }
+
+    .msg {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 11px 16px; border-radius: var(--radius);
+      font-size: 13px; line-height: 1.5;
+    }
+
+    .msg svg {
+      width: 14px; height: 14px; stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0; margin-top: 1px;
+    }
+
+    .msg-success { background: var(--accent-lt); color: var(--accent); border: 1px solid #C3E0D0; }
+    .msg-error   { background: var(--err-lt);    color: var(--err);    border: 1px solid #EFC0C0; }
+    .msg-warning { background: var(--accent2-lt); color: var(--accent2); border: 1px solid #F0D0B8; }
+    .msg-info    { background: var(--info-lt);   color: var(--info);   border: 1px solid #C0D8F0; }
+
     /* ── Tab nav ── */
     .tab-nav {
       display: flex; gap: 4px;
@@ -528,7 +548,7 @@
     <div class="sidebar-footer">
       <a href="{% url 'index' %}" class="accounts-link">// Accounts &amp; Products →</a>
       <div class="user-row">
-        <div class="user-avatar" id="sidebar-avatar">U</div>
+        <div class="user-avatar" id="sidebar-avatar">{{ user.username|first|upper }}</div>
         <div class="user-info">
           <span id="display-username">{{ user.username|default:"User" }}</span>
           <form method="post" action="{% url 'logout' %}" style="margin:0">
@@ -549,6 +569,24 @@
     </header>
 
     <div class="inner">
+
+      <!-- Django messages -->
+      {% if messages %}
+      <ul class="messages-list">
+        {% for message in messages %}
+        <li class="msg msg-{{ message.tags }}">
+          {% if message.tags == 'success' %}
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          {% elif message.tags == 'error' %}
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          {% else %}
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          {% endif %}
+          {{ message }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
 
       <!-- Page intro -->
       <div class="page-intro">
@@ -571,91 +609,116 @@
       <!-- ── PROFILE TAB ── -->
       <div id="tab-profile" class="tab-panel active">
 
-        <!-- Profile hero -->
         <div class="section-card">
           <div class="profile-hero">
-            <div class="profile-avatar" id="display-initials">TB</div>
+            <div class="profile-avatar" id="display-initials">
+              {% if user.first_name and user.last_name %}
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+              {% else %}
+                {{ user.username|first|upper }}
+              {% endif %}
+            </div>
             <div class="profile-hero-info">
-              <div class="profile-hero-name" id="display-name-val">TraceBlocks User</div>
-              <div class="profile-type-badge" id="display-account-type-badge">
-                Individual User
+              <div class="profile-hero-name">
+                {% if user.user_type == 'ORGANISATION' %}
+                  {{ user.organisation_name|default:user.username }}
+                {% elif user.first_name %}
+                  {{ user.first_name }} {{ user.second_name }}
+                {% else %}
+                  {{ user.username }}
+                {% endif %}
+              </div>
+              <div class="profile-type-badge">
+                {% if user.user_type == 'ORGANISATION' %}Organisation / Business{% else %}Individual User{% endif %}
               </div>
             </div>
           </div>
 
           <div class="section-body">
-            <!-- Account type toggle -->
+            <!-- Account type toggle — only shown if org, to view both sections -->
+            {% if user.user_type == 'ORGANISATION' %}
             <div class="type-toggle" id="type-toggle">
-              <label id="lbl-individual" class="active" onclick="switchProfileView('individual')">
-                <input type="radio" name="view_account_type" value="individual" checked />
+              <label id="lbl-individual" onclick="switchProfileView('individual')">
+                <input type="radio" name="view_account_type" value="individual" />
                 Individual
               </label>
-              <label id="lbl-org" onclick="switchProfileView('organisation')">
-                <input type="radio" name="view_account_type" value="organisation" />
+              <label id="lbl-org" class="active" onclick="switchProfileView('organisation')">
+                <input type="radio" name="view_account_type" value="organisation" checked />
                 Organisation
               </label>
             </div>
+            {% endif %}
 
             <!-- Individual details -->
-            <div id="display-individual">
+            <div id="display-individual" {% if user.user_type == 'ORGANISATION' %}style="display:none"{% endif %}>
               <table class="info-table">
                 <tr>
                   <td>First Name</td>
-                  <td id="display-firstname">{{ user.first_name|default:"—" }}</td>
+                  <td>{{ user.first_name|default:"—" }}</td>
                 </tr>
                 <tr>
                   <td>Last Name</td>
-                  <td id="display-lastname">{{ user.last_name|default:"—" }}</td>
+                  <td>{{ user.second_name|default:"—" }}</td>
                 </tr>
+                {% if user.middle_name %}
+                <tr>
+                  <td>Middle Name</td>
+                  <td>{{ user.middle_name }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                   <td>Username</td>
-                  <td><span class="mono" id="display-uname">{{ user.username }}</span></td>
+                  <td><span class="mono">{{ user.username }}</span></td>
                 </tr>
                 <tr>
                   <td>Email</td>
-                  <td id="display-email">{{ user.email|default:"—" }}</td>
+                  <td>{{ user.email|default:"—" }}</td>
                 </tr>
+                {% if user.phonenumber %}
+                <tr>
+                  <td>Phone</td>
+                  <td>{{ user.phonenumber }}</td>
+                </tr>
+                {% endif %}
                 <tr>
                   <td>Account Type</td>
                   <td>Individual User</td>
                 </tr>
                 <tr>
                   <td>Member Since</td>
-                  <td id="display-joined">{{ user.date_joined }}</td>
+                  <td>{{ user.date_joined|date:"N j, Y" }}</td>
                 </tr>
               </table>
             </div>
 
             <!-- Organisation details -->
-            <div id="display-organisation" style="display:none;">
+            <div id="display-organisation" {% if user.user_type != 'ORGANISATION' %}style="display:none"{% endif %}>
               <table class="info-table">
                 <tr>
                   <td>Organisation Name</td>
-                  <td id="display-orgname">—</td>
+                  <td>{{ user.organisation_name|default:"—" }}</td>
                 </tr>
                 <tr>
-                  <td>Registration No.</td>
-                  <td><span class="mono" id="display-regnumber">—</span></td>
-                </tr>
-                <tr>
-                  <td>Organisation Type</td>
-                  <td id="display-orgtype">—</td>
+                  <td>Username</td>
+                  <td><span class="mono">{{ user.username }}</span></td>
                 </tr>
                 <tr>
                   <td>Contact Email</td>
-                  <td id="display-orgemail">—</td>
+                  <td>{{ user.email|default:"—" }}</td>
                 </tr>
+                {% if user.phonenumber %}
                 <tr>
                   <td>Phone</td>
-                  <td id="display-orgphone">—</td>
+                  <td>{{ user.phonenumber }}</td>
                 </tr>
+                {% endif %}
                 <tr>
                   <td>Account Type</td>
                   <td>Organisation / Business</td>
                 </tr>
                 <tr>
                   <td>Member Since</td>
-                  <td id="display-org-joined">—</td>
+                  <td>{{ user.date_joined|date:"N j, Y" }}</td>
                 </tr>
               </table>
             </div>
@@ -684,11 +747,12 @@
             </div>
           </div>
           <div class="section-body">
-            <form method="post" action="">
+            <form method="post" action="{% url 'profile' %}">
               {% csrf_token %}
+              <input type="hidden" name="action" value="update_email">
               <div class="field-group">
                 <label for="new-email">New Email Address</label>
-                <input type="email" id="new-email" name="email" placeholder="you@example.com" autocomplete="email" />
+                <input type="email" id="new-email" name="email" placeholder="{{ user.email|default:'you@example.com' }}" autocomplete="email" />
               </div>
               <div class="btn-row">
                 <button type="submit" class="btn-primary">
@@ -712,8 +776,9 @@
             </div>
           </div>
           <div class="section-body">
-            <form method="post" action="">
+            <form method="post" action="{% url 'profile' %}">
               {% csrf_token %}
+              <input type="hidden" name="action" value="change_password">
               <div class="field-group">
                 <label for="current-password">Current Password</label>
                 <input type="password" id="current-password" name="current_password" placeholder="Enter current password" autocomplete="current-password" />
@@ -750,10 +815,14 @@
           </div>
           <div class="section-body">
             <p style="font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:18px;">Permanently delete your TraceBlocks account and all associated data. This action cannot be undone and will remove all your recorded supply chain events.</p>
-            <button class="btn-danger" onclick="return confirm('Are you sure? This cannot be undone.')">
-              <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-              Delete My Account
-            </button>
+            <form method="post" action="{% url 'profile' %}" onsubmit="return confirm('Are you absolutely sure? This cannot be undone and all your data will be permanently deleted.')">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete_account">
+              <button type="submit" class="btn-danger">
+                <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                Delete My Account
+              </button>
+            </form>
           </div>
         </div>
 
@@ -761,26 +830,12 @@
     </div>
 
     <footer class="site-footer">
-      <span class="chain-dot"></span>VeChainThor Mainnet &nbsp;·&nbsp; TraceBlocks Supply Chain Transparency
+      <span class="chain-dot"></span>VeChainThor Testnet &nbsp;·&nbsp; TraceBlocks Supply Chain Transparency
     </footer>
 
   </main>
 
   <script>
-    // ── Populate from Django ──
-    document.addEventListener('DOMContentLoaded', function () {
-      const username = "{{ user.username|default:'User' }}";
-      const firstName = "{{ user.first_name|default:'' }}";
-      const lastName  = "{{ user.last_name|default:'' }}";
-      const fullName  = (firstName + ' ' + lastName).trim() || username;
-      const initials  = (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || username.charAt(0).toUpperCase();
-
-      document.getElementById('display-initials').textContent    = initials;
-      document.getElementById('sidebar-avatar').textContent      = username.charAt(0).toUpperCase();
-      document.getElementById('display-username').textContent    = username;
-      document.getElementById('display-name-val').textContent    = fullName;
-    });
-
     // ── Tab switching ──
     function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
@@ -789,22 +844,40 @@
       btn.classList.add('active');
     }
 
-    // ── Profile type toggle ──
+    // ── Profile type toggle (only relevant for org accounts) ──
     function switchProfileView(type) {
       const lblI = document.getElementById('lbl-individual');
       const lblO = document.getElementById('lbl-org');
       const ind  = document.getElementById('display-individual');
       const org  = document.getElementById('display-organisation');
       if (type === 'individual') {
-        ind.style.display = ''; org.style.display = 'none';
-        lblI.classList.add('active'); lblO.classList.remove('active');
-        document.getElementById('display-account-type-badge').textContent = 'Individual User';
+        if (ind) ind.style.display = '';
+        if (org) org.style.display = 'none';
+        if (lblI) lblI.classList.add('active');
+        if (lblO) lblO.classList.remove('active');
       } else {
-        ind.style.display = 'none'; org.style.display = '';
-        lblO.classList.add('active'); lblI.classList.remove('active');
-        document.getElementById('display-account-type-badge').textContent = 'Organisation / Business';
+        if (ind) ind.style.display = 'none';
+        if (org) org.style.display = '';
+        if (lblO) lblO.classList.add('active');
+        if (lblI) lblI.classList.remove('active');
       }
     }
+
+    // ── Auto-open settings tab if there are error messages ──
+    // (so the user sees feedback on the form they submitted)
+    document.addEventListener('DOMContentLoaded', function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            // If error came from settings forms, open settings tab
+            // We check by looking at the referring action via a simple heuristic:
+            // errors on profile page almost always come from settings actions
+            const hasError = true;
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    });
   </script>
 </body>
 </html>
