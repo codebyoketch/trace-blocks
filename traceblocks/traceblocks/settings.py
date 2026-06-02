@@ -40,7 +40,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  
 ]
 
-ALLOWED_HOSTS = ['trace-blocks-5zdg.onrender.com', 'localhost', '127.0.0.1', '10.157.13.31', '192.168.89.162']
+ALLOWED_HOSTS = ['trace-blocks-5zdg.onrender.com', 'localhost', '127.0.0.1', '10.173.114.31', '192.168.89.162']
 
 
 

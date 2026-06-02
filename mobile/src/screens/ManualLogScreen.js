@@ -10,10 +10,12 @@ import StatusPicker from '../components/StatusPicker';
 const UNITS = ['kg', 'Tonnes', 'Litres', 'Units', 'Boxes', 'Bags', 'Pallets'];
 const MODES = ['road', 'rail', 'air', 'sea', 'motorcycle'];
 
-export default function ManualLogScreen({ navigation }) {
-  const [mode,       setMode]       = useState('event');   // 'event' | 'handover'
+export default function ManualLogScreen({ navigation, route }) {
+  const preselected = route?.params?.product ?? null;
+
+  const [mode,       setMode]       = useState('event');
   const [products,   setProducts]   = useState([]);
-  const [product,    setProduct]    = useState(null);
+  const [product,    setProduct]    = useState(preselected);
   const [showPicker, setShowPicker] = useState(false);
   const [loading,    setLoading]    = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -29,30 +31,28 @@ export default function ManualLogScreen({ navigation }) {
   const [notes,    setNotes]    = useState('');
 
   // Handover fields
-  const [handoverLocation,  setHandoverLocation]  = useState('');
-  const [handoverDatetime,  setHandoverDatetime]  = useState('');
-  const [qtyDispatched,     setQtyDispatched]     = useState('');
-  const [qtyReceived,       setQtyReceived]       = useState('');
-  const [unit,              setUnit]              = useState('');
-  const [discrepancyNote,   setDiscrepancyNote]   = useState('');
-  const [outgoingName,      setOutgoingName]      = useState('');
-  const [outgoingRole,      setOutgoingRole]      = useState('');
-  const [outgoingSig,       setOutgoingSig]       = useState('');
-  const [incomingName,      setIncomingName]      = useState('');
-  const [incomingRole,      setIncomingRole]      = useState('');
-  const [incomingSig,       setIncomingSig]       = useState('');
-  const [carrier,           setCarrier]           = useState('');
-  const [plate,             setPlate]             = useState('');
-  const [transportMode,     setTransportMode]     = useState('');
+  const [handoverLocation, setHandoverLocation] = useState('');
+  const [handoverDatetime, setHandoverDatetime] = useState('');
+  const [qtyDispatched,    setQtyDispatched]    = useState('');
+  const [qtyReceived,      setQtyReceived]      = useState('');
+  const [unit,             setUnit]             = useState('');
+  const [discrepancyNote,  setDiscrepancyNote]  = useState('');
+  const [outgoingName,     setOutgoingName]     = useState('');
+  const [outgoingRole,     setOutgoingRole]     = useState('');
+  const [outgoingSig,      setOutgoingSig]      = useState('');
+  const [incomingName,     setIncomingName]     = useState('');
+  const [incomingRole,     setIncomingRole]     = useState('');
+  const [incomingSig,      setIncomingSig]      = useState('');
+  const [carrier,          setCarrier]          = useState('');
+  const [plate,            setPlate]            = useState('');
+  const [transportMode,    setTransportMode]    = useState('');
 
   useEffect(() => {
-    // Load products
     apiGetProducts()
       .then((res) => setProducts(res.data?.products ?? []))
       .catch(() => Alert.alert('Error', 'Could not load products.'))
       .finally(() => setLoading(false));
 
-    // Get GPS
     (async () => {
       const { status: perm } = await Location.requestForegroundPermissionsAsync();
       if (perm !== 'granted') { setGpsMsg('Location permission denied.'); return; }
@@ -60,7 +60,10 @@ export default function ManualLogScreen({ navigation }) {
         const loc = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
         setGps({ latitude: loc.coords.latitude, longitude: loc.coords.longitude });
         setGpsOk(true);
-        setGpsMsg(`${loc.coords.latitude.toFixed(5)}, ${loc.coords.longitude.toFixed(5)}`);
+        setGpsMsg(
+          `${loc.coords.latitude.toFixed(5)}, ${loc.coords.longitude.toFixed(5)}  ` +
+          `(±${Math.round(loc.coords.accuracy)} m)`
+        );
       } catch {
         setGpsMsg('GPS unavailable.');
       }
@@ -69,28 +72,24 @@ export default function ManualLogScreen({ navigation }) {
 
   const handleSubmit = async () => {
     if (!product) { Alert.alert('Required', 'Please select a product.'); return; }
-
     setSubmitting(true);
     try {
       if (mode === 'event') {
-        if (!status)         { Alert.alert('Required', 'Please select a status.'); return; }
-        if (!location.trim()) { Alert.alert('Required', 'Location is required.'); return; }
-
+        if (!status)          { Alert.alert('Required', 'Please select a status.');  setSubmitting(false); return; }
+        if (!location.trim()) { Alert.alert('Required', 'Location is required.');     setSubmitting(false); return; }
         const res = await apiLogEvent(
           product.sku, status, location.trim(),
           gps?.latitude ?? null, gps?.longitude ?? null, notes.trim(),
         );
         Alert.alert(
           'Event Recorded ✓',
-          `TX: ${res.data.tx_id?.slice(0, 24)}…`,
+          `Status: ${status.replace(/_/g, ' ')}\nTX: ${res.data.tx_id?.slice(0, 24)}…`,
           [{ text: 'Done', onPress: () => navigation.navigate('Main') }],
         );
       } else {
-        // Handover
-        if (!outgoingName.trim()) { Alert.alert('Required', 'Outgoing transporter name is required.'); return; }
-        if (!incomingName.trim()) { Alert.alert('Required', 'Incoming transporter name is required.'); return; }
-        if (!handoverLocation.trim()) { Alert.alert('Required', 'Handover location is required.'); return; }
-
+        if (!handoverLocation.trim()) { Alert.alert('Required', 'Handover location is required.');        setSubmitting(false); return; }
+        if (!outgoingName.trim())     { Alert.alert('Required', 'Outgoing transporter name is required.'); setSubmitting(false); return; }
+        if (!incomingName.trim())     { Alert.alert('Required', 'Incoming transporter name is required.'); setSubmitting(false); return; }
         const res = await apiLogHandover({
           sku:                  product.sku,
           handover_location:    handoverLocation.trim(),
@@ -130,7 +129,9 @@ export default function ManualLogScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={styles.container} contentContainerStyle={styles.inner}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.inner}
+        keyboardShouldPersistTaps="handled">
+
         {/* Header */}
         <View style={styles.topBar}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -138,6 +139,32 @@ export default function ManualLogScreen({ navigation }) {
           </TouchableOpacity>
           <Text style={styles.topTitle}>Log Event</Text>
           <View style={{ width: 48 }} />
+        </View>
+
+        {/* Product — locked card if pre-selected, picker if not */}
+        <View style={styles.productSection}>
+          <Text style={styles.productSectionLabel}>Product</Text>
+          {preselected ? (
+            <View style={styles.productLocked}>
+              <View style={styles.productLockedLeft}>
+                <Text style={styles.productLockedName}>{product.name}</Text>
+                <Text style={styles.productLockedSku}>{product.sku}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.changeBtn}
+                onPress={() => { setShowPicker(true); }}
+              >
+                <Text style={styles.changeBtnText}>Change</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <TouchableOpacity style={styles.pickerTrigger} onPress={() => setShowPicker(true)}>
+              <Text style={product ? styles.pickerValue : styles.pickerPlaceholder}>
+                {product ? `${product.name} — ${product.sku}` : 'Select a product…'}
+              </Text>
+              <Text style={styles.arrow}>▾</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Mode toggle */}
@@ -163,19 +190,10 @@ export default function ManualLogScreen({ navigation }) {
         {/* GPS strip */}
         <View style={[styles.gpsStrip, gpsOk && styles.gpsStripOk]}>
           <Text style={styles.gpsDot}>{gpsOk ? '●' : '○'}</Text>
-          <Text style={[styles.gpsText, gpsOk && styles.gpsTextOk]}>{gpsMsg}</Text>
+          <Text style={[styles.gpsText, gpsOk && styles.gpsTextOk]} numberOfLines={1}>{gpsMsg}</Text>
         </View>
 
         <View style={styles.form}>
-          {/* Product picker */}
-          <Text style={styles.label}>Product *</Text>
-          <TouchableOpacity style={styles.pickerTrigger} onPress={() => setShowPicker(true)}>
-            <Text style={product ? styles.pickerValue : styles.pickerPlaceholder}>
-              {product ? `${product.name} — ${product.sku}` : 'Select a product…'}
-            </Text>
-            <Text style={styles.arrow}>▾</Text>
-          </TouchableOpacity>
-
           {mode === 'event' ? (
             <>
               <Text style={styles.label}>Status *</Text>
@@ -187,11 +205,11 @@ export default function ManualLogScreen({ navigation }) {
 
               <Text style={styles.label}>Notes (optional)</Text>
               <TextInput style={[styles.input, styles.textarea]} value={notes} onChangeText={setNotes}
-                placeholder="Any relevant notes…" placeholderTextColor="#A8A49A" multiline numberOfLines={3} />
+                placeholder="Any relevant notes…" placeholderTextColor="#A8A49A"
+                multiline numberOfLines={3} />
             </>
           ) : (
             <>
-              {/* Handover form */}
               <Text style={styles.sectionLabel}>Handover Details</Text>
 
               <Text style={styles.label}>Handover Location *</Text>
@@ -211,7 +229,13 @@ export default function ManualLogScreen({ navigation }) {
                 </View>
                 <View style={styles.halfField}>
                   <Text style={styles.label}>Received</Text>
-                  <TextInput style={styles.input} value={qtyReceived} onChangeText={setQtyReceived}
+                  <TextInput
+                    style={[
+                      styles.input,
+                      qtyDispatched && qtyReceived &&
+                      parseFloat(qtyDispatched) !== parseFloat(qtyReceived) && styles.inputWarn,
+                    ]}
+                    value={qtyReceived} onChangeText={setQtyReceived}
                     placeholder="0" placeholderTextColor="#A8A49A" keyboardType="numeric" />
                 </View>
               </View>
@@ -219,7 +243,8 @@ export default function ManualLogScreen({ navigation }) {
               <Text style={styles.label}>Unit</Text>
               <View style={styles.chipRow}>
                 {UNITS.map((u) => (
-                  <TouchableOpacity key={u} style={[styles.chip, unit === u && styles.chipActive]}
+                  <TouchableOpacity key={u}
+                    style={[styles.chip, unit === u && styles.chipActive]}
                     onPress={() => setUnit(u)}>
                     <Text style={[styles.chipText, unit === u && styles.chipTextActive]}>{u}</Text>
                   </TouchableOpacity>
@@ -239,7 +264,7 @@ export default function ManualLogScreen({ navigation }) {
               <TextInput style={styles.input} value={outgoingRole} onChangeText={setOutgoingRole}
                 placeholder="e.g. Driver" placeholderTextColor="#A8A49A" />
               <Text style={styles.label}>Signature (type full name)</Text>
-              <TextInput style={styles.input} value={outgoingSig} onChangeText={setOutgoingSig}
+              <TextInput style={[styles.input, styles.sigInput]} value={outgoingSig} onChangeText={setOutgoingSig}
                 placeholder="Type full name to sign" placeholderTextColor="#A8A49A" />
 
               <Text style={styles.sectionLabel}>Incoming Transporter</Text>
@@ -250,7 +275,7 @@ export default function ManualLogScreen({ navigation }) {
               <TextInput style={styles.input} value={incomingRole} onChangeText={setIncomingRole}
                 placeholder="e.g. Warehouse Manager" placeholderTextColor="#A8A49A" />
               <Text style={styles.label}>Signature (type full name)</Text>
-              <TextInput style={styles.input} value={incomingSig} onChangeText={setIncomingSig}
+              <TextInput style={[styles.input, styles.sigInput]} value={incomingSig} onChangeText={setIncomingSig}
                 placeholder="Type full name to sign" placeholderTextColor="#A8A49A" />
 
               <Text style={styles.sectionLabel}>Transport (optional)</Text>
@@ -259,11 +284,13 @@ export default function ManualLogScreen({ navigation }) {
                 placeholder="e.g. Siginon Logistics" placeholderTextColor="#A8A49A" />
               <Text style={styles.label}>Vehicle Plate</Text>
               <TextInput style={styles.input} value={plate} onChangeText={setPlate}
-                placeholder="e.g. KDA 123B" placeholderTextColor="#A8A49A" />
+                placeholder="e.g. KDA 123B" placeholderTextColor="#A8A49A"
+                autoCapitalize="characters" />
               <Text style={styles.label}>Mode</Text>
               <View style={styles.chipRow}>
                 {MODES.map((m) => (
-                  <TouchableOpacity key={m} style={[styles.chip, transportMode === m && styles.chipActive]}
+                  <TouchableOpacity key={m}
+                    style={[styles.chip, transportMode === m && styles.chipActive]}
                     onPress={() => setTransportMode(m)}>
                     <Text style={[styles.chipText, transportMode === m && styles.chipTextActive]}>{m}</Text>
                   </TouchableOpacity>
@@ -284,12 +311,15 @@ export default function ManualLogScreen({ navigation }) {
               </Text>
           }
         </TouchableOpacity>
+
+        <Text style={styles.footer}>Events are logged immutably on VeChain Testnet</Text>
       </ScrollView>
 
       {/* Product picker modal */}
       <Modal visible={showPicker} transparent animationType="slide">
-        <TouchableOpacity style={styles.overlay} onPress={() => setShowPicker(false)}>
+        <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={() => setShowPicker(false)}>
           <View style={styles.sheet}>
+            <View style={styles.sheetHandle} />
             <Text style={styles.sheetTitle}>Select Product</Text>
             <FlatList
               data={products}
@@ -326,8 +356,39 @@ const styles = StyleSheet.create({
   backText: { color: 'rgba(208,235,224,0.7)', fontSize: 14 },
   topTitle: { color: '#E8F4EE', fontSize: 16, fontWeight: '600' },
 
+  // Product section
+  productSection: { paddingHorizontal: 16, paddingTop: 16, paddingBottom: 4 },
+  productSectionLabel: {
+    fontSize: 10, fontWeight: '700', color: '#7A7669',
+    textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 6,
+  },
+  productLocked: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    backgroundColor: '#E8F4EE', borderWidth: 1, borderColor: '#B5D9C8',
+    borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12,
+  },
+  productLockedLeft: { flex: 1 },
+  productLockedName: { fontSize: 14, fontWeight: '600', color: '#1C1A17' },
+  productLockedSku:  { fontSize: 11, color: '#2D6A4F', fontFamily: 'monospace', marginTop: 2 },
+  changeBtn: {
+    paddingHorizontal: 10, paddingVertical: 5,
+    borderRadius: 6, borderWidth: 1, borderColor: '#B5D9C8',
+    marginLeft: 10,
+  },
+  changeBtnText: { fontSize: 11, color: '#2D6A4F', fontWeight: '600' },
+
+  pickerTrigger: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#CCC9BF',
+    borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12,
+  },
+  pickerValue:       { fontSize: 14, color: '#1C1A17', flex: 1 },
+  pickerPlaceholder: { fontSize: 14, color: '#A8A49A', flex: 1 },
+  arrow:             { fontSize: 14, color: '#7A7669' },
+
+  // Mode toggle
   modeRow: {
-    flexDirection: 'row', margin: 16, marginBottom: 8,
+    flexDirection: 'row', marginHorizontal: 16, marginTop: 12, marginBottom: 8,
     backgroundColor: '#FFFFFF', borderRadius: 10,
     borderWidth: 1, borderColor: '#E2DED6', overflow: 'hidden',
   },
@@ -336,6 +397,7 @@ const styles = StyleSheet.create({
   modeBtnText:       { fontSize: 13, fontWeight: '600', color: '#7A7669' },
   modeBtnTextActive: { color: '#fff' },
 
+  // GPS
   gpsStrip: {
     flexDirection: 'row', alignItems: 'center', gap: 8,
     marginHorizontal: 16, marginBottom: 8,
@@ -344,9 +406,10 @@ const styles = StyleSheet.create({
   },
   gpsStripOk: { backgroundColor: '#E8F4EE', borderColor: '#B5D9C8' },
   gpsDot:     { fontSize: 10, color: '#A8A49A' },
-  gpsText:    { fontSize: 12, color: '#7A7669', flex: 1, fontFamily: 'monospace' },
+  gpsText:    { fontSize: 11, color: '#7A7669', flex: 1, fontFamily: 'monospace' },
   gpsTextOk:  { color: '#2D6A4F' },
 
+  // Form
   form: { paddingHorizontal: 16 },
   label: {
     fontSize: 10, fontWeight: '700', color: '#7A7669',
@@ -363,16 +426,9 @@ const styles = StyleSheet.create({
     borderRadius: 10, paddingHorizontal: 14, paddingVertical: 11,
     fontSize: 14, color: '#1C1A17',
   },
-  textarea: { minHeight: 72, textAlignVertical: 'top' },
-
-  pickerTrigger: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF', borderWidth: 1, borderColor: '#CCC9BF',
-    borderRadius: 10, paddingHorizontal: 14, paddingVertical: 12,
-  },
-  pickerValue:       { fontSize: 14, color: '#1C1A17', flex: 1 },
-  pickerPlaceholder: { fontSize: 14, color: '#A8A49A', flex: 1 },
-  arrow:             { fontSize: 14, color: '#7A7669' },
+  inputWarn: { borderColor: '#E0A060' },
+  textarea:  { minHeight: 72, textAlignVertical: 'top', paddingTop: 10 },
+  sigInput:  { fontStyle: 'italic' },
 
   row:       { flexDirection: 'row', gap: 10 },
   halfField: { flex: 1 },
@@ -394,15 +450,22 @@ const styles = StyleSheet.create({
   submitBtnDisabled: { opacity: 0.6 },
   submitBtnText: { color: '#fff', fontWeight: '700', fontSize: 16 },
 
+  footer: { textAlign: 'center', color: '#A8A49A', fontSize: 11, marginBottom: 8 },
+
+  // Modal
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)', justifyContent: 'flex-end' },
   sheet: {
     backgroundColor: '#FFFFFF', borderTopLeftRadius: 20, borderTopRightRadius: 20,
-    paddingBottom: 32, maxHeight: '70%',
+    paddingBottom: 36, maxHeight: '70%',
+  },
+  sheetHandle: {
+    width: 36, height: 4, borderRadius: 2, backgroundColor: '#E2DED6',
+    alignSelf: 'center', marginTop: 12, marginBottom: 4,
   },
   sheetTitle: {
     fontSize: 13, fontWeight: '700', color: '#7A7669',
     letterSpacing: 1, textTransform: 'uppercase', textAlign: 'center',
-    paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#E2DED6',
+    paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#E2DED6',
   },
   sheetOption: {
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',

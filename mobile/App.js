@@ -8,10 +8,8 @@ import { Text } from 'react-native';
 import { getToken } from './src/services/auth';
 import LoginScreen         from './src/screens/LoginScreen';
 import HomeScreen          from './src/screens/HomeScreen';
-import ScanScreen          from './src/screens/ScanScreen';
 import LogEventScreen      from './src/screens/LogEventScreen';
 import HistoryScreen       from './src/screens/HistoryScreen';
-import MapScreen           from './src/screens/MapScreen';
 import CreateProductScreen from './src/screens/CreateProductScreen';
 import ManualLogScreen     from './src/screens/ManualLogScreen';
 import AccountScreen       from './src/screens/AccountScreen';
@@ -27,7 +25,6 @@ function TabIcon({ icon, focused }) {
   );
 }
 
-// Main tab navigator — the home area of the app
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -45,16 +42,14 @@ function MainTabs() {
         tabBarLabelStyle: { fontSize: 10, fontWeight: '600', letterSpacing: 0.3 },
       }}
     >
-      <Tab.Screen name="Products" component={HomeScreen}
+      <Tab.Screen
+        name="Products"
+        component={HomeScreen}
         options={{ tabBarIcon: ({ focused }) => <TabIcon icon="⊞" focused={focused} /> }}
       />
-      <Tab.Screen name="Map" component={MapScreen}
-        options={{ tabBarIcon: ({ focused }) => <TabIcon icon="⊙" focused={focused} /> }}
-      />
-      <Tab.Screen name="Log" component={ManualLogScreen}
-        options={{ tabBarIcon: ({ focused }) => <TabIcon icon="⊕" focused={focused} /> }}
-      />
-      <Tab.Screen name="Account" component={AccountScreen}
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
         options={{ tabBarIcon: ({ focused }) => <TabIcon icon="⊛" focused={focused} /> }}
       />
     </Tab.Navigator>
@@ -87,10 +82,10 @@ export default function App() {
       >
         <Stack.Screen name="Login"         component={LoginScreen} />
         <Stack.Screen name="Main"          component={MainTabs} />
-        <Stack.Screen name="Scan"          component={ScanScreen} />
         <Stack.Screen name="LogEvent"      component={LogEventScreen} />
         <Stack.Screen name="History"       component={HistoryScreen} />
         <Stack.Screen name="CreateProduct" component={CreateProductScreen} />
+        <Stack.Screen name="ManualLog"     component={ManualLogScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

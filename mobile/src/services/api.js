@@ -2,7 +2,8 @@ import axios from 'axios';
 import { getToken } from './auth';
 
 // ── Change to your LAN IP for local testing, or your Render URL for production
-export const BASE_URL = 'http://10.157.13.31:8000';
+export const BASE_URL = 'http://10.173.114.31:8000';  // Local LAN IP
+// export const BASE_URL = 'https://trace-blocks-5zdg.onrender.com';  // Render URL
 
 const client = axios.create({
   baseURL: BASE_URL,

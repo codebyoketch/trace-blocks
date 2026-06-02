@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View, Text, StyleSheet, TouchableOpacity,
-  ActivityIndicator, Alert,
+  ActivityIndicator, Alert, StatusBar, Platform,
 } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { apiResolveQR } from '../services/api';
@@ -14,38 +14,24 @@ export default function ScanScreen({ navigation, route }) {
   const cooldown = useRef(false);
 
   useEffect(() => {
-    if (permission && !permission.granted) {
-      requestPermission();
-    }
+    if (permission && !permission.granted) requestPermission();
   }, [permission]);
 
   const handleBarCodeScanned = async ({ data }) => {
-    // Debounce — ignore rapid re-scans
     if (cooldown.current || scanned) return;
     cooldown.current = true;
     setScanned(true);
     setLoading(true);
-
     try {
-      // The QR encodes either:
-      //   a) a full URL: https://domain.com/api/mobile/qr/<token>/
-      //   b) just the raw token: 2fb2c0b79b1646efbfc59387dd81e3fb
       let token = data.trim();
-
-      // Extract token from URL if it's a full URL
       const match = token.match(/\/api\/mobile\/qr\/([a-f0-9]+)\/?/);
-      if (match) {
-        token = match[1];
-      }
-
-      const res = await apiResolveQR(token);
+      if (match) token = match[1];
+      const res     = await apiResolveQR(token);
       const context = res.data;
-
-      // Navigate to LogEvent with the resolved context
       navigation.navigate('LogEvent', {
-        qrToken:  token,
-        product:  context.product,
-        lastEvent: context.last_event,
+        qrToken:       token,
+        product:       context.product,
+        lastEvent:     context.last_event,
         statusChoices: context.status_choices,
       });
     } catch (err) {
@@ -58,12 +44,10 @@ export default function ScanScreen({ navigation, route }) {
       ]);
     } finally {
       setLoading(false);
-      // Allow re-scan after 3 seconds
       setTimeout(() => { cooldown.current = false; }, 3000);
     }
   };
 
-  // ── Permission not yet determined ──
   if (!permission) {
     return (
       <View style={styles.centered}>
@@ -72,12 +56,13 @@ export default function ScanScreen({ navigation, route }) {
     );
   }
 
-  // ── Permission denied ──
   if (!permission.granted) {
     return (
       <View style={styles.centered}>
         <Text style={styles.permTitle}>Camera Permission Required</Text>
-        <Text style={styles.permSub}>TraceBlocks needs camera access to scan QR codes.</Text>
+        <Text style={styles.permSub}>
+          TraceBlocks needs camera access to scan QR codes.
+        </Text>
         <TouchableOpacity style={styles.permBtn} onPress={requestPermission}>
           <Text style={styles.permBtnText}>Grant Permission</Text>
         </TouchableOpacity>
@@ -89,34 +74,52 @@ export default function ScanScreen({ navigation, route }) {
   }
 
   return (
-  <View style={{ flex: 1 }}>
-    <CameraView
-      style={{ flex: 1 }}
-      facing="back"
-      onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
-      barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
-    />
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor="#000" translucent={false} />
 
-    {/* Overlay sits on top of camera using absolute positioning */}
-    <View style={[StyleSheet.absoluteFillObject, styles.overlay]}>
-      {/* Top bar */}
-        <View style={styles.topBar}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Text style={styles.backBtnText}>✕</Text>
-          </TouchableOpacity>
-          <Text style={styles.topTitle}>Scan QR Code</Text>
-          <View style={{ width: 36 }} />
+      {/*
+        CameraView as a normal flex child — fills the entire container.
+        The overlay sits on top via absoluteFillObject.
+      */}
+      <CameraView
+        style={styles.camera}
+        facing="back"
+        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+        barcodeScannerSettings={{ barcodeTypes: ['qr'] }}
+      />
+
+      {/*
+        Overlay: three sections stacked with flex.
+        Top and bottom have solid/semi-transparent backgrounds.
+        The MIDDLE section is fully transparent — camera shows through.
+      */}
+      <View style={styles.overlay} pointerEvents="box-none">
+
+        {/* ── 1. Top dark band ────────────────────────────────────────── */}
+        <View style={styles.topBand}>
+          <View style={styles.topBar}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.closeBtn}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            >
+              <Text style={styles.closeBtnText}>✕</Text>
+            </TouchableOpacity>
+            <Text style={styles.topTitle}>Scan QR Code</Text>
+            <View style={{ width: 36 }} />
+          </View>
+          {name ? (
+            <View style={styles.contextWrap}>
+              <View style={styles.contextBadge}>
+                <Text style={styles.contextText}>Scanning for: {name}</Text>
+              </View>
+            </View>
+          ) : null}
         </View>
 
-        {/* Context label */}
-        {name && (
-          <View style={styles.contextBadge}>
-            <Text style={styles.contextText}>Scanning for: {name}</Text>
-          </View>
-        )}
-
-        {/* Viewfinder */}
-        <View style={styles.viewfinderWrap}>
+        {/* ── 2. Transparent middle — camera feed shows through ────────── */}
+        <View style={styles.middle} pointerEvents="none">
+          {/* just the four corner brackets */}
           <View style={styles.viewfinder}>
             <View style={[styles.corner, styles.tl]} />
             <View style={[styles.corner, styles.tr]} />
@@ -125,18 +128,23 @@ export default function ScanScreen({ navigation, route }) {
           </View>
         </View>
 
-        {/* Bottom hint */}
-        <View style={styles.bottomHint}>
+        {/* ── 3. Bottom dark band ─────────────────────────────────────── */}
+        <View style={styles.bottomBand}>
+          <Text style={styles.frameHint}>
+            {scanned ? '✓  QR detected — loading…' : 'Align QR code within the frame'}
+          </Text>
+
           {loading ? (
             <View style={styles.loadingRow}>
-              <ActivityIndicator color="#E8F4EE" size="small" />
-              <Text style={styles.hintText}>Resolving QR…</Text>
+              <ActivityIndicator color="#6FC49A" size="small" />
+              <Text style={styles.bottomText}>Resolving QR…</Text>
             </View>
           ) : (
-            <Text style={styles.hintText}>
-              {scanned ? 'QR scanned — loading…' : 'Point at a TraceBlocks event QR code'}
+            <Text style={styles.bottomText}>
+              Point at a TraceBlocks event QR code
             </Text>
           )}
+
           {scanned && !loading && (
             <TouchableOpacity
               style={styles.rescanBtn}
@@ -146,6 +154,7 @@ export default function ScanScreen({ navigation, route }) {
             </TouchableOpacity>
           )}
         </View>
+
       </View>
     </View>
   );
@@ -153,54 +162,79 @@ export default function ScanScreen({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#000' },
-  centered:  { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#F5F3EE', padding: 32 },
+  camera:    { flex: 1 },               // fills the root, behind overlay
 
+  // Overlay covers everything, children stack top→middle→bottom
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    flexDirection: 'column',
+  },
+
+  // ── Top band: opaque dark, shrinks to content ──────────────────────────
+  topBand: {
+    backgroundColor: 'rgba(0,0,0,0.72)',
+    paddingTop: Platform.OS === 'android' ? 40 : 56,
+    paddingBottom: 16,
+  },
+  topBar: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  closeBtn:     { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
+  closeBtnText: { color: '#fff', fontSize: 20, fontWeight: '300' },
+  topTitle:     { color: '#fff', fontSize: 16, fontWeight: '600' },
+
+  contextWrap: { alignItems: 'center', marginTop: 10 },
+  contextBadge: {
+    backgroundColor: 'rgba(45,106,79,0.85)',
+    borderRadius: 20, paddingHorizontal: 16, paddingVertical: 6,
+  },
+  contextText: { color: '#E8F4EE', fontSize: 12, fontWeight: '500' },
+
+  // ── Middle: transparent, flex:1 so it takes all remaining space ────────
+  middle: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  viewfinder: { width: 240, height: 240 },
+
+  corner: {
+    position: 'absolute', width: 36, height: 36,
+    borderColor: '#fff', borderWidth: 3,
+  },
+  tl: { top: 0,    left: 0,  borderRightWidth: 0, borderBottomWidth: 0, borderTopLeftRadius: 6 },
+  tr: { top: 0,    right: 0, borderLeftWidth: 0,  borderBottomWidth: 0, borderTopRightRadius: 6 },
+  bl: { bottom: 0, left: 0,  borderRightWidth: 0, borderTopWidth: 0,    borderBottomLeftRadius: 6 },
+  br: { bottom: 0, right: 0, borderLeftWidth: 0,  borderTopWidth: 0,    borderBottomRightRadius: 6 },
+
+  // ── Bottom band: opaque dark, shrinks to content ───────────────────────
+  bottomBand: {
+    backgroundColor: 'rgba(0,0,0,0.72)',
+    paddingVertical: 28,
+    paddingHorizontal: 24,
+    paddingBottom: Platform.OS === 'android' ? 36 : 44,
+    alignItems: 'center',
+    gap: 12,
+  },
+  frameHint:  { color: 'rgba(255,255,255,0.9)', fontSize: 14, fontWeight: '600', textAlign: 'center' },
+  loadingRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  bottomText: { color: 'rgba(255,255,255,0.65)', fontSize: 12, textAlign: 'center' },
+  rescanBtn:  {
+    backgroundColor: 'rgba(45,106,79,0.9)',
+    borderRadius: 10, paddingHorizontal: 24, paddingVertical: 10,
+  },
+  rescanText: { color: '#E8F4EE', fontSize: 13, fontWeight: '600' },
+
+  // ── Permission / loading screens ───────────────────────────────────────
+  centered: {
+    flex: 1, alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#F5F3EE', padding: 32,
+  },
   permTitle:   { fontSize: 18, fontWeight: '600', color: '#1C1A17', marginBottom: 8, textAlign: 'center' },
   permSub:     { fontSize: 14, color: '#7A7669', textAlign: 'center', marginBottom: 24, lineHeight: 20 },
   permBtn:     { backgroundColor: '#2D6A4F', borderRadius: 10, paddingHorizontal: 24, paddingVertical: 12, marginBottom: 16 },
   permBtnText: { color: '#fff', fontWeight: '600', fontSize: 15 },
   backLink:    { color: '#7A7669', fontSize: 14, marginTop: 8 },
-
-  overlay: { flex: 1 },
-
-  topBar: {
-    flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-    paddingTop: 56, paddingHorizontal: 20, paddingBottom: 16,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  backBtn:     { width: 36, height: 36, alignItems: 'center', justifyContent: 'center' },
-  backBtnText: { color: '#fff', fontSize: 18, fontWeight: '300' },
-  topTitle:    { color: '#fff', fontSize: 16, fontWeight: '600' },
-
-  contextBadge: {
-    alignSelf: 'center', marginTop: 8,
-    backgroundColor: 'rgba(45,106,79,0.7)',
-    borderRadius: 20, paddingHorizontal: 16, paddingVertical: 6,
-  },
-  contextText: { color: '#E8F4EE', fontSize: 12, fontWeight: '500' },
-
-  viewfinderWrap: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  viewfinder: {
-    width: 240, height: 240,
-    position: 'relative',
-  },
-
-  // Corner brackets
-  corner: {
-    position: 'absolute', width: 32, height: 32,
-    borderColor: '#E8F4EE', borderWidth: 3,
-  },
-  tl: { top: 0, left: 0,  borderRightWidth: 0, borderBottomWidth: 0, borderTopLeftRadius: 4 },
-  tr: { top: 0, right: 0, borderLeftWidth: 0,  borderBottomWidth: 0, borderTopRightRadius: 4 },
-  bl: { bottom: 0, left: 0,  borderRightWidth: 0, borderTopWidth: 0, borderBottomLeftRadius: 4 },
-  br: { bottom: 0, right: 0, borderLeftWidth: 0,  borderTopWidth: 0, borderBottomRightRadius: 4 },
-
-  bottomHint: {
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    padding: 24, alignItems: 'center', gap: 12,
-  },
-  loadingRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  hintText:   { color: '#E8F4EE', fontSize: 13, textAlign: 'center', lineHeight: 18 },
-  rescanBtn:  { backgroundColor: 'rgba(45,106,79,0.8)', borderRadius: 8, paddingHorizontal: 20, paddingVertical: 8 },
-  rescanText: { color: '#E8F4EE', fontSize: 13, fontWeight: '600' },
 });
