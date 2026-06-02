@@ -82,9 +82,7 @@ body {
 
 .sidebar > * { position: relative; z-index: 1; }
 
-.sidebar-top {
-  padding: 28px 20px 0;
-}
+.sidebar-top { padding: 28px 20px 0; }
 
 .logo {
   display: flex;
@@ -146,7 +144,6 @@ body {
   color: rgba(208,235,224,0.55);
   text-decoration: none;
   transition: all 0.18s;
-  letter-spacing: 0;
   white-space: nowrap;
 }
 
@@ -158,46 +155,18 @@ body {
   opacity: 0.7;
 }
 
-.nav-item:hover {
-  background: rgba(45,106,79,0.25);
-  color: #D0EBE0;
-}
-
-.nav-item.active {
-  background: rgba(45,106,79,0.35);
-  color: #E8F4EE;
-  font-weight: 600;
-}
-
+.nav-item:hover { background: rgba(45,106,79,0.25); color: #D0EBE0; }
+.nav-item.active { background: rgba(45,106,79,0.35); color: #E8F4EE; font-weight: 600; }
 .nav-item.active svg { opacity: 1; }
-
 .nav-ext { font-size: 11px; opacity: 0.5; margin-left: auto; }
 
-/* ── Sidebar footer ── */
 .sidebar-footer {
   padding: 16px 16px 20px;
   border-top: 1px solid rgba(45,106,79,0.25);
   margin-top: auto;
 }
 
-.accounts-link {
-  display: block;
-  font-family: var(--font-m);
-  font-size: 11px;
-  color: rgba(111,196,154,0.5);
-  text-decoration: none;
-  letter-spacing: 0.04em;
-  margin-bottom: 14px;
-  transition: color 0.15s;
-}
-
-.accounts-link:hover { color: #6FC49A; }
-
-.user-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+.user-row { display: flex; align-items: center; gap: 10px; }
 
 .user-avatar {
   width: 34px; height: 34px;
@@ -206,42 +175,26 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-family: var(--font-d);
   font-size: 14px;
-  font-weight: 400;
   color: #fff;
   flex-shrink: 0;
   border: 2px solid rgba(111,196,154,0.3);
 }
 
-.user-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
-  flex: 1;
-}
+.user-info { display: flex; flex-direction: column; gap: 2px; overflow: hidden; flex: 1; }
 
 #display-username {
-  font-size: 13px;
-  font-weight: 600;
-  color: #D0EBE0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 13px; font-weight: 600; color: #D0EBE0;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 
 .logout-btn {
   font-family: var(--font-m);
   font-size: 10px;
   color: rgba(111,196,154,0.45);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  text-align: left;
-  letter-spacing: 0.04em;
+  background: none; border: none; cursor: pointer;
+  padding: 0; text-align: left; letter-spacing: 0.04em;
   transition: color 0.15s;
 }
-
 .logout-btn:hover { color: #F09595; }
 
 /* ══════════════ MAIN ══════════════ */
@@ -267,7 +220,6 @@ body {
   top: 0;
   z-index: 10;
   gap: 16px;
-  flex-wrap: wrap;
 }
 
 .topbar-title {
@@ -276,6 +228,7 @@ body {
   font-weight: 300;
   color: var(--text);
   letter-spacing: -0.02em;
+  flex-shrink: 0;
 }
 
 .topbar-title em { font-style: italic; color: var(--accent); }
@@ -284,8 +237,231 @@ body {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
+/* ── SEARCH BAR ── */
+.search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 360px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 15px; height: 15px;
+  stroke: var(--soft); fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+  pointer-events: none;
+  transition: stroke 0.15s;
+}
+
+.search-input {
+  width: 100%;
+  height: 36px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 0 36px 0 36px;
+  font-family: var(--font-b);
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.search-input::placeholder { color: var(--soft); }
+
+.search-input:focus {
+  background: var(--surface);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45,106,79,0.1);
+  border-radius: 10px;
+}
+
+.search-input:focus ~ .search-icon,
+.search-wrap:focus-within .search-icon { stroke: var(--accent); }
+
+.search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px; height: 18px;
+  background: var(--border2);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1;
+  transition: background 0.15s;
+  padding: 0;
+}
+
+.search-clear:hover { background: var(--accent2); color: #fff; }
+.search-wrap.has-value .search-clear { display: flex; }
+
+/* ── SEARCH RESULTS DROPDOWN ── */
+.search-results {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0; right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+  z-index: 200;
+  overflow: hidden;
+  display: none;
+  max-height: 480px;
+  overflow-y: auto;
+}
+
+.search-results.visible { display: block; }
+
+.search-results-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.search-results-section:last-child { border-bottom: none; }
+
+.search-results-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 14px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--soft);
+  font-family: var(--font-m);
+}
+
+.search-results-label svg {
+  width: 11px; height: 11px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 10px 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.search-result-item:hover,
+.search-result-item.highlighted { background: var(--accent-lt); }
+
+.search-result-icon {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.search-result-icon svg {
+  width: 14px; height: 14px;
+  stroke: currentColor; fill: none;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.search-result-icon.product { background: var(--accent-lt); color: var(--accent); }
+.search-result-icon.event   { background: var(--info-lt);   color: var(--info); }
+
+.search-result-body { flex: 1; overflow: hidden; }
+
+.search-result-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.search-result-name mark {
+  background: none;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.search-result-meta {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: var(--font-m);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-result-badge {
+  font-size: 9px;
+  font-weight: 600;
+  font-family: var(--font-m);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.search-empty {
+  padding: 28px 14px;
+  text-align: center;
+  font-family: var(--font-m);
+  font-size: 12px;
+  color: var(--soft);
+}
+
+.search-empty strong { display: block; color: var(--muted); font-size: 13px; margin-bottom: 4px; }
+
+.search-footer {
+  padding: 8px 14px;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 14px;
+}
+
+.search-hint {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--soft);
+}
+
+.search-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 4px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--muted);
+  font-family: var(--font-m);
+}
+
+/* network badge + log event btn */
 .network-badge {
   display: flex;
   align-items: center;
@@ -298,6 +474,7 @@ body {
   border-radius: 20px;
   padding: 6px 14px;
   letter-spacing: 0.04em;
+  flex-shrink: 0;
 }
 
 .net-dot {
@@ -325,7 +502,7 @@ body {
   cursor: pointer;
   text-decoration: none;
   transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
-  letter-spacing: 0.01em;
+  flex-shrink: 0;
 }
 
 .btn-log-event svg {
@@ -375,45 +552,18 @@ body {
 .stat-card.c-blue::after  { background: var(--info); }
 .stat-card.c-warn::after  { background: #D4A017; }
 
-.stat-card:hover {
-  border-color: var(--border2);
-  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-}
+.stat-card:hover { border-color: var(--border2); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
 
-.stat-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 10px;
-}
-
-.stat-value {
-  font-family: var(--font-d);
-  font-size: 38px;
-  font-weight: 300;
-  line-height: 1;
-  margin-bottom: 6px;
-  letter-spacing: -0.03em;
-}
-
+.stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.stat-value { font-family: var(--font-d); font-size: 38px; font-weight: 300; line-height: 1; margin-bottom: 6px; letter-spacing: -0.03em; }
 .stat-value.c-green { color: var(--accent); }
 .stat-value.c-amber { color: var(--accent2); }
 .stat-value.c-blue  { color: var(--info); }
 .stat-value.c-warn  { color: var(--warn); }
-
-.stat-sub {
-  font-size: 11px;
-  color: var(--soft);
-}
+.stat-sub { font-size: 11px; color: var(--soft); }
 
 /* ── Two-col panels ── */
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
 
 .panel {
   background: var(--surface);
@@ -441,23 +591,8 @@ body {
   gap: 8px;
 }
 
-.panel-title-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex-shrink: 0;
-}
-
-.panel-count {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--muted);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2px 9px;
-}
-
+.panel-title-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.panel-count { font-family: var(--font-m); font-size: 10px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 20px; padding: 2px 9px; }
 .panel-body { padding: 12px 16px; }
 
 /* ── Product list ── */
@@ -476,41 +611,12 @@ body {
   gap: 10px;
 }
 
-.product-row:hover {
-  background: var(--accent-lt);
-  border-color: #B5D9C8;
-}
+.product-row:hover { background: var(--accent-lt); border-color: #B5D9C8; }
 
-.product-row-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  overflow: hidden;
-  flex: 1;
-}
-
-.product-name {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product-sku {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--soft);
-  letter-spacing: 0.03em;
-}
-
-.product-row-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.product-row-left { display: flex; flex-direction: column; gap: 2px; overflow: hidden; flex: 1; }
+.product-name { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.product-sku { font-family: var(--font-m); font-size: 10px; color: var(--soft); letter-spacing: 0.03em; }
+.product-row-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
 .event-count {
   font-family: var(--font-m);
@@ -523,20 +629,8 @@ body {
   white-space: nowrap;
 }
 
-.row-arrow {
-  width: 16px; height: 16px;
-  stroke: var(--soft); fill: none;
-  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-  flex-shrink: 0;
-}
-
-.empty-state {
-  font-family: var(--font-m);
-  font-size: 12px;
-  color: var(--soft);
-  padding: 20px 4px;
-  text-align: center;
-}
+.row-arrow { width: 16px; height: 16px; stroke: var(--soft); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.empty-state { font-family: var(--font-m); font-size: 12px; color: var(--soft); padding: 20px 4px; text-align: center; }
 
 /* ── Event feed ── */
 .event-feed { display: flex; flex-direction: column; }
@@ -554,20 +648,9 @@ body {
 }
 
 .event-row:last-child { border-bottom: none; }
+.event-row:hover { background: var(--surface2); padding-left: 10px; }
 
-.event-row:hover {
-  background: var(--surface2);
-  padding-left: 10px;
-}
-
-/* status dots */
-.event-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  margin-top: 5px;
-}
-
+.event-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
 .dot-manufactured    { background: #378ADD; }
 .dot-shipped         { background: var(--accent); }
 .dot-in_transit      { background: #D4A017; }
@@ -578,26 +661,9 @@ body {
 .dot-default         { background: var(--soft); }
 
 .event-body { flex: 1; overflow: hidden; }
+.event-top { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 3px; }
 
-.event-top {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  flex-wrap: wrap;
-  margin-bottom: 3px;
-}
-
-/* status badges */
-.event-badge {
-  font-size: 9px;
-  font-weight: 600;
-  font-family: var(--font-m);
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
+.event-badge { font-size: 9px; font-weight: 600; font-family: var(--font-m); letter-spacing: 0.07em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
 .badge-manufactured     { background: #E8F1FB; color: #1E5FA6; }
 .badge-shipped          { background: var(--accent-lt); color: var(--accent); }
 .badge-in_transit       { background: var(--warn-lt); color: var(--warn); }
@@ -607,47 +673,11 @@ body {
 .badge-handover         { background: #E8F1FB; color: var(--info); }
 .badge-default          { background: var(--bg); color: var(--muted); }
 
-.event-product {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text);
-}
-
-.event-location {
-  font-size: 11px;
-  color: var(--muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-bottom: 3px;
-}
-
-.event-meta {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.event-time {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--soft);
-}
-
-.event-tx {
-  font-family: var(--font-m);
-  font-size: 10px;
-  color: var(--soft);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 130px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
+.event-product { font-size: 12px; font-weight: 600; color: var(--text); }
+.event-location { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
+.event-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.event-time { font-family: var(--font-m); font-size: 10px; color: var(--soft); }
+.event-tx { font-family: var(--font-m); font-size: 10px; color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 130px; display: flex; align-items: center; gap: 4px; }
 .tx-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 .tx-dot.confirmed { background: var(--accent); }
 .tx-dot.pending   { background: var(--warn); }
@@ -664,7 +694,8 @@ body {
   .sidebar { transform: translateX(-228px); }
   .main-content { margin-left: 0; }
   .inner { padding: 20px 18px 40px; }
-  .topbar { padding: 0 18px; }
+  .topbar { padding: 0 18px; height: auto; min-height: 62px; flex-wrap: wrap; gap: 8px; padding-top: 10px; padding-bottom: 10px; }
+  .search-wrap { max-width: 100%; order: 3; flex-basis: 100%; }
 }
 </style>
 </head>
@@ -699,7 +730,6 @@ body {
           Profile
         </a>
 
-
         <div class="nav-section-label">Chain</div>
         <a href="https://insight.vecha.in/#/test/" target="_blank" class="nav-item">
           <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -729,7 +759,30 @@ body {
     <!-- Top bar -->
     <header class="topbar">
       <h1 class="topbar-title">Network <em>Overview</em></h1>
+
       <div class="topbar-right">
+
+        <!-- ── SEARCH ── -->
+        <div class="search-wrap" id="search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            type="text"
+            class="search-input"
+            id="search-input"
+            placeholder="Search products, events, SKUs…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="search-clear" id="search-clear" title="Clear search" aria-label="Clear search">✕</button>
+
+          <!-- Results dropdown -->
+          <div class="search-results" id="search-results" role="listbox">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
         <div class="network-badge">
           <div class="net-dot"></div>
           VeChain Testnet
@@ -847,9 +900,234 @@ body {
 </div>
 
 <script>
+  // ── Avatar / username
   const username = "{{ request.user.username|default:'User' }}";
   document.getElementById('display-username').textContent = username;
   document.getElementById('avatar-initials').textContent = username.charAt(0).toUpperCase();
+
+  // ── Search data: pulled from Django template context
+  // Products: array of {name, sku, eventCount, url}
+  const PRODUCTS = [
+    {% for p in products %}
+    {
+      type: 'product',
+      name: "{{ p.name|escapejs }}",
+      sku:  "{{ p.sku|escapejs }}",
+      eventCount: {{ p.events.count }},
+      url:  "{% url 'product_detail' p.sku %}",
+    },
+    {% endfor %}
+  ];
+
+  // Events: array of {product, status, location, time, txId, url}
+  const EVENTS = [
+    {% for e in recent_events %}
+    {
+      type: 'event',
+      product: "{{ e.product.name|escapejs }}",
+      productSku: "{{ e.product.sku|escapejs }}",
+      status: "{{ e.get_status_display|escapejs }}",
+      location: "{{ e.location|escapejs }}",
+      time: "{{ e.timestamp|date:'d M Y H:i' }}",
+      txId: "{{ e.tx_id|default:''|slice:':16'|escapejs }}",
+      txStatus: "{{ e.tx_status|default:'pending'|escapejs }}",
+      url: "{% url 'product_detail' e.product.sku %}#event-{{ e.id }}",
+    },
+    {% endfor %}
+  ];
+
+  // ── Search UI
+  const searchInput   = document.getElementById('search-input');
+  const searchResults = document.getElementById('search-results');
+  const searchWrap    = document.getElementById('search-wrap');
+  const searchClear   = document.getElementById('search-clear');
+
+  let highlightIndex = -1;
+  let debounceTimer  = null;
+  let allItems       = [];  // flat list of rendered result links for keyboard nav
+
+  function escapeRe(str) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function highlight(text, query) {
+    if (!query) return text;
+    const re = new RegExp(`(${escapeRe(query)})`, 'gi');
+    return text.replace(re, '<mark>$1</mark>');
+  }
+
+  function badgeHtml(status) {
+    const slug = status.toLowerCase().replace(/\s+/g, '_');
+    return `<span class="search-result-badge badge-${slug}">${status}</span>`;
+  }
+
+  function renderResults(query) {
+    const q = query.trim().toLowerCase();
+    searchResults.innerHTML = '';
+    allItems = [];
+    highlightIndex = -1;
+
+    if (!q) {
+      searchResults.classList.remove('visible');
+      return;
+    }
+
+    // Filter
+    const matchedProducts = PRODUCTS.filter(p =>
+      p.name.toLowerCase().includes(q) ||
+      p.sku.toLowerCase().includes(q)
+    );
+
+    const matchedEvents = EVENTS.filter(e =>
+      e.product.toLowerCase().includes(q) ||
+      e.location.toLowerCase().includes(q) ||
+      e.status.toLowerCase().includes(q) ||
+      e.productSku.toLowerCase().includes(q) ||
+      (e.txId && e.txId.toLowerCase().includes(q))
+    );
+
+    const totalMatches = matchedProducts.length + matchedEvents.length;
+
+    if (totalMatches === 0) {
+      searchResults.innerHTML = `
+        <div class="search-empty">
+          <strong>No results for "${query}"</strong>
+          Try a product name, SKU, location, or event status
+        </div>`;
+      searchResults.classList.add('visible');
+      return;
+    }
+
+    // Products section
+    if (matchedProducts.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'search-results-section';
+      section.innerHTML = `
+        <div class="search-results-label">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Products
+        </div>`;
+
+      matchedProducts.slice(0, 5).forEach(p => {
+        const a = document.createElement('a');
+        a.className = 'search-result-item';
+        a.href = p.url;
+        a.setAttribute('role', 'option');
+        a.innerHTML = `
+          <div class="search-result-icon product">
+            <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          </div>
+          <div class="search-result-body">
+            <div class="search-result-name">${highlight(p.name, query)}</div>
+            <div class="search-result-meta">${highlight(p.sku, query)} · ${p.eventCount} event${p.eventCount !== 1 ? 's' : ''}</div>
+          </div>`;
+        section.appendChild(a);
+        allItems.push(a);
+      });
+
+      searchResults.appendChild(section);
+    }
+
+    // Events section
+    if (matchedEvents.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'search-results-section';
+      section.innerHTML = `
+        <div class="search-results-label">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Events
+        </div>`;
+
+      matchedEvents.slice(0, 6).forEach(e => {
+        const a = document.createElement('a');
+        a.className = 'search-result-item';
+        a.href = e.url;
+        a.setAttribute('role', 'option');
+        a.innerHTML = `
+          <div class="search-result-icon event">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="search-result-body">
+            <div class="search-result-name">${highlight(e.product, query)}</div>
+            <div class="search-result-meta">📍 ${highlight(e.location, query)} · ${e.time}</div>
+          </div>
+          ${badgeHtml(e.status)}`;
+        section.appendChild(a);
+        allItems.push(a);
+      });
+
+      searchResults.appendChild(section);
+    }
+
+    // Footer hints
+    const footer = document.createElement('div');
+    footer.className = 'search-footer';
+    footer.innerHTML = `
+      <span class="search-hint"><kbd class="search-kbd">↑↓</kbd> navigate</span>
+      <span class="search-hint"><kbd class="search-kbd">↵</kbd> open</span>
+      <span class="search-hint"><kbd class="search-kbd">Esc</kbd> close</span>`;
+    searchResults.appendChild(footer);
+
+    searchResults.classList.add('visible');
+  }
+
+  function moveHighlight(dir) {
+    if (allItems.length === 0) return;
+    allItems[highlightIndex]?.classList.remove('highlighted');
+    highlightIndex = (highlightIndex + dir + allItems.length) % allItems.length;
+    allItems[highlightIndex].classList.add('highlighted');
+    allItems[highlightIndex].scrollIntoView({ block: 'nearest' });
+  }
+
+  function closeSearch() {
+    searchResults.classList.remove('visible');
+    highlightIndex = -1;
+    allItems.forEach(a => a.classList.remove('highlighted'));
+  }
+
+  // Input events
+  searchInput.addEventListener('input', () => {
+    const val = searchInput.value;
+    searchWrap.classList.toggle('has-value', val.length > 0);
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => renderResults(val), 120);
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown')  { e.preventDefault(); moveHighlight(1); }
+    if (e.key === 'ArrowUp')    { e.preventDefault(); moveHighlight(-1); }
+    if (e.key === 'Escape')     { closeSearch(); searchInput.blur(); }
+    if (e.key === 'Enter' && highlightIndex >= 0) {
+      e.preventDefault();
+      allItems[highlightIndex]?.click();
+    }
+  });
+
+  searchInput.addEventListener('focus', () => {
+    if (searchInput.value.trim()) renderResults(searchInput.value);
+  });
+
+  // Clear button
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchWrap.classList.remove('has-value');
+    closeSearch();
+    searchInput.focus();
+  });
+
+  // Close when clicking outside
+  document.addEventListener('mousedown', (e) => {
+    if (!searchWrap.contains(e.target)) closeSearch();
+  });
+
+  // Global keyboard shortcut: "/" to focus search
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+  });
 </script>
 </body>
 </html>
