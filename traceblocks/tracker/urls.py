@@ -6,9 +6,8 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
 
     # ── Web UI ────────────────────────────────────────────────────────────────
-    path("",                              views.CreateUser_view,   name="createuser"),
-    path("index",                         views.index,             name="index"),
-    path("login/",                        views.Login_view,        name="login"),
+    path("createuser/",                   views.CreateUser_view,   name="createuser"),
+    path("",                              views.Login_view,        name="login"),
     path("logout/",                       auth_views.LogoutView.as_view(next_page="login"), name="logout"),
     path("interface/",                    views.interface_view,    name="interface"),
     path("new/event/",                    views.events_view,       name="events"),

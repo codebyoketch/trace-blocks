@@ -109,7 +109,7 @@ export default function HomeScreen({ navigation }) {
         </View>
         <View style={styles.netBadge}>
           <View style={styles.netDot} />
-          <Text style={styles.netText}>VeChain Testnet</Text>
+          <Text style={styles.netText}>VeChain</Text>
         </View>
       </View>
 
@@ -122,7 +122,7 @@ export default function HomeScreen({ navigation }) {
           style={styles.newProductBtn}
           onPress={() => navigation.navigate('CreateProduct')}
         >
-          <Text style={styles.newProductText}>+ New Product</Text>
+          <Text style={styles.newProductText}>+ Log Event</Text>
         </TouchableOpacity>
       </View>
 

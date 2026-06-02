@@ -224,6 +224,4 @@ traceblocks/package.json
 tracer/bin/gunicornc
 tracer/bin/gunicorn
 tracer/bin/dotenv
-traceblocks/tracker/migrations/
 package-lock.json
-traceblocks/db.sqlite3
