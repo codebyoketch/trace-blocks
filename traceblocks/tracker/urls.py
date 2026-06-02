@@ -7,6 +7,7 @@ urlpatterns = [
 
     # ── Web UI ────────────────────────────────────────────────────────────────
     path("createuser/",                   views.CreateUser_view,   name="createuser"),
+    path("index/",                        views.index,             name="index"),
     path("",                              views.Login_view,        name="login"),
     path("logout/",                       auth_views.LogoutView.as_view(next_page="login"), name="logout"),
     path("interface/",                    views.interface_view,    name="interface"),

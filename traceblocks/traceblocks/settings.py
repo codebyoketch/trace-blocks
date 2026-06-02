@@ -27,7 +27,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = 's5u*@tfg31$$ry@j6!s-)&oo*2buwdg30f(9_b429a7ef(u^yb'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Sessions expire after 10 minutes of inactivity
 SESSION_COOKIE_AGE = 60 * 10  # seconds
