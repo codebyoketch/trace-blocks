@@ -24,7 +24,7 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('super')
+SECRET_KEY = os.getenv('super') or 'django-insecure-dev-only-traceblocks-secret-key'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -148,7 +148,7 @@ STATIC_URL = 'static/'
 # ==============================================================================
 
 # Public Testnet Endpoint
-VECHAIN_NODE_URL = os.getenv('super_secret_key3')
+VECHAIN_NODE_URL = os.getenv('super_secret_key3') or 'https://testnet.veblocks.net'
 
 # Public Testnet Chain Tag ID (Hex 0x27)
 VECHAIN_CHAIN_TAG = "0x27"
